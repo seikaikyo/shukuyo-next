@@ -1,0 +1,408 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Pencil, Trash2, Plus, ChevronRight, AlertTriangle } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useProfileStore, RELATION_TYPES } from '@/stores/profile'
+import { usePartnerCompatibilities } from '@/hooks/use-compatibility'
+import type { PartnerCompatibility, PartnerRelationType } from '@/types/compatibility'
+import type { Partner } from '@/stores/profile'
+
+// ---- helpers ----
+
+function scoreColor(score: number) {
+  if (score >= 80) return 'text-[var(--fortune-great)]'
+  if (score >= 60) return 'text-[var(--fortune-good)]'
+  if (score >= 40) return 'text-[var(--fortune-neutral)]'
+  if (score >= 20) return 'text-[var(--fortune-caution)]'
+  return 'text-[var(--fortune-bad)]'
+}
+
+function getRelationLabel(rel: string) {
+  return RELATION_TYPES.find((r) => r.value === rel)?.label ?? rel
+}
+
+// ---- PartnerFormDialog ----
+
+interface PartnerFormDialogProps {
+  open: boolean
+  editPartner?: Partner | null
+  onClose: () => void
+  onSaved: () => void
+}
+
+function PartnerFormDialog({ open, editPartner, onClose, onSaved }: PartnerFormDialogProps) {
+  const { addPartner, updatePartner } = useProfileStore()
+  const [nickname, setNickname] = useState('')
+  const [birthDate, setBirthDate] = useState('')
+  const [relation, setRelation] = useState<string>('friend')
+
+  useEffect(() => {
+    if (open) {
+      if (editPartner) {
+        setNickname(editPartner.nickname)
+        setBirthDate(editPartner.birthDate)
+        setRelation(editPartner.relation || 'friend')
+      } else {
+        setNickname('')
+        setBirthDate('')
+        setRelation('friend')
+      }
+    }
+  }, [open, editPartner])
+
+  if (!open) return null
+
+  function handleSave() {
+    if (!nickname || !birthDate) return
+    if (editPartner) {
+      updatePartner(editPartner.id, { nickname, birthDate, relation: relation as PartnerRelationType })
+    } else {
+      addPartner({ nickname, birthDate, relation: relation as PartnerRelationType })
+    }
+    onSaved()
+    onClose()
+  }
+
+  return (
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
+      <div className='bg-background border border-border rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 flex flex-col gap-4'>
+        <h3 className='text-base font-semibold text-foreground'>
+          {editPartner ? '編輯對象' : '新增對象'}
+        </h3>
+
+        <div className='flex flex-col gap-1'>
+          <label className='text-xs text-muted-foreground'>暱稱</label>
+          <input
+            type='text'
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder='請輸入暱稱'
+            className='h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
+          />
+        </div>
+
+        <div className='flex flex-col gap-1'>
+          <label className='text-xs text-muted-foreground'>出生日期</label>
+          <input
+            type='date'
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
+            max={new Date().toISOString().slice(0, 10)}
+            className='h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
+          />
+        </div>
+
+        <div className='flex flex-col gap-1'>
+          <label className='text-xs text-muted-foreground'>關係</label>
+          <div className='flex flex-wrap gap-1.5'>
+            {RELATION_TYPES.map((rt) => (
+              <button
+                key={rt.value}
+                type='button'
+                onClick={() => setRelation(rt.value)}
+                title={rt.desc}
+                className={cn(
+                  'px-3 py-1.5 rounded-full text-xs border transition-colors',
+                  relation === rt.value
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'border-border text-muted-foreground hover:border-primary hover:text-primary'
+                )}
+              >
+                {rt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className='flex gap-2 justify-end mt-2'>
+          <Button variant='outline' size='sm' onClick={onClose}>取消</Button>
+          <Button size='sm' disabled={!nickname || !birthDate} onClick={handleSave}>儲存</Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ---- PartnerCard ----
+
+interface PartnerCardProps {
+  partner: Partner
+  compat?: PartnerCompatibility
+  onSelect: (id: string) => void
+  onEdit: (id: string) => void
+  onDelete: (id: string) => void
+}
+
+function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCardProps) {
+  const ds = compat?.directional_scores
+  const verdict = compat?.verdict
+
+  return (
+    <div
+      className='bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer'
+      role='button'
+      tabIndex={0}
+      onClick={() => onSelect(partner.id)}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onSelect(partner.id)}
+    >
+      {/* top row */}
+      <div className='flex items-center gap-3 px-4 py-3'>
+        <div className='flex-1 min-w-0'>
+          <p className='text-sm font-medium text-foreground truncate'>{partner.nickname}</p>
+          <div className='flex items-center gap-2 mt-0.5'>
+            {partner.relation && (
+              <span className='text-xs text-muted-foreground'>{getRelationLabel(partner.relation)}</span>
+            )}
+            <span className='text-xs text-muted-foreground tabular-nums'>{partner.birthDate}</span>
+          </div>
+        </div>
+
+        {/* mansion */}
+        {compat && (
+          <div className='flex flex-col items-end gap-0.5 shrink-0'>
+            <span className='text-xs text-muted-foreground'>{compat.mansion.name_jp}</span>
+            <span className='text-[10px] text-muted-foreground'>{compat.mansion.element}</span>
+          </div>
+        )}
+
+        {/* scores */}
+        {ds ? (
+          <div className='flex flex-col gap-0.5 items-end shrink-0 min-w-[80px]'>
+            <div className='flex items-center gap-1 text-xs'>
+              <span className='text-muted-foreground'>我→</span>
+              <span className={cn('font-bold tabular-nums', scoreColor(ds.person1_to_person2.score))}>
+                {ds.person1_to_person2.score}
+              </span>
+              <span className='text-[10px] text-muted-foreground'>{ds.person1_to_person2.direction}</span>
+            </div>
+            <div className='flex items-center gap-1 text-xs'>
+              <span className='text-muted-foreground'>對→</span>
+              <span className={cn('font-bold tabular-nums', scoreColor(ds.person2_to_person1.score))}>
+                {ds.person2_to_person1.score}
+              </span>
+              <span className='text-[10px] text-muted-foreground'>{ds.person2_to_person1.direction}</span>
+            </div>
+          </div>
+        ) : compat ? (
+          <span className={cn('text-xl font-bold tabular-nums shrink-0', scoreColor(compat.score))}>
+            {compat.score}
+          </span>
+        ) : null}
+
+        <div className='flex items-center gap-1 shrink-0' onClick={(e) => e.stopPropagation()}>
+          <button
+            type='button'
+            onClick={() => onEdit(partner.id)}
+            className='p-1.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
+            aria-label='編輯'
+          >
+            <Pencil className='h-3.5 w-3.5' />
+          </button>
+          <button
+            type='button'
+            onClick={() => onDelete(partner.id)}
+            className='p-1.5 rounded text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors'
+            aria-label='刪除'
+          >
+            <Trash2 className='h-3.5 w-3.5' />
+          </button>
+          <ChevronRight className='h-4 w-4 text-muted-foreground' />
+        </div>
+      </div>
+
+      {/* initiative summary */}
+      {compat?.relation?.initiative && (
+        <div className='px-4 pb-2 flex items-center gap-2 border-t border-border/50 pt-2' onClick={(e) => e.stopPropagation()}>
+          <span className='text-xs font-medium text-primary shrink-0'>{compat.relation.initiative.initiative}</span>
+          <span className='text-xs text-muted-foreground truncate'>{compat.relation.initiative.headline}</span>
+        </div>
+      )}
+
+      {/* verdict warning */}
+      {verdict && (verdict.severity === 'caution' || verdict.severity === 'warning') && (
+        <div className='px-4 pb-2 flex items-start gap-2 text-xs text-amber-600 dark:text-amber-400' onClick={(e) => e.stopPropagation()}>
+          <AlertTriangle className='h-3.5 w-3.5 shrink-0 mt-0.5' />
+          <span className='truncate'>{verdict.verdict}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---- PartnerList ----
+
+interface PartnerListProps {
+  onSelectPartner: (id: string) => void
+}
+
+export function PartnerList({ onSelectPartner }: PartnerListProps) {
+  const { partners, deletePartner } = useProfileStore()
+  const { partnerCompatibilities, loading, fetchAll } = usePartnerCompatibilities()
+
+  const [formOpen, setFormOpen] = useState(false)
+  const [editPartner, setEditPartner] = useState<Partner | null>(null)
+
+  useEffect(() => {
+    fetchAll()
+  }, [fetchAll])
+
+  function handleEdit(id: string) {
+    const p = partners.find((p) => p.id === id)
+    if (p) { setEditPartner(p); setFormOpen(true) }
+  }
+
+  function handleDelete(id: string) {
+    if (confirm('確定要刪除這個對象嗎？')) {
+      deletePartner(id)
+      fetchAll()
+    }
+  }
+
+  function handleSaved() {
+    fetchAll()
+  }
+
+  const compatMap = new Map(partnerCompatibilities.map((pc) => [pc.partnerId, pc]))
+
+  return (
+    <div className='flex flex-col gap-3'>
+      <div className='flex items-center justify-between'>
+        <h3 className='text-sm font-medium text-foreground'>
+          已儲存對象
+          <span className='ml-1.5 text-xs text-muted-foreground tabular-nums'>{partners.length}/20</span>
+        </h3>
+        <Button
+          size='sm'
+          variant='outline'
+          disabled={partners.length >= 20}
+          onClick={() => { setEditPartner(null); setFormOpen(true) }}
+          className='flex items-center gap-1'
+        >
+          <Plus className='h-3.5 w-3.5' />
+          新增
+        </Button>
+      </div>
+
+      {loading && (
+        <div className='flex flex-col gap-2'>
+          {[1, 2, 3].map((i) => <Skeleton key={i} className='h-16 rounded-lg' />)}
+        </div>
+      )}
+
+      {!loading && !partners.length && (
+        <Card>
+          <CardContent className='pt-8 pb-8 flex flex-col items-center gap-3 text-center'>
+            <p className='text-sm text-muted-foreground'>尚未新增任何對象</p>
+            <p className='text-xs text-muted-foreground max-w-xs'>新增後可快速查詢和對方的相性，並保存結果</p>
+            <Button
+              size='sm'
+              onClick={() => { setEditPartner(null); setFormOpen(true) }}
+              className='flex items-center gap-1'
+            >
+              <Plus className='h-3.5 w-3.5' />
+              新增第一個對象
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {!loading && partners.length > 0 && (
+        <div className='flex flex-col gap-2'>
+          {partners.map((partner) => (
+            <PartnerCard
+              key={partner.id}
+              partner={partner}
+              compat={compatMap.get(partner.id)}
+              onSelect={onSelectPartner}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* partner matrix (when >= 2) */}
+      {!loading && partnerCompatibilities.length >= 2 && (
+        <PartnerMatrix partnerCompatibilities={partnerCompatibilities} onSelect={onSelectPartner} />
+      )}
+
+      <PartnerFormDialog
+        open={formOpen}
+        editPartner={editPartner}
+        onClose={() => setFormOpen(false)}
+        onSaved={handleSaved}
+      />
+    </div>
+  )
+}
+
+// ---- PartnerMatrix ----
+
+const RELATION_ORDER = ['eishin', 'gyotai', 'mei', 'yusui', 'kisei', 'ankai'] as const
+
+function relationColor(type: string) {
+  if (type === 'mei') return 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400'
+  if (type === 'gyotai') return 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
+  if (type === 'eishin') return 'bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400'
+  if (type === 'yusui') return 'bg-muted/40 text-muted-foreground'
+  if (type === 'kisei') return 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400'
+  if (type === 'ankai') return 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400'
+  return 'bg-muted/40 text-muted-foreground'
+}
+
+function PartnerMatrix({
+  partnerCompatibilities,
+  onSelect,
+}: {
+  partnerCompatibilities: PartnerCompatibility[]
+  onSelect: (id: string) => void
+}) {
+  const grouped = RELATION_ORDER
+    .map((type) => ({
+      type,
+      items: partnerCompatibilities.filter((pc) => pc.relation.type === type),
+    }))
+    .filter((g) => g.items.length > 0)
+
+  const positive = partnerCompatibilities.filter((pc) => pc.score >= 60).length
+  const harmony = Math.round((positive / partnerCompatibilities.length) * 100)
+
+  return (
+    <div className='flex flex-col gap-3 mt-2'>
+      <div className='flex items-center gap-3'>
+        <h4 className='text-sm font-medium text-foreground'>相性分佈</h4>
+        <span className='text-xs text-muted-foreground'>
+          和諧率 <span className={cn('font-bold', harmony >= 50 ? 'text-emerald-600' : 'text-amber-600')}>{harmony}%</span>
+        </span>
+      </div>
+      {grouped.map((group) => (
+        <div key={group.type} className='flex flex-col gap-1.5'>
+          <p className='text-xs font-medium text-muted-foreground'>
+            {group.items[0].relation.name}（{group.items[0].relation.reading}）
+          </p>
+          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2'>
+            {group.items.map((pc) => (
+              <button
+                key={pc.partnerId}
+                type='button'
+                onClick={() => onSelect(pc.partnerId)}
+                className={cn(
+                  'flex flex-col items-center gap-0.5 px-2 py-2 rounded-lg text-xs transition-shadow hover:shadow-md',
+                  relationColor(group.type)
+                )}
+              >
+                <span className='font-medium truncate max-w-full'>{pc.nickname}</span>
+                <span className='text-xl font-bold tabular-nums'>{pc.score}</span>
+                <span className='text-[10px] opacity-70'>{pc.mansion.name_jp}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}

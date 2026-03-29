@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useProfileStore } from '@/stores/profile'
+import { useProfileStore, useProfileHydrated } from '@/stores/profile'
 import { useFortune } from '@/hooks/use-fortune'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -301,6 +301,16 @@ function HomeContent({ birthDate }: { birthDate: string }) {
 
 export default function HomePage() {
   const { birthDate } = useProfileStore()
+  const hydrated = useProfileHydrated()
+
+  // SSR hydration 完成前顯示 loading，避免閃爍
+  if (!hydrated) {
+    return (
+      <div className='flex flex-1 items-center justify-center py-24'>
+        <Skeleton className='h-64 w-full max-w-md rounded-xl' />
+      </div>
+    )
+  }
 
   if (!birthDate) {
     return <SetupCard />

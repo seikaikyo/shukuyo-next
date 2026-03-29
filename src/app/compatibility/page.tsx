@@ -1,230 +1,64 @@
 'use client'
 
-import { useState } from 'react'
-import { useProfileStore } from '@/stores/profile'
-import { useCompatibility } from '@/hooks/use-compatibility'
+import { useState, useEffect } from 'react'
+import { cn } from '@/lib/utils'
+import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
-import type { CompatibilityResult } from '@/types/compatibility'
+import { useProfileStore } from '@/stores/profile'
+import { useCompatibility } from '@/hooks/use-compatibility'
+import { PairResult } from '@/components/compatibility/pair-result'
+import { PartnerList } from '@/components/compatibility/partner-list'
+import { CompatFinder } from '@/components/compatibility/compat-finder'
 
-// ---- Helpers ----
+// ---- Tab 定義 ----
 
-function scoreColor(score: number) {
-  if (score >= 80) return 'text-[var(--fortune-great)]'
-  if (score >= 60) return 'text-[var(--fortune-good)]'
-  if (score >= 40) return 'text-[var(--fortune-neutral)]'
-  if (score >= 20) return 'text-[var(--fortune-caution)]'
-  return 'text-[var(--fortune-bad)]'
-}
+const TABS = [
+  { key: 'diagnose', label: '相性診斷' },
+  { key: 'partners', label: '夥伴管理' },
+  { key: 'explore', label: '相性探索' },
+] as const
 
-function scoreBorder(score: number) {
-  if (score >= 80) return 'border-[var(--fortune-great)]'
-  if (score >= 60) return 'border-[var(--fortune-good)]'
-  if (score >= 40) return 'border-[var(--fortune-neutral)]'
-  if (score >= 20) return 'border-[var(--fortune-caution)]'
-  return 'border-[var(--fortune-bad)]'
-}
+type TabKey = typeof TABS[number]['key']
 
-// ---- Sub-components ----
+// ---- 相性診斷 Tab ----
 
-function DateInput({
-  label,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  placeholder?: string
-}) {
-  return (
-    <div className='flex flex-col gap-1'>
-      <label className='text-xs text-muted-foreground'>{label}</label>
-      <input
-        type='date'
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className={cn(
-          'h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground',
-          'focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
-          'transition-colors duration-200'
-        )}
-      />
-    </div>
-  )
-}
-
-function ResultCard({ result }: { result: CompatibilityResult }) {
-  const { score, relation, person1, person2, summary, direction_analysis } = result
-  const verdict = direction_analysis?.verdict
-
-  return (
-    <div className='flex flex-col gap-4'>
-      {/* score */}
-      <Card className={cn('border-2', scoreBorder(score))}>
-        <CardContent className='pt-6 pb-6 flex flex-col items-center gap-3'>
-          <div className='flex flex-col items-center gap-1'>
-            <span className={cn('text-6xl font-bold tabular-nums leading-none', scoreColor(score))}>
-              {score}
-            </span>
-            <span className='text-xs text-muted-foreground'>分</span>
-          </div>
-          <div className='flex flex-col items-center gap-1'>
-            <p className='text-xl font-semibold text-foreground'>{relation.name}</p>
-            <p className='text-sm text-muted-foreground'>{relation.name_jp}（{relation.reading}）</p>
-          </div>
-          {summary && (
-            <p className='text-sm text-muted-foreground text-center max-w-sm leading-relaxed'>
-              {summary}
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* persons */}
-      <Card className='border border-border'>
-        <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-          <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-            雙方宿
-          </p>
-          <div className='grid grid-cols-2 gap-4'>
-            {[
-              { label: '你', person: person1 },
-              { label: '對方', person: person2 },
-            ].map(({ label, person }) => (
-              <div key={label} className='flex flex-col gap-1 px-3 py-3 rounded-md bg-muted/40'>
-                <span className='text-xs text-muted-foreground'>{label}</span>
-                <span className='text-base font-semibold text-foreground'>{person.mansion}</span>
-                <span className='text-xs text-muted-foreground'>{person.reading}</span>
-                <span className='text-xs text-muted-foreground'>{person.element}</span>
-                {person.keywords?.length > 0 && (
-                  <div className='flex flex-wrap gap-1 mt-0.5'>
-                    {person.keywords.slice(0, 3).map((kw) => (
-                      <span key={kw} className='text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary'>
-                        {kw}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* relation detail */}
-      <Card className='border border-border'>
-        <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-          <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-            關係解析
-          </p>
-          {relation.description && (
-            <p className='text-sm text-muted-foreground leading-relaxed'>{relation.description}</p>
-          )}
-          {relation.advice && (
-            <p className='text-sm text-muted-foreground leading-relaxed border-l-2 border-primary/40 pl-3'>
-              {relation.advice}
-            </p>
-          )}
-          {relation.tips && relation.tips.length > 0 && (
-            <div className='flex flex-col gap-1'>
-              <p className='text-xs font-medium text-muted-foreground'>建議</p>
-              <ul className='flex flex-col gap-0.5'>
-                {relation.tips.map((tip, i) => (
-                  <li key={i} className='text-xs text-muted-foreground flex items-start gap-1.5'>
-                    <span className='text-primary shrink-0 mt-0.5'>·</span>
-                    {tip}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {relation.good_for && relation.good_for.length > 0 && (
-            <div className='flex flex-col gap-1'>
-              <p className='text-xs font-medium text-muted-foreground'>適合</p>
-              <div className='flex flex-wrap gap-1'>
-                {relation.good_for.map((g) => (
-                  <span key={g} className='text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
-                    {g}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* verdict */}
-      {verdict && (
-        <Card className='border border-border'>
-          <CardContent className='pt-5 pb-5 flex flex-col gap-2'>
-            <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-              總體評斷
-            </p>
-            <p className='text-sm font-medium text-foreground'>{verdict.verdict}</p>
-            {verdict.explanation && (
-              <p className='text-xs text-muted-foreground leading-relaxed'>{verdict.explanation}</p>
-            )}
-            {verdict.bottom_line && (
-              <p className='text-xs text-muted-foreground leading-relaxed border-l-2 border-primary/40 pl-3'>
-                {verdict.bottom_line}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  )
-}
-
-// ---- Page ----
-
-export default function CompatibilityPage() {
+function DiagnoseTab() {
   const { birthDate } = useProfileStore()
   const { compatibility, loading, error, calculateCompatibility } = useCompatibility()
-
-  const [date1, setDate1] = useState(birthDate || '')
   const [date2, setDate2] = useState('')
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (date1 && date2) calculateCompatibility(date1, date2)
+    if (birthDate && date2) calculateCompatibility(birthDate, date2)
   }
 
   return (
-    <div className='mx-auto w-full max-w-2xl px-4 pb-12 flex flex-col gap-4'>
-      <div className='py-4 flex flex-col gap-1'>
-        <h2 className='text-base font-semibold text-foreground'>相性診斷</h2>
-        <p className='text-xs text-muted-foreground'>
-          輸入兩人出生日期，依宿曜道推算相性關係
-        </p>
-      </div>
+    <div className='flex flex-col gap-4'>
+      <p className='text-xs text-muted-foreground'>輸入對方的出生日期，依宿曜道推算雙向相性</p>
 
-      {/* input form */}
-      <Card className='border border-border dark:border-primary/20'>
+      <Card>
         <CardContent className='pt-5 pb-5'>
           <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-            <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-              <DateInput
-                label='你的出生日期'
-                value={date1}
-                onChange={setDate1}
-                placeholder='YYYY-MM-DD'
-              />
-              <DateInput
-                label='對方的出生日期'
+            <div className='flex flex-col gap-1'>
+              <label className='text-xs text-muted-foreground'>你的出生日期</label>
+              <p className='text-sm text-foreground tabular-nums'>{birthDate || '（未設定，請先到個人檔案設定）'}</p>
+            </div>
+            <div className='flex flex-col gap-1'>
+              <label className='text-xs text-muted-foreground' htmlFor='compat-date2'>對方的出生日期</label>
+              <input
+                id='compat-date2'
+                type='date'
                 value={date2}
-                onChange={setDate2}
-                placeholder='YYYY-MM-DD'
+                onChange={(e) => setDate2(e.target.value)}
+                max={new Date().toISOString().slice(0, 10)}
+                className='h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
               />
             </div>
             <Button
               type='submit'
-              disabled={!date1 || !date2 || loading}
+              disabled={!birthDate || !date2 || loading}
               className='w-full'
             >
               {loading ? '計算中…' : '診斷相性'}
@@ -233,63 +67,171 @@ export default function CompatibilityPage() {
         </CardContent>
       </Card>
 
-      {/* error */}
       {error && !loading && (
-        <div className='flex flex-col items-center gap-3 py-8 text-center'>
+        <div className='flex flex-col items-center gap-3 py-6 text-center'>
           <p className='text-sm text-muted-foreground'>計算失敗：{error}</p>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => date1 && date2 && calculateCompatibility(date1, date2)}
-          >
+          <Button variant='outline' size='sm' onClick={() => birthDate && date2 && calculateCompatibility(birthDate, date2)}>
             重試
           </Button>
         </div>
       )}
 
-      {/* loading */}
       {loading && (
-        <>
-          <Card className='border border-border'>
-            <CardContent className='pt-6 pb-6 flex flex-col items-center gap-3'>
-              <Skeleton className='h-20 w-20 rounded-full' />
-              <Skeleton className='h-6 w-32' />
-              <Skeleton className='h-4 w-24' />
-              <Skeleton className='h-4 w-64' />
-            </CardContent>
-          </Card>
-          <Card className='border border-border'>
-            <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-              <Skeleton className='h-3 w-16' />
-              <div className='grid grid-cols-2 gap-4'>
-                <Skeleton className='h-28 rounded-md' />
-                <Skeleton className='h-28 rounded-md' />
-              </div>
-            </CardContent>
-          </Card>
-        </>
+        <div className='flex flex-col gap-3'>
+          <Skeleton className='h-32 rounded-xl' />
+          <Skeleton className='h-24 rounded-lg' />
+          <Skeleton className='h-40 rounded-lg' />
+        </div>
       )}
 
-      {/* result */}
-      {!loading && compatibility && <ResultCard result={compatibility} />}
+      {!loading && compatibility && (
+        <PairResult result={compatibility} />
+      )}
 
-      {/* tip */}
       {!loading && !compatibility && !error && (
-        <Card className='border border-border'>
-          <CardContent className='pt-5 pb-5 text-center'>
-            <p className='text-sm text-muted-foreground'>
-              宿曜道將 27 個星宿分為六種關係：
-            </p>
-            <div className='flex flex-wrap justify-center gap-2 mt-3'>
-              {['安危（知己）', '安壊（志向不同）', '義衰（義氣）', '友衰（友情）', '栄親（親密）', '栄害（競爭）'].map((rel) => (
-                <span key={rel} className='text-xs px-2 py-1 rounded-full border border-border text-muted-foreground'>
-                  {rel}
+        <Card>
+          <CardContent className='pt-5 pb-5 text-center flex flex-col gap-3'>
+            <p className='text-sm text-muted-foreground'>宿曜道將 27 個星宿分為六種關係</p>
+            <div className='flex flex-wrap justify-center gap-2'>
+              {[
+                { label: '安危', desc: '知己' },
+                { label: '安壌', desc: '志向不同' },
+                { label: '義衰', desc: '義氣' },
+                { label: '友衰', desc: '友情' },
+                { label: '栄親', desc: '親密' },
+                { label: '栄害', desc: '競爭' },
+              ].map(({ label, desc }) => (
+                <span key={label} className='text-xs px-2 py-1 rounded-full border border-border text-muted-foreground'>
+                  {label}（{desc}）
                 </span>
               ))}
             </div>
           </CardContent>
         </Card>
       )}
+    </div>
+  )
+}
+
+// ---- 夥伴管理 Tab ----
+
+function PartnersTab() {
+  const { birthDate } = useProfileStore()
+  const { compatibility, loading: compatLoading, calculateCompatibility } = useCompatibility()
+  const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null)
+  const [partnerName, setPartnerName] = useState<string | null>(null)
+  const [partnerLoading, setPartnerLoading] = useState(false)
+
+  const { partners } = useProfileStore()
+
+  async function handleSelectPartner(id: string) {
+    const partner = partners.find((p) => p.id === id)
+    if (!partner?.birthDate || !birthDate) return
+
+    setPartnerLoading(true)
+    setSelectedPartnerId(id)
+    setPartnerName(partner.nickname)
+    await calculateCompatibility(birthDate, partner.birthDate)
+    setPartnerLoading(false)
+  }
+
+  function handleBack() {
+    setSelectedPartnerId(null)
+    setPartnerName(null)
+  }
+
+  if (selectedPartnerId) {
+    return (
+      <div className='flex flex-col gap-4'>
+        <div className='flex items-center gap-2'>
+          <Button variant='ghost' size='sm' onClick={handleBack} className='flex items-center gap-1 -ml-2'>
+            <ArrowLeft className='h-4 w-4' />
+            返回列表
+          </Button>
+        </div>
+        {partnerName && (
+          <div className='px-4 py-3 rounded-lg border-l-4 border-l-primary bg-primary/5 flex items-baseline gap-2'>
+            <span className='text-base font-semibold text-foreground'>{partnerName}</span>
+            <span className='text-xs text-muted-foreground'>
+              {partners.find((p) => p.id === selectedPartnerId)?.birthDate}
+            </span>
+          </div>
+        )}
+        {(partnerLoading || compatLoading) && (
+          <div className='flex flex-col gap-3'>
+            <Skeleton className='h-32 rounded-xl' />
+            <Skeleton className='h-24 rounded-lg' />
+          </div>
+        )}
+        {!partnerLoading && !compatLoading && compatibility && (
+          <PairResult result={compatibility} />
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className='flex flex-col gap-4'>
+      <p className='text-xs text-muted-foreground'>儲存常用對象，隨時查詢相性並追蹤關係狀態</p>
+      <PartnerList onSelectPartner={handleSelectPartner} />
+    </div>
+  )
+}
+
+// ---- Page ----
+
+export default function CompatibilityPage() {
+  const [activeTab, setActiveTab] = useState<TabKey>('diagnose')
+
+  // session 恢復
+  useEffect(() => {
+    const saved = sessionStorage.getItem('shukuyo_compat_tab') as TabKey | null
+    if (saved && TABS.some((t) => t.key === saved)) setActiveTab(saved)
+  }, [])
+
+  function switchTab(tab: TabKey) {
+    setActiveTab(tab)
+    sessionStorage.setItem('shukuyo_compat_tab', tab)
+  }
+
+  return (
+    <div className='mx-auto w-full max-w-2xl px-4 pb-12 flex flex-col gap-4'>
+      {/* header */}
+      <div className='py-4 flex flex-col gap-1'>
+        <h2 className='text-base font-semibold text-foreground'>相性診斷</h2>
+        <p className='text-xs text-muted-foreground'>依宿曜道推算人際相性</p>
+      </div>
+
+      {/* tab bar */}
+      <div
+        className='flex border-b border-border overflow-x-auto scrollbar-hide -mx-4 px-4'
+        role='tablist'
+        aria-label='相性功能'
+      >
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            role='tab'
+            aria-selected={activeTab === tab.key}
+            onClick={() => switchTab(tab.key)}
+            className={cn(
+              'flex-shrink-0 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap',
+              activeTab === tab.key
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* tab content */}
+      <div role='tabpanel'>
+        {activeTab === 'diagnose' && <DiagnoseTab />}
+        {activeTab === 'partners' && <PartnersTab />}
+        {activeTab === 'explore' && <CompatFinder />}
+      </div>
     </div>
   )
 }

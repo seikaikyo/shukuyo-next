@@ -1,5 +1,8 @@
 import type { Person } from './mansion'
 
+export type PartnerRelationType = 'lover' | 'spouse' | 'friend' | 'colleague' | 'family' | 'ex' | 'parent' | 'boss' | 'rival'
+export type EmotionDirection = 'me_to_them' | 'them_to_me' | 'mutual'
+
 export interface RoleParagraph {
   theme: string
   sutra: string
