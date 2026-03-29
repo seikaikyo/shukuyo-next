@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { Star, Sparkles, BookOpen } from 'lucide-react'
 
 // ---- Setup card (no birth date set) ----
 
@@ -277,19 +278,14 @@ function HomeContent({ birthDate }: { birthDate: string }) {
       {/* quick action links */}
       <div className='grid grid-cols-3 gap-3'>
         {[
-          { href: '/fortune', label: '運勢詳情', glyph: '✦', desc: '日週月年運' },
-          {
-            href: '/compatibility',
-            label: '人際相性',
-            glyph: '◈',
-            desc: '二十七宿相性',
-          },
-          { href: '/knowledge', label: '知識庫', glyph: '書', desc: '宿曜道典籍' },
-        ].map(({ href, label, glyph, desc }) => (
+          { href: '/fortune', label: '運勢詳情', icon: <Star className='size-5 text-primary' />, desc: '日週月年運' },
+          { href: '/compatibility', label: '人際相性', icon: <Sparkles className='size-5 text-primary' />, desc: '二十七宿相性' },
+          { href: '/knowledge', label: '知識庫', icon: <BookOpen className='size-5 text-primary' />, desc: '宿曜道典籍' },
+        ].map(({ href, label, icon, desc }) => (
           <Link key={href} href={href}>
             <Card className='border border-border hover:border-primary/40 hover:shadow-sm transition-all duration-200 cursor-pointer h-full'>
               <CardContent className='flex flex-col items-center gap-1.5 pt-5 pb-5 text-center'>
-                <span className='text-xl text-primary select-none'>{glyph}</span>
+                {icon}
                 <span className='text-xs font-medium text-foreground'>{label}</span>
                 <span className='text-xs text-muted-foreground'>{desc}</span>
               </CardContent>
