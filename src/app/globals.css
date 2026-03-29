@@ -9,7 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-heading: var(--font-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,73 +49,121 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* 和風 light theme */
 :root {
-  --background: oklch(1 0 0);
+  /* #faf9f6 warm white */
+  --background: oklch(0.979 0.005 83.2);
+  /* #1a1a1a ink black */
   --foreground: oklch(0.145 0 0);
+  /* #ffffff */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
+  /* popover matches card */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
+  /* #8b4513 copper/赤銅 */
+  --primary: oklch(0.412 0.122 46.2);
+  /* #faf9f6 */
+  --primary-foreground: oklch(0.979 0.005 83.2);
+  /* #f5f0eb */
+  --secondary: oklch(0.958 0.012 74.4);
+  --secondary-foreground: oklch(0.145 0 0);
+  /* #f0ebe4 */
+  --muted: oklch(0.938 0.014 74.8);
+  /* #6b6b6b */
+  --muted-foreground: oklch(0.499 0 0);
+  /* #c9a96e pale gold */
+  --accent: oklch(0.738 0.092 72.6);
+  --accent-foreground: oklch(0.145 0 0);
+  /* #991b1b */
+  --destructive: oklch(0.398 0.141 25.6);
+  /* #e8e4df */
+  --border: oklch(0.912 0.010 74.2);
+  --input: oklch(0.912 0.010 74.2);
+  /* #8b4513 copper ring */
+  --ring: oklch(0.412 0.122 46.2);
+  /* chart colors using warm tones */
+  --chart-1: oklch(0.412 0.122 46.2);
+  --chart-2: oklch(0.738 0.092 72.6);
+  --chart-3: oklch(0.499 0.060 55.0);
+  --chart-4: oklch(0.600 0.080 65.0);
+  --chart-5: oklch(0.320 0.090 38.0);
+  --radius: 0.5rem;
+  /* sidebar uses secondary/muted tones */
+  --sidebar: oklch(0.958 0.012 74.4);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-primary: oklch(0.412 0.122 46.2);
+  --sidebar-primary-foreground: oklch(0.979 0.005 83.2);
+  --sidebar-accent: oklch(0.938 0.014 74.8);
+  --sidebar-accent-foreground: oklch(0.145 0 0);
+  --sidebar-border: oklch(0.912 0.010 74.2);
+  --sidebar-ring: oklch(0.412 0.122 46.2);
+  /* fortune level colors */
+  --fortune-great: #2d6a4f;
+  --fortune-good: #4a7c59;
+  --fortune-neutral: #6b6b6b;
+  --fortune-caution: #b45309;
+  --fortune-bad: #991b1b;
 }
 
+/* 黒金 dark theme */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* #0a0a0a ink black */
+  --background: oklch(0.095 0 0);
+  /* #e8e0d0 warm white */
+  --foreground: oklch(0.896 0.018 74.0);
+  /* #141414 */
+  --card: oklch(0.130 0 0);
+  --card-foreground: oklch(0.896 0.018 74.0);
+  /* popover matches card */
+  --popover: oklch(0.130 0 0);
+  --popover-foreground: oklch(0.896 0.018 74.0);
+  /* #d4af37 real gold */
+  --primary: oklch(0.740 0.155 83.6);
+  /* #0a0a0a */
+  --primary-foreground: oklch(0.095 0 0);
+  /* #1a1710 warm dark */
+  --secondary: oklch(0.158 0.012 72.0);
+  --secondary-foreground: oklch(0.896 0.018 74.0);
+  /* #1a1710 */
+  --muted: oklch(0.158 0.012 72.0);
+  /* #8a8078 */
+  --muted-foreground: oklch(0.558 0.018 68.0);
+  /* #b8941f deep gold */
+  --accent: oklch(0.638 0.140 79.8);
+  --accent-foreground: oklch(0.896 0.018 74.0);
+  /* #f87171 */
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* #2a2520 */
+  --border: oklch(0.210 0.014 68.0);
+  --input: oklch(0.210 0.014 68.0);
+  /* #d4af37 gold ring */
+  --ring: oklch(0.740 0.155 83.6);
+  /* chart colors using gold tones */
+  --chart-1: oklch(0.740 0.155 83.6);
+  --chart-2: oklch(0.638 0.140 79.8);
+  --chart-3: oklch(0.558 0.018 68.0);
+  --chart-4: oklch(0.450 0.100 75.0);
+  --chart-5: oklch(0.320 0.060 65.0);
+  /* sidebar */
+  --sidebar: oklch(0.158 0.012 72.0);
+  --sidebar-foreground: oklch(0.896 0.018 74.0);
+  --sidebar-primary: oklch(0.740 0.155 83.6);
+  --sidebar-primary-foreground: oklch(0.095 0 0);
+  --sidebar-accent: oklch(0.210 0.014 68.0);
+  --sidebar-accent-foreground: oklch(0.896 0.018 74.0);
+  --sidebar-border: oklch(0.210 0.014 68.0);
+  --sidebar-ring: oklch(0.740 0.155 83.6);
+  /* fortune level colors */
+  --fortune-great: #4ade80;
+  --fortune-good: #86efac;
+  --fortune-neutral: #8a8078;
+  --fortune-caution: #fbbf24;
+  --fortune-bad: #f87171;
+}
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer base {

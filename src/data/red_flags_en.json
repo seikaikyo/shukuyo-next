@@ -1,0 +1,316 @@
+{
+  "_source": "每種能量結構被利用的模式辨識，依面向（personal/seeker/company）分別定義",
+  "ei": {
+    "direction_name": "栄",
+    "your_role": "the one being elevated",
+    "personal": {
+      "healthy": "They give you opportunities and resources, and you grow while staying grateful",
+      "red_flag": "They decide things for you under the banner of 'helping,' and get angry when you push back",
+      "test": "Help you asked for = healthy. Help you didn't ask for that they insist is 'for your own good' = watch out",
+      "action": "Say it straight: 'I didn't ask for this.' If they can't accept your no, that's not help -- that's control"
+    },
+    "seeker": {
+      "healthy": "The company gives you real promotion opportunities and resources, and you create value in return",
+      "red_flag": "They use 'we're investing in you' as an excuse to underpay, and promotions are always empty promises",
+      "test": "Promotions and raises have a concrete timeline = healthy. Always 'just wait a bit longer' = red flag",
+      "action": "Ask for specific promotion criteria and timelines. A promise with no details isn't a promise"
+    },
+    "company": {
+      "healthy": "{name} lifts the team and actively pursues opportunities",
+      "red_flag": "{name} only wants to be lifted without contributing to the team",
+      "test": "Elevates the whole team = healthy. Only climbs for themselves = red flag",
+      "action": "Watch whether they push the team up or step on the team to climb. Ask how they've helped colleagues"
+    },
+    "ex": {
+      "healthy": "You walked away with real growth -- their help genuinely made you better",
+      "red_flag": "After it ended, you realized their 'help' was actually control. You weren't being elevated, you were being led around",
+      "test": "You feel freer after leaving = that help was control. You're genuinely stronger = the help was real",
+      "action": "Save this insight for the next one. When someone wants to 'help' you, ask yourself: is this the direction I want?"
+    }
+  },
+  "shin": {
+    "direction_name": "親",
+    "your_role": "the giver",
+    "personal": {
+      "healthy": "You naturally take care of them, and they appreciate it and give back",
+      "red_flag": "They take endlessly, never reciprocate, and treat your effort as a given. Stop giving and they get moody",
+      "test": "Your giving is appreciated = healthy. They only think of you when they need something = red flag",
+      "action": "Stop giving for a week and watch. A grateful person asks what's wrong. An exploiter gets angry or vanishes"
+    },
+    "seeker": {
+      "healthy": "The company values your steady commitment and gives you training and growth resources",
+      "red_flag": "They're nice to you when they're short-staffed, but once you're in, no training and no resources",
+      "test": "There's a concrete training plan after joining = healthy. You're left to figure things out alone = red flag",
+      "action": "Ask about the specifics of the training program in the interview. Vague answers mean the company doesn't deserve your loyalty"
+    },
+    "company": {
+      "healthy": "{name} is committed and willing to grow with the company long-term",
+      "red_flag": "{name} talks about long-term commitment but is always ready to jump ship",
+      "test": "Past jobs lasted two years or more = worth considering. Switches every six months = be careful",
+      "action": "Ask why they left their last few jobs. If it's always someone else's fault, that's a sign"
+    },
+    "ex": {
+      "healthy": "You know your giving meant something -- the other person became better because of you",
+      "red_flag": "After it ended, you realized you were the only one giving. They left and never looked back",
+      "test": "They still thank you after it ended = your giving was valued. They disappeared = you were used up",
+      "action": "Set a checkpoint in the next relationship: after three months, is your giving being reciprocated? If not, cut your losses early"
+    }
+  },
+  "yu": {
+    "direction_name": "友",
+    "your_role": "the one who reaches out",
+    "personal": {
+      "healthy": "You actively maintain the relationship, and they value it and reciprocate",
+      "red_flag": "They only show up when they need a favor and disappear otherwise. You're not a friend, you're a free resource",
+      "test": "Two-way contact = healthy. You're always the one reaching out, checking in, helping = time to rethink",
+      "action": "Stop reaching out and see if they come to you. Someone who never shows up unless you initiate -- you know what that means"
+    },
+    "seeker": {
+      "healthy": "Your networking and collaboration skills are put to good use, and you have a platform to shine",
+      "red_flag": "The company dumps all cross-department coordination on you, but your actual work goes unrecognized",
+      "test": "Your social investment counts toward your performance = healthy. All effort, no credit = red flag",
+      "action": "Clarify your responsibilities. Cross-department coordination is an extra contribution, not an obligation",
+      "drain_warning": "You're the giver. The other side is comfortable while you drain. Watch whether you're the only one contributing."
+    },
+    "company": {
+      "healthy": "{name} brings networking value and integrates into the team quickly",
+      "red_flag": "{name} is great socially but lacks professional skills -- all relationships, no substance",
+      "test": "Social skills translate into work results = healthy. Social but doesn't deliver = red flag",
+      "action": "Besides communication skills, look for concrete professional output in the interview"
+    },
+    "ex": {
+      "healthy": "This relationship taught you how to actively build connections",
+      "red_flag": "After it ended, you realized you were the only one keeping it alive",
+      "test": "They reached out after the split = you weren't the only one investing. They vanished = you were free service",
+      "action": "In the next relationship, watch: if you stop initiating, does the other person step up? The answer will save you a lot of time"
+    }
+  },
+  "sui": {
+    "direction_name": "衰",
+    "your_role": "the receiver",
+    "personal": {
+      "healthy": "They take care of you, and you accept help while keeping your own judgment",
+      "red_flag": "Their caretaking breeds dependency. Without them, you feel like you can't do anything",
+      "test": "You can still act independently after receiving help = healthy. You fall apart without them = red flag",
+      "action": "Deliberately do something you thought only they could handle. If you pull it off, you'll know it was habit, not inability"
+    },
+    "seeker": {
+      "healthy": "The company has real problems for you to solve, and solving them gives you a sense of achievement",
+      "red_flag": "Problems never end because the company itself is a problem factory",
+      "test": "Problems are trending down = healthy. You fix one and the company breaks two more = red flag",
+      "action": "Watch for three months: are the problems you solve being prevented systemically? If not, it's a bottomless pit",
+      "drain_warning": "You receive energy but it decays over time. Year one is the best; the drain becomes obvious in bad fortune years."
+    },
+    "company": {
+      "healthy": "{name} is good at solving problems and steadily removes obstacles",
+      "red_flag": "{name} only fixes problems but never prevents them -- always firefighting",
+      "test": "Problems are being systemically prevented = healthy. Same problems keep recurring = red flag",
+      "action": "Ask how they prevent problems from happening again. Someone who can only fight fires but can't build firewalls has limited value"
+    },
+    "ex": {
+      "healthy": "They took care of you while you maintained your independence",
+      "red_flag": "After it ended, you realized you can't do anything on your own because they handled everything",
+      "test": "You can live independently after the split = you weren't dependent. You fell apart = you were cared for until you lost the ability to stand alone",
+      "action": "Start practicing independence now. Not for getting back together -- for yourself"
+    }
+  },
+  "an": {
+    "direction_name": "安",
+    "your_role": "the stability provider",
+    "personal": {
+      "healthy": "You build the environment, and they grow steadily within it",
+      "red_flag": "They keep destroying what you build. You create stability, they tear it down, and you start over",
+      "test": "You build and they maintain = healthy. You build, they wreck, you rebuild = you're feeding a black hole",
+      "action": "Stop rebuilding what gets destroyed. If they collapse because of it, that's their problem, not yours"
+    },
+    "seeker": {
+      "healthy": "The company needs you to build systems and processes, and your groundwork is recognized",
+      "red_flag": "Everything you build keeps getting scrapped and redone -- nobody values it",
+      "test": "Your systems are adopted and maintained = healthy. Built then torn down repeatedly = red flag",
+      "action": "Confirm who has decision-making power and maintenance responsibility. Systems nobody maintains aren't worth building",
+      "drain_warning": "You lead but must constantly output energy to maintain stability. Long-term fatigue accumulates quietly."
+    },
+    "company": {
+      "healthy": "{name} builds systems and processes -- stable and reliable",
+      "red_flag": "{name} is overly cautious, wants to systematize everything but moves too slowly",
+      "test": "System-building delivers real results = healthy. Building systems for the sake of it = red flag",
+      "action": "Ask what concrete improvements their past systems brought. If they can't give numbers, think twice"
+    },
+    "ex": {
+      "healthy": "What you built for them helped them grow, and that value doesn't disappear just because you split up",
+      "red_flag": "You kept building, they kept destroying. After the split, you realized it was all wasted effort",
+      "test": "You feel relieved after the split = you were drained. You feel it's a shame = the building had real value",
+      "action": "Remember for the next one: what you build only matters if someone maintains it. People who won't maintain aren't worth building for"
+    }
+  },
+  "kai": {
+    "direction_name": "壊",
+    "your_role": "the one receiving stability",
+    "personal": {
+      "healthy": "They give to you, and you're grateful and do your best to give back",
+      "red_flag": "They guilt-trip you with 'look how much I've done for you.' You try to make your own choices and they pull the sacrifice card",
+      "test": "Their giving is voluntary with no strings attached = healthy. Giving becomes leverage = red flag",
+      "action": "Gratitude is gratitude, but your decisions can't be held hostage by anyone's sacrifices. 'Thank you, but this one is my call'"
+    },
+    "seeker": {
+      "healthy": "The company has tough problems for you to tackle, and your crisis management skills are valued",
+      "red_flag": "You're only ever cleaning up messes -- the good stuff never comes your way",
+      "test": "Positive feedback after handling a crisis = healthy. Nobody remembers after it's done = red flag",
+      "action": "Make sure your crisis work is documented and recognized. Sacrifice without feedback isn't worth it",
+      "drain_warning": "Classical warning: 'beyond endurance.' Your energy is continuously extracted. Without strong external support, expect difficulty after 2-3 years."
+    },
+    "company": {
+      "healthy": "{name} handles pressure well and has a solid approach to tough problems",
+      "red_flag": "{name} only performs under pressure and creates conflict when things are calm",
+      "test": "Returns to normal after a crisis = healthy. Can't sit still without one and creates their own = red flag",
+      "action": "Watch their behavior in a low-pressure interview. If they can't stay calm, they can fight battles but can't govern in peace"
+    },
+    "ex": {
+      "healthy": "You're grateful for what they gave, and there were good times even if the relationship was uneven",
+      "red_flag": "After the split, they won't let go and keep bringing up how much they did for you",
+      "test": "They let go after the split = the giving was genuine. They won't let go = the giving was a tool for control",
+      "action": "Gratitude is gratitude. A breakup is a breakup. Using past sacrifices to chain your future -- that's a red flag"
+    }
+  },
+  "ki": {
+    "direction_name": "危",
+    "your_role": "the one under pressure",
+    "personal": {
+      "healthy": "Early friction is tough, but you can see improvement over time",
+      "red_flag": "It's always rough and the good part never comes. They use 'we just need time' to make you wait forever",
+      "test": "Small improvements in three months = normal. A year in with zero change = it's not rough-then-smooth, it's just rough",
+      "action": "Set a clear deadline, then evaluate. No progress means it's not a timing issue -- it's a people issue"
+    },
+    "seeker": {
+      "healthy": "The company has a healthy social culture, and your coordination skills have room to shine",
+      "red_flag": "The company looks friendly on the surface but is cliquish underneath -- social events become political",
+      "test": "Social investment leads to real collaboration = healthy. Just surface schmoozing = red flag",
+      "action": "Watch whether social interactions translate into actual teamwork. Pure schmoozing is wasting your energy",
+      "drain_warning": "Pressure-driven growth — strong short-term but the drain is real. In bad fortune years, pressure may crush rather than push."
+    },
+    "company": {
+      "healthy": "{name} has strong social skills and can boost team morale",
+      "red_flag": "{name}'s socializing turns into office politics and cliques",
+      "test": "Socializing leads to positive collaboration = healthy. Socializing becomes picking sides and exclusion = red flag",
+      "action": "Ask former colleagues for their take. Polarized opinions are a warning sign"
+    },
+    "ex": {
+      "healthy": "After the rough patch, there really were good times. The rough-then-smooth rhythm was real",
+      "red_flag": "It was always rough. The smooth part never came. You just kept enduring",
+      "test": "Looking back, was there ever a genuinely comfortable phase? Yes = the rhythm was real. No = you were strung along",
+      "action": "In the next relationship, set a checkpoint: if nothing improves in three months, it's not a rhythm issue -- it's a people issue"
+    }
+  },
+  "sei": {
+    "direction_name": "成",
+    "your_role": "the achiever",
+    "personal": {
+      "healthy": "You learn and grow together, and both sides make progress",
+      "red_flag": "You're the only one doing the work while they enjoy the results. Or they weaponize your drive: 'You're so driven, do this for me'",
+      "test": "Both sides are progressing = healthy. Only you're working while they watch = you're not a partner, you're free labor",
+      "action": "Next time they ask for help, ask 'How are you going to contribute?' Their reaction tells you everything"
+    },
+    "seeker": {
+      "healthy": "The company gives you learning opportunities, and your project results are recognized",
+      "red_flag": "The company pushes you to keep learning new things with no time to absorb, or your boss takes credit for your work",
+      "test": "What you learn gets put into practice = healthy. You learn but can't apply it, or credit gets stolen = red flag",
+      "action": "Confirm who owns the project results. If your work always has someone else's name on it, it's time to go"
+    },
+    "company": {
+      "healthy": "{name} learns fast and delivers well on projects",
+      "red_flag": "{name} only wants to learn, not to deliver -- treating the company as a free school",
+      "test": "Learning leads to output = healthy. Learns and leaves = red flag",
+      "action": "Check if they actually applied what they learned in past roles. Someone who only learns but never ships won't stick around"
+    },
+    "ex": {
+      "healthy": "You grew together, and after the split, you each took your growth with you",
+      "red_flag": "Only you were growing while they coasted on your results. After the split, you suddenly felt lighter",
+      "test": "You got better after the split = there was real nourishment. You realized you wasted your time = you were used",
+      "action": "Save this insight for the next one. When you meet someone similar, just ask: 'How are you going to contribute?'"
+    }
+  },
+  "mei": {
+    "direction_name": "命",
+    "your_role": "the mirror (same mansion)",
+    "personal": {
+      "healthy": "You mirror each other, see your own issues, and grow together",
+      "red_flag": "They use 'we're the same' to justify bad behavior. 'You'd do it too.' 'That's just how we are'",
+      "test": "Mirroring makes you reflect on yourself = healthy. Mirroring is used to justify bad behavior = red flag",
+      "action": "'We're the same' doesn't mean you have to accept their bad behavior. You share the same nature, not the same choices. Behavior is a choice"
+    },
+    "seeker": {
+      "healthy": "The company culture fits you well, and communication is low-friction",
+      "red_flag": "The company is too much like you -- the whole team thinks the same way, lacking diverse perspectives",
+      "test": "The team has different types of people who complement each other = healthy. Pure echo chamber = red flag",
+      "action": "Look at whether the team has people from different backgrounds. An echo chamber company will slowly calcify"
+    },
+    "company": {
+      "healthy": "{name} thinks in sync with the team, and communication is smooth",
+      "red_flag": "{name} is too similar to the team -- no new perspectives coming in",
+      "test": "Brings a different angle = healthy. Completely homogeneous = red flag",
+      "action": "If the team is already homogeneous, {name} won't bring change. Consider hiring for complementary strengths"
+    },
+    "ex": {
+      "healthy": "After the split, you understand yourself better -- they were your mirror",
+      "red_flag": "They kept using 'we're the same' to justify bad behavior, and it took you a long time to see through it",
+      "test": "After the split, you can tell the difference between 'we're alike' and 'their behavior is unacceptable' = you've grown",
+      "action": "Someone like you doesn't mean you accept all their behavior. That ability to distinguish is what this relationship taught you"
+    }
+  },
+  "gyo": {
+    "direction_name": "業",
+    "your_role": "the one who carries the weight",
+    "personal": {
+      "healthy": "You let things unfold naturally and slowly see small positive changes",
+      "red_flag": "They use 'the timing isn't right' or 'let it happen naturally' to make you wait forever. Always 'give me a bit more time' with nothing changing",
+      "test": "Set checkpoints (three months / six months) -- small positive changes = normal. Zero improvement = it's not a timing issue",
+      "action": "'I can wait, but not forever. Let's see where things are in three months' -- say it upfront"
+    },
+    "seeker": {
+      "healthy": "The company gives you time to grow without demanding instant results",
+      "red_flag": "They say no rush but hit you with KPIs every month -- your ramp-up period becomes a performance review",
+      "test": "Evaluation criteria match what they said when you joined = healthy. They said no rush but review monthly = red flag",
+      "action": "Get the evaluation method in writing before joining -- in the contract or confirmed by email. Verbal promises don't count"
+    },
+    "company": {
+      "healthy": "{name} needs time but has real potential -- worth the wait",
+      "red_flag": "{name} hides behind 'I need more time' and never delivers results",
+      "test": "Small but steady progress = normal. Six months with nothing to show = red flag",
+      "action": "Set three-month milestones. If they miss them, it's not a timing issue -- it's a capability issue"
+    },
+    "ex": {
+      "healthy": "This relationship taught you patience, and the process had value even if the outcome wasn't what you hoped",
+      "red_flag": "You kept waiting for 'things will get better when the time is right,' but they never did",
+      "test": "Looking back, was there any small progress at all? Yes = normal rhythm for this dynamic. No = you were strung along",
+      "action": "In the next relationship, say it from the start: 'I can wait, but not forever'"
+    }
+  },
+  "tai": {
+    "direction_name": "胎",
+    "your_role": "the one growing",
+    "personal": {
+      "healthy": "You grow in your own incubation period, and you decide the pace of waiting",
+      "red_flag": "They use 'you're not ready yet' to hold you back. Whatever you want to do, they say the timing is wrong",
+      "test": "You feel you need to wait = healthy. They decide for you that you need to wait = red flag",
+      "action": "Only you can judge if you're ready. Anyone who makes that call for you is controlling you"
+    },
+    "seeker": {
+      "healthy": "The company has a training system that lets you grow steadily within a mature framework",
+      "red_flag": "They promise training but leave you to sink or swim -- no mentor, no plan",
+      "test": "Concrete training plan and mentor after joining = healthy. Left to fend for yourself = red flag",
+      "action": "Ask to see the actual training plan during the interview. 'We'll arrange something' = there is no plan"
+    },
+    "company": {
+      "healthy": "{name} has high potential and breaks through after training",
+      "red_flag": "{name} enjoys being trained but won't become independent -- always needs someone to hold their hand",
+      "test": "Works independently after training = healthy. Still needs a mentor forever = red flag",
+      "action": "Gradually reduce guidance and observe independence. If they still can't work alone after six months, they're not right for this role"
+    },
+    "ex": {
+      "healthy": "After the split, at some point you understood what this relationship meant -- its value plays out long-term",
+      "red_flag": "They kept telling you 'you're not ready yet' and used it to control what you did",
+      "test": "You feel free after the split = you were being controlled. You slowly came to understand = the incubation was real",
+      "action": "Only you can judge if you're ready. Anyone who decides that for you is controlling you"
+    }
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "_source": "依方向 + 關係類型 + gap 類型，給出不同的對治建議",
+  "_gap_types": "drain=我方向消耗大, their_side=對方獲益多, my_side=我獲益多",
+  "drain": {
+    "衰": {
+      "spouse": "You're constantly pouring energy into your partner in this marriage. Talk to them regularly about what you need — don't just push through in silence",
+      "lover": "You're giving more in this relationship. Watch your energy levels, and speak up when you're running low",
+      "friend": "You're giving more in this friendship. If it feels off, adjust how often you meet — you don't have to force it",
+      "colleague": "You're putting in more than your counterpart. Make sure your contributions are visible — don't carry things quietly",
+      "family": "You're the backbone of this relationship. If you keep giving long-term, remember to take care of yourself too",
+      "parent": "You keep giving to them. This is driven by the energy structure — pay attention to your own state",
+      "ex": "Looking back, you were being drained the whole time. Were you always receiving care but losing yourself in the process? This insight is for your next relationship"
+    },
+    "安": {
+      "spouse": "You're the stabilizing foundation of your family. Share the load with your partner — don't carry all the chores and decisions alone",
+      "lover": "You've always been the one creating a stable environment. Let your partner do something for you too",
+      "friend": "You're always the reliable one. Asking for help once in a while isn't a weakness",
+      "colleague": "You build the infrastructure while they enjoy the results. Make sure your work shows up in performance reviews",
+      "family": "You keep the household running. Say something when you're tired — nobody knows unless you tell them",
+      "parent": "You're the builder of this relationship. Giving is in your nature, but you need someone to support you too",
+      "ex": "You spent all your time building a stable environment for them. Did you feel lighter after the breakup? If so, you were being hollowed out without realizing it"
+    },
+    "危": {
+      "spouse": "The early friction in this marriage fell mostly on you. It gets better with time — give each other space",
+      "lover": "You're absorbing most of the pressure in this relationship. It stabilizes after the rough patch, but take care of yourself along the way",
+      "friend": "You're under more pressure in this friendship. Group settings feel easier than one-on-one",
+      "colleague": "You're carrying more pressure at work. Social settings build trust more easily than meeting rooms",
+      "family": "The friction pressure lands on your side. It gets smoother with age — give it time",
+      "parent": "You carry more pressure in this relationship. Formal occasions feel more natural than everyday interactions",
+      "ex": "You absorbed most of the friction in this relationship. If leaving felt like relief, that pressure wasn't growth — it was drain"
+    },
+    "親": {
+      "spouse": "You naturally nurture your partner — that's good energy in a marriage. But remember to be taken care of too",
+      "lover": "You're the giver, constantly creating stability for them. Make sure your own needs are being met",
+      "friend": "You're the one running this friendship. Giving is auspicious, but if you're always the one initiating, pay attention",
+      "colleague": "You're mentoring them at work. Make sure this mentoring relationship is recognized by management",
+      "family": "You're the glue holding the family together. Your dedication keeps things solid, but giving isn't an obligation",
+      "parent": "You keep nurturing them. That's your role, but you deserve something back too",
+      "ex": "You were always nurturing them. After parting, ask yourself: did they become better because of you? Did you lose yourself in the giving?"
+    },
+    "友": {
+      "spouse": "Your social contributions in this marriage aren't being reciprocated equally. You built the network, they use it, but your needs get ignored",
+      "lover": "You've been actively building this relationship, but their responses keep fading. Your effort is being consumed",
+      "friend": "You've always been the proactive one, but their responses keep getting more half-hearted. Your social energy is going to waste",
+      "colleague": "You lead cross-department coordination, but others take the credit. Your effort is being consumed",
+      "family": "You're the one everyone calls to handle things, but nobody ever asks what you need. You're doing thankless work",
+      "parent": "Your investment in this parent keeps draining away. It's not that you're not good enough — they're just not receiving",
+      "ex": "You kept reaching out but they never responded. After parting, you realized your effort was completely one-sided"
+    }
+  },
+  "their_side": {
+    "栄": {
+      "spouse": "Your partner has been lifting you up more than you realize. Their support style may not match your expectations",
+      "lover": "They invest more in your growth than you've noticed. It's not that you're ungrateful — you may just be overlooking it",
+      "friend": "They've been pushing you forward more than you think. Recall when they gave you a boost",
+      "colleague": "Their contribution to your growth is bigger than you've noticed. Don't underestimate their role",
+      "family": "They've been quietly supporting you, but you might be taking it for granted",
+      "parent": "This parent has pushed your growth more than you realize. Much of their support only becomes visible later",
+      "ex": "They elevated you more than you felt at the time. Looking back, many of your improvements came from that relationship"
+    },
+    "友": {
+      "spouse": "Your partner enjoys more of the social benefits of this marriage. The network you built serves them too",
+      "lover": "You're the giver; they receive more. Check periodically whether your effort is being valued",
+      "friend": "The connections and trust you've built — they're using them too. Make sure they don't only show up when they need help",
+      "colleague": "Your cross-department network is being leveraged by them. Make sure the collaboration is two-way",
+      "family": "You care about them more actively. That's who you are, but their response matters too",
+      "parent": "You give actively; they receive. That's the natural flow of energy",
+      "ex": "You were the giver in this relationship. If they vanished completely after the split, they wanted your resources — not you"
+    },
+    "成": {
+      "spouse": "Your partner has grown more in this marriage. You drove their achievements — don't forget your own goals",
+      "lover": "They've gained a sense of achievement from you. Make sure you're growing too",
+      "friend": "They've learned more from being with you. But the shared learning process itself has value",
+      "colleague": "They've grown more from the collaboration. Your driving force is the key — make sure it's recognized",
+      "family": "They've grown more with your help. Your role is important — don't underestimate your contribution",
+      "parent": "They've benefited from your guidance. That's the natural structure of the nurturing direction",
+      "ex": "They grew more by your side. After parting, ask yourself: were your results taken from you? Is what you learned still with you?"
+    },
+    "壊": {
+      "spouse": "Your partner gives you more stability than you've absorbed. The sutra says 'the rest is not bearable' — daily life won't be smooth, but the direction is right",
+      "lover": "They give you more stability than you feel. It's hard to reciprocate equally — just be consciously grateful",
+      "friend": "They've supported you in this friendship more than you realize. The imbalance is structural, not your fault",
+      "colleague": "Their foundational support in this partnership is bigger than you've noticed",
+      "family": "Their way of caring may not be visible to you. The imbalance is natural — growing is the best way to give back",
+      "parent": "This parent gave you more stability than you think. Accept the structural imbalance and give back where you can",
+      "ex": "They gave you more stability than you felt at the time. The things you're rebuilding now were actually built by them"
+    },
+    "命": {
+      "spouse": "You two are very alike, but they've benefited slightly more from this marriage. No need to change anything deliberately",
+      "lover": "In this same-star relationship, they benefit slightly more. Don't keep score — focus on growing together",
+      "friend": "They've gained more from mirroring you. That's normal — no adjustments needed",
+      "colleague": "You think alike but they benefit more. Make sure your contributions are visible",
+      "family": "Same type but they benefit slightly more. Don't keep score — focus on moving forward together",
+      "parent": "In this same-star structure, they benefit slightly more. Natural phenomenon — no forced adjustments needed",
+      "ex": "You were too alike, and only after parting could you see each other's issues clearly. Looking back now, the things you disliked in them — aren't those things you have too?"
+    },
+    "業": {
+      "spouse": "They've gained more from this marriage, but your accumulation period will pay off. Give it time",
+      "lover": "They benefit more. It's not that you're not good enough — the karma-side rhythm is just slower",
+      "friend": "They benefit from your patience. Long-term, this connection will repay you in unexpected ways",
+      "colleague": "Their growth is more visible. You're in your accumulation phase — your investment will pay off later",
+      "family": "They've gained more from you. The weight of karmic ties takes time to resolve",
+      "parent": "They benefit more. The karma-side rhythm is slow — doesn't mean it's valueless",
+      "ex": "After parting, you realized this relationship never really progressed. It's not your fault — the karma-side rhythm just stalls"
+    },
+    "胎": {
+      "spouse": "They've grown faster in this marriage. You're the potential type — you'll break through when the time is right",
+      "lover": "They benefit more. The embryo-side is still brewing — your value will show up in the future",
+      "friend": "They've gained more from this friendship. Your growth is latent — it needs time",
+      "colleague": "They're growing faster. You're accumulating experience — it'll come in handy later",
+      "family": "They benefit more. You're on the receiving end of nurturing — the best repayment is your own growth",
+      "parent": "They benefit more. The embryo-side's value is long-term",
+      "ex": "Someday after parting, you might suddenly understand what this relationship meant. The embryo-side's value is long-term — no rush"
+    },
+    "親": {
+      "spouse": "Your nurturing helped your partner grow substantially. You're the driving force in this marriage — make sure your own needs are met too",
+      "lover": "You nurtured them in this relationship, and they became better because of you. But are you being taken care of?",
+      "friend": "The friend you've nurtured has grown because of your help. Make sure your effort is being appreciated",
+      "colleague": "The colleague you mentored has grown through your investment. Make sure your mentoring contribution is visible to management",
+      "family": "Your dedication in the family helped them grow. Your sacrifice has value, but don't sacrifice until you forget yourself",
+      "parent": "Your care for this parent gives them great peace of mind. This is the right direction — but take care of yourself too",
+      "ex": "The person you nurtured became better because of you. After parting, ask yourself: what did this giving mean for you?"
+    },
+    "安": {
+      "spouse": "The home environment you built let your partner grow in stability. Your building has value — but don't focus so much on creating the setting that you forget yourself",
+      "lover": "Your partner really enjoys the stable environment you built for this relationship. Make sure they're also maintaining it, not just enjoying it",
+      "friend": "The stable environment you provide gives your friend great comfort. But being reliable shouldn't become being taken for granted",
+      "colleague": "They enjoy the results of the systems and processes you built. Make sure your infrastructure work counts in your reviews",
+      "family": "Your effort to maintain family stability benefits everyone. But stability isn't one person's responsibility",
+      "parent": "The secure environment you built for your parent puts them at ease. Good direction — but taking care of yourself is what makes it sustainable",
+      "ex": "They enjoyed the stable environment you built. After parting, ask yourself: did you take care of yourself while you were building?"
+    },
+    "衰": {
+      "spouse": "Your partner cares for you more than you might realize. Their way of caring may not match what you expect",
+      "lover": "They give you more than you feel. It's not that they're lacking — you might not be noticing",
+      "friend": "They support you more than you're aware of. Think about what they've quietly done for you",
+      "colleague": "They contribute more to the partnership than you've noticed. Don't overlook their support",
+      "family": "Their care may not be obvious to you. Action-based love is harder to notice",
+      "parent": "This parent gave you more than you think. Some care only becomes visible when you grow older",
+      "ex": "They cared for you more than you felt at the time. Looking back after the breakup, you may notice things you missed"
+    }
+  },
+  "my_side": {
+    "栄": {
+      "spouse": "You're the beneficiary in this marriage — your partner has been quietly lifting you up. Remember to thank them and give back",
+      "lover": "You've gained more from this relationship. Do something for them proactively — don't take it for granted",
+      "friend": "You've gained more from this friendship. Make an effort to do something for them once in a while",
+      "colleague": "You've benefited more from the collaboration. Actively help highlight their contributions",
+      "family": "You're the one being cared for in the family. Don't take it for granted — express your gratitude",
+      "parent": "You benefit from their effort. Remember to give back",
+      "ex": "You were the beneficiary. After parting, ask yourself: did you ever properly thank them? This regret can be made up in your next relationship"
+    },
+    "衰": {
+      "spouse": "You're very well taken care of in this marriage. Enjoy it but don't lose your independence",
+      "lover": "They take great care of you. Accept it while keeping your own center of gravity",
+      "friend": "They actively care for you more than you do for them. Enjoy it but stay independent",
+      "colleague": "Their support in this partnership is spot-on. Remember to reciprocate — don't take it for granted",
+      "family": "You're getting plenty of care. Accept it but don't lose your ability to handle things yourself",
+      "parent": "This parent takes excellent care of you. Maintain your independence — don't rely on them for everything",
+      "ex": "They took great care of you back then. If you felt lost after the breakup, you were too dependent. Keep that in mind for next time"
+    },
+    "友": {
+      "spouse": "Your partner builds networks for you in this marriage. Reciprocate their social investment",
+      "lover": "They give more actively than you. Their effort deserves gratitude",
+      "friend": "They actively maintain this friendship. You receive more — initiate plans once in a while too",
+      "colleague": "They build connections for you. Make sure you're reciprocating their investment",
+      "family": "They care about you more actively. Remember to care about them too",
+      "parent": "They give more actively. Respond to their goodwill",
+      "ex": "They actively maintained this relationship. If you only realized after parting that you never initiated, remember to reach out first in your next relationship"
+    },
+    "安": {
+      "spouse": "Your partner is the stable foundation of the family, and you enjoy the environment they've built. Express your thanks",
+      "lover": "They've been creating a stable environment for you. Don't treat their effort as background noise",
+      "friend": "They're your most reliable friend. Their effort deserves to be seen",
+      "colleague": "They handle the infrastructure while you enjoy the stable environment. Acknowledge their contribution",
+      "family": "They keep the household running. Their effort is invisible but indispensable",
+      "parent": "They build a stable environment for you. Express your thanks",
+      "ex": "They built a stable environment for you. Can you hold up your life on your own after the split? That's the real test of independence"
+    },
+    "壊": {
+      "spouse": "You're receiving stability. The classic warning reminds you it's hard to repay in other ways — be consciously grateful",
+      "lover": "You benefit from their effort. The imbalance is structural — the best repayment is your own growth",
+      "friend": "You're the beneficiary of this friendship. Their effort keeps you grounded — don't forget to be grateful",
+      "colleague": "You benefit from the infrastructure they built. Use the resources well, but know where they came from",
+      "family": "You're the one being cared for. The imbalance is natural — growth is the best repayment",
+      "parent": "You benefit from their effort. The way to repay is to become a better version of yourself",
+      "ex": "You were on the receiving end. Only after parting did you realize how much they gave. Gratitude can be late — but it shouldn't be absent"
+    },
+    "命": {
+      "spouse": "You benefit slightly more in this marriage. Same-star pairing — don't keep score, focus on growing together",
+      "lover": "You benefit slightly more. No need to adjust — focus on moving forward together",
+      "friend": "You've gained more from this mirroring relationship. Enjoy the understanding but also give to them",
+      "colleague": "You benefit more. Make sure you're reciprocating their investment",
+      "family": "You benefit slightly more. Don't keep score — growing together is what matters most",
+      "parent": "You benefit more. Natural phenomenon — thank them",
+      "ex": "You two were very alike, and you grew faster after parting. It's not that they were bad — people too similar just tend to stagnate together"
+    },
+    "業": {
+      "spouse": "You've gained more from this marriage than your partner. They're in their accumulation phase — give them time and space",
+      "lover": "You benefit more. Their slower pace doesn't mean they don't care",
+      "friend": "You've gained more from this friendship. Their way of reciprocating might not match what you expect",
+      "colleague": "You've benefited more from the collaboration. They need more time before results show",
+      "family": "You benefit more. They carry the weight of karmic ties — give them space",
+      "parent": "You benefit more. Their value takes time to become visible",
+      "ex": "You benefited more, though it wasn't obvious. Looking back, the patience and waiting this relationship taught you — that's your biggest takeaway"
+    },
+    "胎": {
+      "spouse": "You've grown faster in this marriage. Your partner is the potential type — their breakthrough comes later",
+      "lover": "You've grown faster. The embryo-side's value is long-term — don't rush it",
+      "friend": "You've grown more from this friendship. Their return will show up in the future",
+      "colleague": "You've grown faster. They're brewing — a breakthrough will come",
+      "family": "You've grown more. They need time — the best support is patience",
+      "parent": "You've grown faster. They're the potential type — give it time",
+      "ex": "You grew faster. Parting doesn't mean failure — sometimes it's just that your rhythms were out of sync"
+    },
+    "成": {
+      "spouse": "You've grown more in this marriage. Your partner drove your achievements — share your progress with them",
+      "lover": "You've gained more of a sense of achievement from them. Remember to drive their growth too",
+      "friend": "You've gained more from learning together. Invite them to tackle more challenging things with you",
+      "colleague": "You've grown more from the collaboration. Help them find growth opportunities too",
+      "family": "You've grown more with their help. Share your results",
+      "parent": "You've grown more. The way to give back is to share your progress",
+      "ex": "You gained achievement from them. The growth you took with you is permanent — be grateful and move forward"
+    },
+    "危": {
+      "spouse": "You benefit slightly more in this marriage. Your partner absorbs more of the friction pressure — be considerate",
+      "lover": "You benefit more. They bear more of the relationship pressure — take care of their feelings",
+      "friend": "You benefit more from this friendship. They absorb more social pressure",
+      "colleague": "You benefit more from the collaboration. They're under pressure — support them",
+      "family": "You benefit more. They absorb the friction pressure — give them time",
+      "parent": "You benefit more. They carry more pressure — be considerate",
+      "ex": "They bore more pressure than you. If you're still in touch, a belated thank-you wouldn't be too much"
+    }
+  }
+}
