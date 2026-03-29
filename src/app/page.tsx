@@ -284,7 +284,7 @@ function HomeContent({ birthDate }: { birthDate: string }) {
             glyph: '◈',
             desc: '二十七宿相性',
           },
-          { href: '/knowledge', label: '知識庫', glyph: '☯', desc: '宿曜道典籍' },
+          { href: '/knowledge', label: '知識庫', glyph: '書', desc: '宿曜道典籍' },
         ].map(({ href, label, glyph, desc }) => (
           <Link key={href} href={href}>
             <Card className='border border-border hover:border-primary/40 hover:shadow-sm transition-all duration-200 cursor-pointer h-full'>
