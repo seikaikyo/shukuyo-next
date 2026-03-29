@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashai-api.onrender.com/shukuyo'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashai-api.onrender.com/shukuyo/api/sukuyodo'
 
 export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE}${path}`
