@@ -12,7 +12,8 @@ import type { DailyFortune } from '@/types/fortune'
 // ---- Helpers ----
 
 function todayStr() {
-  return new Date().toISOString().split('T')[0]
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 function offsetDate(dateStr: string, days: number) {
@@ -171,29 +172,16 @@ function CategoryCard({ fortune }: { fortune: DailyFortune }) {
     },
   ]
 
+  const filtered = cats.filter(({ desc }) => desc)
+  if (filtered.length === 0) return null
+
   return (
     <Card className='border border-border'>
       <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
-        <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          各方面運勢
-        </p>
-        {cats.map(({ label, score, desc }) => (
-          <div key={label} className='flex flex-col gap-1.5'>
-            <div className='flex items-center gap-3'>
-              <span className='text-xs text-muted-foreground w-10 shrink-0'>{label}</span>
-              <div className='flex-1 h-1.5 bg-muted rounded-full overflow-hidden'>
-                <div
-                  className='h-full rounded-full bg-primary transition-all duration-500'
-                  style={{ width: `${score}%` }}
-                />
-              </div>
-              <span className={cn('text-xs tabular-nums w-7 text-right', scoreColor(score))}>
-                {score}
-              </span>
-            </div>
-            {desc && (
-              <p className='text-xs text-muted-foreground pl-[52px] leading-relaxed'>{desc}</p>
-            )}
+        {filtered.map(({ label, desc }) => (
+          <div key={label}>
+            <p className='text-xs font-medium text-primary mb-1'>{label}</p>
+            <p className='text-sm text-muted-foreground leading-relaxed'>{desc}</p>
           </div>
         ))}
       </CardContent>

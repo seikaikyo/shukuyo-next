@@ -91,7 +91,9 @@ function offsetDate(dateStr: string, days: number) {
 }
 
 function todayStr() {
-  return new Date().toISOString().split('T')[0]
+  // 用本地時區，避免 UTC 在 UTC+8 凌晨時顯示前一天
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 function scoreColor(score: number) {
@@ -253,41 +255,24 @@ function HomeContent({ birthDate }: { birthDate: string }) {
         </Card>
       ) : null}
 
-      {/* category breakdown */}
-      {loading ? (
-        <DetailSkeleton />
-      ) : fortune ? (
+      {/* fortune descriptions */}
+      {!loading && fortune?.fortune?.career_desc && (
         <Card className='border border-border'>
-          <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-            <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-              各方面運勢
-            </p>
-            {(
-              [
-                { label: '事業', value: fortune.fortune.career },
-                { label: '感情', value: fortune.fortune.love },
-                { label: '健康', value: fortune.fortune.health },
-                { label: '財運', value: fortune.fortune.wealth },
-              ] as { label: string; value: number }[]
-            ).map(({ label, value }) => (
-              <div key={label} className='flex items-center gap-3'>
-                <span className='text-xs text-muted-foreground w-10 shrink-0'>{label}</span>
-                <div className='flex-1 h-1.5 bg-muted rounded-full overflow-hidden'>
-                  <div
-                    className='h-full rounded-full bg-primary transition-all duration-500'
-                    style={{ width: `${value}%` }}
-                  />
-                </div>
-                <span
-                  className={cn('text-xs tabular-nums w-7 text-right', scoreColor(value))}
-                >
-                  {value}
-                </span>
+          <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
+            {[
+              { label: '事業', desc: fortune.fortune.career_desc },
+              { label: '感情', desc: fortune.fortune.love_desc },
+              { label: '健康', desc: fortune.fortune.health_desc },
+              { label: '財運', desc: fortune.fortune.wealth_desc },
+            ].filter(({ desc }) => desc).map(({ label, desc }) => (
+              <div key={label}>
+                <p className='text-xs font-medium text-primary mb-1'>{label}</p>
+                <p className='text-sm text-muted-foreground leading-relaxed'>{desc}</p>
               </div>
             ))}
           </CardContent>
         </Card>
-      ) : null}
+      )}
 
       {/* quick action links */}
       <div className='grid grid-cols-3 gap-3'>
@@ -299,7 +284,7 @@ function HomeContent({ birthDate }: { birthDate: string }) {
             glyph: '◈',
             desc: '二十七宿相性',
           },
-          { href: '/knowledge', label: '知識庫', glyph: '卍', desc: '宿曜道典籍' },
+          { href: '/knowledge', label: '知識庫', glyph: '☯', desc: '宿曜道典籍' },
         ].map(({ href, label, glyph, desc }) => (
           <Link key={href} href={href}>
             <Card className='border border-border hover:border-primary/40 hover:shadow-sm transition-all duration-200 cursor-pointer h-full'>
