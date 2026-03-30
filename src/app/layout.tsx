@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Noto_Sans_JP, Noto_Serif_JP } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
+import { I18nProvider } from '@/lib/i18n'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { BottomTabs } from '@/components/layout/bottom-tabs'
@@ -47,13 +48,15 @@ export default function RootLayout({
           defaultTheme='dark'
           enableSystem
         >
-          <Navbar />
-          <main className='flex-1 pt-16 pb-16 md:pb-0'>
-            {children}
-          </main>
-          <Footer />
-          <BottomTabs />
-          <Toaster />
+          <I18nProvider>
+            <Navbar />
+            <main className='flex-1 pt-16 pb-16 md:pb-0'>
+              {children}
+            </main>
+            <Footer />
+            <BottomTabs />
+            <Toaster />
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>
