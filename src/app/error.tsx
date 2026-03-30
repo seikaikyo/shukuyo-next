@@ -1,9 +1,11 @@
 'use client'
 
+import * as Sentry from '@sentry/nextjs'
+import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/lib/i18n'
 
-export default function GlobalError({
+export default function Error({
   error,
   reset,
 }: {
@@ -11,6 +13,10 @@ export default function GlobalError({
   reset: () => void
 }) {
   const { t } = useTranslation()
+
+  useEffect(() => {
+    Sentry.captureException(error)
+  }, [error])
 
   return (
     <div className='flex flex-1 items-center justify-center py-24 px-4'>
