@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { useProfileStore } from '@/stores/profile'
+import { useTranslation } from '@/lib/i18n'
 import { ThemeToggle } from '@/components/theme-toggle'
 import {
   Sheet,
@@ -13,17 +15,18 @@ import {
 } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
-const navLinks = [
-  { href: '/', label: '首頁' },
-  { href: '/fortune', label: '運勢' },
-  { href: '/compatibility', label: '相性' },
-  { href: '/knowledge', label: '知識' },
+const navLinkDefs = [
+  { href: '/', key: 'nav.home' },
+  { href: '/fortune', key: 'nav.fortune' },
+  { href: '/compatibility', key: 'nav.match' },
+  { href: '/company', key: 'nav.company' },
+  { href: '/knowledge', key: 'nav.knowledge' },
 ]
 
-const locales = [
-  { code: 'zh', label: '中' },
-  { code: 'en', label: 'EN' },
-  { code: 'ja', label: '日' },
+const LOCALE_OPTIONS = [
+  { code: 'zh-TW', short: 'zh', label: '中' },
+  { code: 'en', short: 'en', label: 'EN' },
+  { code: 'ja', short: 'ja', label: '日' },
 ]
 
 function NavLink({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
@@ -48,22 +51,23 @@ function NavLink({ href, label, onClick }: { href: string; label: string; onClic
 }
 
 function LocaleSwitcher() {
-  const [active, setActive] = useState('zh')
+  const { locale, setLocale } = useProfileStore()
+  const activeShort = LOCALE_OPTIONS.find(l => l.code === locale)?.short || 'zh'
 
   return (
     <div className='flex items-center gap-0.5'>
-      {locales.map((locale) => (
+      {LOCALE_OPTIONS.map((opt) => (
         <button
-          key={locale.code}
-          onClick={() => setActive(locale.code)}
+          key={opt.code}
+          onClick={() => setLocale(opt.code)}
           className={cn(
             'px-2 py-1 text-xs rounded transition-colors duration-200',
-            active === locale.code
+            activeShort === opt.short
               ? 'text-primary font-medium'
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          {locale.label}
+          {opt.label}
         </button>
       ))}
     </div>
@@ -97,6 +101,9 @@ function HamburgerIcon({ open }: { open: boolean }) {
 
 export function Navbar() {
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
+
+  const navLinks = navLinkDefs.map((d) => ({ href: d.href, label: t(d.key) }))
 
   return (
     <header className='fixed top-0 inset-x-0 z-40 h-16 border-b border-border bg-background/95 backdrop-blur-sm'>
@@ -126,7 +133,7 @@ export function Navbar() {
           {/* hamburger — mobile only */}
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger
-              aria-label='開啟選單'
+              aria-label={t('nav.mainTabsLabel')}
               className={cn(
                 'md:hidden inline-flex items-center justify-center',
                 'w-9 h-9 rounded-md text-foreground',
@@ -138,7 +145,7 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side='right' className='w-64 pt-12 px-6'>
               <SheetHeader>
-                <SheetTitle className='font-serif text-lg text-primary'>宿曜道</SheetTitle>
+                <SheetTitle className='font-serif text-lg text-primary'>{t('header.title')}</SheetTitle>
               </SheetHeader>
               <div className='mt-6 flex flex-col gap-5'>
                 {navLinks.map((link) => (

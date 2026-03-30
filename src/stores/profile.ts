@@ -12,12 +12,38 @@ export interface Partner {
   emotionDirection?: EmotionDirection
 }
 
+export interface Company {
+  id: string
+  name: string
+  foundingDate: string
+  country?: string
+  memo?: string
+  jobUrl?: string
+}
+
+export interface JobSeeker {
+  id: string
+  name: string
+  birthDate: string
+  targetCompanyIds?: string[]
+}
+
+export interface HrCandidate {
+  id: string
+  name: string
+  birthDate: string
+}
+
 interface ProfileState {
   birthDate: string | null
   gender: string | null
   name: string | null
   locale: string
   partners: Partner[]
+  companies: Company[]
+  jobSeekers: JobSeeker[]
+  hrCandidates: HrCandidate[]
+  hrCompany: { name: string; foundingDate: string } | null
   setBirthDate: (date: string) => void
   setGender: (gender: string) => void
   setName: (name: string) => void
@@ -27,20 +53,29 @@ interface ProfileState {
   addPartner: (data: Omit<Partner, 'id'>) => void
   updatePartner: (id: string, data: Partial<Omit<Partner, 'id'>>) => void
   deletePartner: (id: string) => void
+  addCompany: (data: Omit<Company, 'id'>) => void
+  updateCompany: (id: string, data: Partial<Omit<Company, 'id'>>) => void
+  deleteCompany: (id: string) => void
+  addJobSeeker: (data: Omit<JobSeeker, 'id'>) => void
+  updateJobSeeker: (id: string, data: Partial<Omit<JobSeeker, 'id'>>) => void
+  deleteJobSeeker: (id: string) => void
+  addHrCandidate: (data: Omit<HrCandidate, 'id'>) => void
+  deleteHrCandidate: (id: string) => void
+  setHrCompany: (data: { name: string; foundingDate: string } | null) => void
   _hasHydrated: boolean
   _setHasHydrated: (v: boolean) => void
 }
 
-export const RELATION_TYPES: { value: PartnerRelationType; label: string; desc: string }[] = [
-  { value: 'lover', label: '戀人', desc: '戀愛關係' },
-  { value: 'spouse', label: '配偶', desc: '婚姻關係' },
-  { value: 'friend', label: '朋友', desc: '友誼關係' },
-  { value: 'colleague', label: '同事', desc: '職場關係' },
-  { value: 'family', label: '家人', desc: '家庭關係' },
-  { value: 'parent', label: '父母', desc: '親子關係' },
-  { value: 'boss', label: '主管', desc: '上司關係' },
-  { value: 'rival', label: '競爭', desc: '競爭關係' },
-  { value: 'ex', label: '前任', desc: '前戀人關係' },
+export const RELATION_TYPES: { value: PartnerRelationType; labelKey: string; descKey: string }[] = [
+  { value: 'lover', labelKey: 'relationTypes.lover', descKey: 'relationTypeDesc.lover' },
+  { value: 'spouse', labelKey: 'relationTypes.spouse', descKey: 'relationTypeDesc.spouse' },
+  { value: 'friend', labelKey: 'relationTypes.friend', descKey: 'relationTypeDesc.friend' },
+  { value: 'colleague', labelKey: 'relationTypes.colleague', descKey: 'relationTypeDesc.colleague' },
+  { value: 'family', labelKey: 'relationTypes.family', descKey: 'relationTypeDesc.family' },
+  { value: 'parent', labelKey: 'relationTypes.parent', descKey: 'relationTypeDesc.parent' },
+  { value: 'boss', labelKey: 'relationTypes.superior', descKey: 'relationTypeDesc.superior' },
+  { value: 'rival', labelKey: 'relationTypes.client', descKey: 'relationTypeDesc.client' },
+  { value: 'ex', labelKey: 'relationTypes.ex', descKey: 'relationTypeDesc.ex' },
 ]
 
 export const useProfileStore = create<ProfileState>()(
@@ -51,6 +86,10 @@ export const useProfileStore = create<ProfileState>()(
       name: null,
       locale: 'zh-TW',
       partners: [],
+      companies: [],
+      jobSeekers: [],
+      hrCandidates: [],
+      hrCompany: null,
       _hasHydrated: false,
       _setHasHydrated: (v) => set({ _hasHydrated: v }),
 
@@ -85,15 +124,71 @@ export const useProfileStore = create<ProfileState>()(
         set((state) => ({
           partners: state.partners.filter((p) => p.id !== id),
         })),
+
+      addCompany: (data) =>
+        set((state) => ({
+          companies: [
+            ...state.companies,
+            { ...data, id: `company_${Date.now()}_${Math.random().toString(36).slice(2, 7)}` },
+          ],
+        })),
+
+      updateCompany: (id, data) =>
+        set((state) => ({
+          companies: state.companies.map((c) => (c.id === id ? { ...c, ...data } : c)),
+        })),
+
+      deleteCompany: (id) =>
+        set((state) => ({
+          companies: state.companies.filter((c) => c.id !== id),
+        })),
+
+      addJobSeeker: (data) =>
+        set((state) => ({
+          jobSeekers: [
+            ...state.jobSeekers,
+            { ...data, id: `seeker_${Date.now()}_${Math.random().toString(36).slice(2, 7)}` },
+          ],
+        })),
+
+      updateJobSeeker: (id, data) =>
+        set((state) => ({
+          jobSeekers: state.jobSeekers.map((s) => (s.id === id ? { ...s, ...data } : s)),
+        })),
+
+      deleteJobSeeker: (id) =>
+        set((state) => ({
+          jobSeekers: state.jobSeekers.filter((s) => s.id !== id),
+        })),
+
+      addHrCandidate: (data) =>
+        set((state) => ({
+          hrCandidates: [
+            ...state.hrCandidates,
+            { ...data, id: `hr_${Date.now()}_${Math.random().toString(36).slice(2, 7)}` },
+          ],
+        })),
+
+      deleteHrCandidate: (id) =>
+        set((state) => ({
+          hrCandidates: state.hrCandidates.filter((c) => c.id !== id),
+        })),
+
+      setHrCompany: (data) => set({ hrCompany: data }),
     }),
     {
       name: 'shukuyo-profile',
+      version: 1,
       partialize: (state) => ({
         birthDate: state.birthDate,
         gender: state.gender,
         name: state.name,
         locale: state.locale,
         partners: state.partners,
+        companies: state.companies,
+        jobSeekers: state.jobSeekers,
+        hrCandidates: state.hrCandidates,
+        hrCompany: state.hrCompany,
       }),
       onRehydrateStorage: () => () => {
         useProfileStore.setState({ _hasHydrated: true })

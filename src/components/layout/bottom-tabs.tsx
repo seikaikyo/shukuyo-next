@@ -2,17 +2,22 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
-const tabs = [
-  { href: '/', label: '首頁', icon: '家' },
-  { href: '/fortune', label: '運勢', icon: '星' },
-  { href: '/compatibility', label: '相性', icon: '縁' },
-  { href: '/knowledge', label: '知識', icon: '書' },
+const tabDefs = [
+  { href: '/', key: 'nav.home', icon: '家' },
+  { href: '/fortune', key: 'nav.fortune', icon: '星' },
+  { href: '/compatibility', key: 'nav.match', icon: '縁' },
+  { href: '/company', key: 'nav.company', icon: '社' },
+  { href: '/knowledge', key: 'nav.knowledge', icon: '書' },
 ]
 
 export function BottomTabs() {
   const pathname = usePathname()
+  const { t } = useTranslation()
+
+  const tabs = tabDefs.map((d) => ({ ...d, label: t(d.key) }))
 
   return (
     <nav className='fixed bottom-0 inset-x-0 z-40 h-16 border-t border-border bg-background/95 backdrop-blur-sm md:hidden'>
