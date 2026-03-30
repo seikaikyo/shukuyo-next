@@ -12,18 +12,6 @@ export interface LuckyDay {
   conflicts?: string[]
 }
 
-export interface LuckyDaySummaryItem {
-  name: string
-  lucky_days: LuckyDay[]
-}
-
-export interface LuckyDayCategoryMeta {
-  key: string
-  name: string
-  icon: string
-  actions: { key: string; name: string }[]
-}
-
 export interface LuckyDayActionResult {
   key: string
   name: string
@@ -85,27 +73,6 @@ export interface LuckyCalendarData {
   days: Record<string, LuckyCalendarDay[]>
 }
 
-export interface PairLuckyCalendarData {
-  year: number
-  month: number
-  person1: {
-    mansion: string
-    reading: string
-    element: string
-  }
-  person2: {
-    mansion: string
-    reading: string
-    element: string
-  }
-  compatibility: {
-    relation: string
-    score: number
-    description: string
-  }
-  days: Record<string, LuckyCalendarDay[]>
-}
-
 export interface PairLuckyDaysResult {
   relation_type: string
   relation_name: string
@@ -127,20 +94,3 @@ export interface PairLuckyDaysResult {
   actions: PairLuckyAction[]
 }
 
-export interface CareerLuckyDate {
-  date: string
-  weekday: string
-  career: number
-  level: string
-  day_mansion: string
-  relation: string
-  flags: string[]
-  reason: string
-  reason_meta?: FortuneDescriptionMeta
-}
-
-export interface LuckyDatesResult {
-  good_dates: CareerLuckyDate[]
-  bad_dates: CareerLuckyDate[]
-  dark_weeks: { start: string; end: string }[]
-}

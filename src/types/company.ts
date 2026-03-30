@@ -146,14 +146,6 @@ export interface CompanyJobsResult {
   jobs: CompanyJob[]
 }
 
-export interface GcisCompany {
-  name: string
-  business_no: string
-  founding_date: string
-  responsible: string
-  capital: string
-}
-
 // 公司比較分析
 export interface ComparisonDrain {
   index: number
@@ -238,21 +230,3 @@ export interface ComparisonResult {
   verdict: ComparisonVerdict
 }
 
-export interface GlobalSearchResult {
-  name: string
-  founding_date: string
-  country: string
-  country_name: string
-  source: string
-  score: number
-  relation_name: string
-  relation_type: string
-  direction: string
-  distance_type: string
-  distance_type_name: string
-  verdict: string
-  person1_mansion: string
-  person1_element: string
-  person2_mansion: string
-  person2_element: string
-}

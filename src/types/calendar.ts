@@ -11,58 +11,45 @@ export interface SpecialDay {
   ryouhan_reversed?: boolean
 }
 
-export interface SpecialDaysResult {
+// ---- 月曆 API 回傳型別 ----
+
+export interface CalendarDayMansion {
+  name_jp: string
+  index: number
+  element: string
+}
+
+export interface CalendarPersonal {
+  relation_type: string
+  relation_name: string
+  fortune_score: number
+  level?: string
+  level_name?: string
+  sanki_period: string
+  sanki_period_index: number
+  sanki_day_type?: string
+  is_dark_week: boolean
+  rokugai?: string | null
+}
+
+export interface CalendarDay {
+  date: string
+  day: number
+  weekday: string
+  day_mansion: CalendarDayMansion
+  special_day: {
+    type: string
+    name: string
+    level: string
+    reading?: string
+    description?: string
+  } | null
+  ryouhan: { active: boolean } | null
+  personal: CalendarPersonal | null
+}
+
+export interface CalendarMonthData {
   year: number
   month: number
-  days: SpecialDay[]
-  summary: {
-    kanro_count: number
-    kongou_count: number
-    rasetsu_count: number
-  }
-}
-
-export interface JapaneseLuckyDay {
-  date: string
-  weekday: string
-  types: string[]
-  labels: string[]
-  descriptions?: string[]
-  is_super_lucky: boolean
-  stem_branch: string
-  rokuyo: string
-}
-
-export interface JapaneseUnluckyDay {
-  date: string
-  weekday: string
-  type: string
-  label: string
-  stem_branch: string
-  rokuyo: string
-}
-
-export interface JapaneseCalendarSummary {
-  tensya_count: number
-  ichiryumanbai_count: number
-  tora_count: number
-  mi_count: number
-  super_lucky_count: number
-  fujoubyou_count: number
-}
-
-export interface DayTypeDescription {
-  name: string
-  reading: string
-  short: string
-  description: string
-}
-
-export interface JapaneseCalendarResult {
-  year: number
-  month: number
-  days: JapaneseLuckyDay[]
-  unlucky_days: JapaneseUnluckyDay[]
-  summary: JapaneseCalendarSummary
-  day_type_descriptions?: Record<string, DayTypeDescription>
+  days: CalendarDay[]
 }

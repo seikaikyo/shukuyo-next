@@ -1,16 +1,24 @@
-import redFlagsZh from '../data/red_flags.json'
-import redFlagsJa from '../data/red_flags_ja.json'
-import redFlagsEn from '../data/red_flags_en.json'
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RedFlagsData = Record<string, any>
 
-const RED_FLAGS_MAP: Record<string, typeof redFlagsZh> = {
-  'zh-TW': redFlagsZh,
-  'ja': redFlagsJa,
-  'en': redFlagsEn,
-}
+const cache = new Map<string, RedFlagsData>()
 
-function getRedFlagsData(locale?: string): typeof redFlagsZh {
-  if (!locale) return redFlagsZh
-  return RED_FLAGS_MAP[locale] || redFlagsZh
+async function loadRedFlags(locale: string): Promise<RedFlagsData> {
+  const key = locale || 'zh-TW'
+  if (cache.has(key)) return cache.get(key)!
+  let data: RedFlagsData
+  switch (key) {
+    case 'ja':
+      data = (await import('../data/red_flags_ja.json')).default as RedFlagsData
+      break
+    case 'en':
+      data = (await import('../data/red_flags_en.json')).default as RedFlagsData
+      break
+    default:
+      data = (await import('../data/red_flags.json')).default as RedFlagsData
+  }
+  cache.set(key, data)
+  return data
 }
 
 const DIRECTION_KEY_MAP: Record<string, string> = {
@@ -31,22 +39,37 @@ export interface RedFlag {
 }
 
 /**
- * 取得紅旗資料
- * @param direction 方向（漢字或 romaji）
- * @param mode 面向：personal（預設）/ seeker / company
+ * 取得紅旗資料（async — 按需載入 locale JSON）
  */
-export function getRedFlag(direction: string, mode: string = 'personal', locale?: string): RedFlag | null {
+export async function getRedFlagAsync(direction: string, mode: string = 'personal', locale?: string): Promise<RedFlag | null> {
   const key = DIRECTION_KEY_MAP[direction]
   if (!key) return null
-  const data = getRedFlagsData(locale)
+  const data = await loadRedFlags(locale || 'zh-TW')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const entry = (data as any)[key]
   if (!entry) return null
-  // 新格式：entry.personal / entry.seeker / entry.company
   if (entry[mode]) return entry[mode] as RedFlag
-  // fallback 到 personal
   if (entry.personal) return entry.personal as RedFlag
-  // 舊格式相容（直接有 healthy/red_flag）
   if (entry.healthy) return entry as unknown as RedFlag
   return null
+}
+
+/** 同步版（用預載的 cache，首次可能 miss 回 null） */
+export function getRedFlag(direction: string, mode: string = 'personal', locale?: string): RedFlag | null {
+  const key = DIRECTION_KEY_MAP[direction]
+  if (!key) return null
+  const cached = cache.get(locale || 'zh-TW')
+  if (!cached) return null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const entry = (cached as any)[key]
+  if (!entry) return null
+  if (entry[mode]) return entry[mode] as RedFlag
+  if (entry.personal) return entry.personal as RedFlag
+  if (entry.healthy) return entry as unknown as RedFlag
+  return null
+}
+
+/** 預載指定 locale 到 cache */
+export function preloadRedFlags(locale: string): Promise<void> {
+  return loadRedFlags(locale).then(() => {})
 }
