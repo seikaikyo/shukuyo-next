@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2, Plus, ChevronRight, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '@/lib/i18n'
+import { scoreColor } from '@/utils/score-colors'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -10,20 +12,6 @@ import { useProfileStore, RELATION_TYPES } from '@/stores/profile'
 import { usePartnerCompatibilities } from '@/hooks/use-compatibility'
 import type { PartnerCompatibility, PartnerRelationType } from '@/types/compatibility'
 import type { Partner } from '@/stores/profile'
-
-// ---- helpers ----
-
-function scoreColor(score: number) {
-  if (score >= 80) return 'text-[var(--fortune-great)]'
-  if (score >= 60) return 'text-[var(--fortune-good)]'
-  if (score >= 40) return 'text-[var(--fortune-neutral)]'
-  if (score >= 20) return 'text-[var(--fortune-caution)]'
-  return 'text-[var(--fortune-bad)]'
-}
-
-function getRelationLabel(rel: string) {
-  return RELATION_TYPES.find((r) => r.value === rel)?.label ?? rel
-}
 
 // ---- PartnerFormDialog ----
 
@@ -36,6 +24,7 @@ interface PartnerFormDialogProps {
 
 function PartnerFormDialog({ open, editPartner, onClose, onSaved }: PartnerFormDialogProps) {
   const { addPartner, updatePartner } = useProfileStore()
+  const { t } = useTranslation()
   const [nickname, setNickname] = useState('')
   const [birthDate, setBirthDate] = useState('')
   const [relation, setRelation] = useState<string>('friend')
@@ -71,40 +60,42 @@ function PartnerFormDialog({ open, editPartner, onClose, onSaved }: PartnerFormD
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
       <div className='bg-background border border-border rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 flex flex-col gap-4'>
         <h3 className='text-base font-semibold text-foreground'>
-          {editPartner ? '編輯對象' : '新增對象'}
+          {editPartner ? t('v3.match.editPartner') : t('v3.match.addPartner')}
         </h3>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-muted-foreground'>暱稱</label>
+          <label className='text-xs text-muted-foreground'>{t('profile.nickname')}</label>
           <input
             type='text'
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            placeholder='請輸入暱稱'
+            placeholder={t('profile.nicknamePlaceholder')}
+            maxLength={50}
             className='h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-muted-foreground'>出生日期</label>
+          <label className='text-xs text-muted-foreground'>{t('profile.birthDate')}</label>
           <input
             type='date'
             value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)}
+            min='1900-01-01'
             max={new Date().toISOString().slice(0, 10)}
             className='h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-muted-foreground'>關係</label>
+          <label className='text-xs text-muted-foreground'>{t('profile.relation')}</label>
           <div className='flex flex-wrap gap-1.5'>
             {RELATION_TYPES.map((rt) => (
               <button
                 key={rt.value}
                 type='button'
                 onClick={() => setRelation(rt.value)}
-                title={rt.desc}
+                title={t(rt.descKey)}
                 className={cn(
                   'px-3 py-1.5 rounded-full text-xs border transition-colors',
                   relation === rt.value
@@ -112,15 +103,15 @@ function PartnerFormDialog({ open, editPartner, onClose, onSaved }: PartnerFormD
                     : 'border-border text-muted-foreground hover:border-primary hover:text-primary'
                 )}
               >
-                {rt.label}
+                {t(rt.labelKey)}
               </button>
             ))}
           </div>
         </div>
 
         <div className='flex gap-2 justify-end mt-2'>
-          <Button variant='outline' size='sm' onClick={onClose}>取消</Button>
-          <Button size='sm' disabled={!nickname || !birthDate} onClick={handleSave}>儲存</Button>
+          <Button variant='outline' size='sm' onClick={onClose}>{t('common.cancel')}</Button>
+          <Button size='sm' disabled={!nickname || !birthDate} onClick={handleSave}>{t('common.save')}</Button>
         </div>
       </div>
     </div>
@@ -138,6 +129,7 @@ interface PartnerCardProps {
 }
 
 function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCardProps) {
+  const { t } = useTranslation()
   const ds = compat?.directional_scores
   const verdict = compat?.verdict
 
@@ -155,7 +147,9 @@ function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCar
           <p className='text-sm font-medium text-foreground truncate'>{partner.nickname}</p>
           <div className='flex items-center gap-2 mt-0.5'>
             {partner.relation && (
-              <span className='text-xs text-muted-foreground'>{getRelationLabel(partner.relation)}</span>
+              <span className='text-xs text-muted-foreground'>
+                {t(RELATION_TYPES.find((r) => r.value === partner.relation)?.labelKey ?? partner.relation)}
+              </span>
             )}
             <span className='text-xs text-muted-foreground tabular-nums'>{partner.birthDate}</span>
           </div>
@@ -173,14 +167,14 @@ function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCar
         {ds ? (
           <div className='flex flex-col gap-0.5 items-end shrink-0 min-w-[80px]'>
             <div className='flex items-center gap-1 text-xs'>
-              <span className='text-muted-foreground'>我→</span>
+              <span className='text-muted-foreground'>{t('common.me')}</span>
               <span className={cn('font-bold tabular-nums', scoreColor(ds.person1_to_person2.score))}>
                 {ds.person1_to_person2.score}
               </span>
               <span className='text-[10px] text-muted-foreground'>{ds.person1_to_person2.direction}</span>
             </div>
             <div className='flex items-center gap-1 text-xs'>
-              <span className='text-muted-foreground'>對→</span>
+              <span className='text-muted-foreground'>{t('common.other')}</span>
               <span className={cn('font-bold tabular-nums', scoreColor(ds.person2_to_person1.score))}>
                 {ds.person2_to_person1.score}
               </span>
@@ -198,19 +192,19 @@ function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCar
             type='button'
             onClick={() => onEdit(partner.id)}
             className='p-1.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
-            aria-label='編輯'
+            aria-label={t('common.edit')}
           >
-            <Pencil className='h-3.5 w-3.5' />
+            <Pencil className='h-3.5 w-3.5' aria-hidden='true' />
           </button>
           <button
             type='button'
             onClick={() => onDelete(partner.id)}
             className='p-1.5 rounded text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors'
-            aria-label='刪除'
+            aria-label={t('common.delete')}
           >
-            <Trash2 className='h-3.5 w-3.5' />
+            <Trash2 className='h-3.5 w-3.5' aria-hidden='true' />
           </button>
-          <ChevronRight className='h-4 w-4 text-muted-foreground' />
+          <ChevronRight className='h-4 w-4 text-muted-foreground' aria-hidden='true' />
         </div>
       </div>
 
@@ -225,7 +219,7 @@ function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCar
       {/* verdict warning */}
       {verdict && (verdict.severity === 'caution' || verdict.severity === 'warning') && (
         <div className='px-4 pb-2 flex items-start gap-2 text-xs text-amber-600 dark:text-amber-400' onClick={(e) => e.stopPropagation()}>
-          <AlertTriangle className='h-3.5 w-3.5 shrink-0 mt-0.5' />
+          <AlertTriangle className='h-3.5 w-3.5 shrink-0 mt-0.5' aria-hidden='true' />
           <span className='truncate'>{verdict.verdict}</span>
         </div>
       )}
@@ -240,6 +234,7 @@ interface PartnerListProps {
 }
 
 export function PartnerList({ onSelectPartner }: PartnerListProps) {
+  const { t } = useTranslation()
   const { partners, deletePartner } = useProfileStore()
   const { partnerCompatibilities, loading, fetchAll } = usePartnerCompatibilities()
 
@@ -256,7 +251,8 @@ export function PartnerList({ onSelectPartner }: PartnerListProps) {
   }
 
   function handleDelete(id: string) {
-    if (confirm('確定要刪除這個對象嗎？')) {
+    const p = partners.find((p) => p.id === id)
+    if (confirm(t('profile.confirmDeletePartner', { name: p?.nickname ?? '' }))) {
       deletePartner(id)
       fetchAll()
     }
@@ -272,7 +268,7 @@ export function PartnerList({ onSelectPartner }: PartnerListProps) {
     <div className='flex flex-col gap-3'>
       <div className='flex items-center justify-between'>
         <h3 className='text-sm font-medium text-foreground'>
-          已儲存對象
+          {t('profile.savedPartners')}
           <span className='ml-1.5 text-xs text-muted-foreground tabular-nums'>{partners.length}/20</span>
         </h3>
         <Button
@@ -282,8 +278,8 @@ export function PartnerList({ onSelectPartner }: PartnerListProps) {
           onClick={() => { setEditPartner(null); setFormOpen(true) }}
           className='flex items-center gap-1'
         >
-          <Plus className='h-3.5 w-3.5' />
-          新增
+          <Plus className='h-3.5 w-3.5' aria-hidden='true' />
+          {t('common.add')}
         </Button>
       </div>
 
@@ -296,15 +292,15 @@ export function PartnerList({ onSelectPartner }: PartnerListProps) {
       {!loading && !partners.length && (
         <Card>
           <CardContent className='pt-8 pb-8 flex flex-col items-center gap-3 text-center'>
-            <p className='text-sm text-muted-foreground'>尚未新增任何對象</p>
-            <p className='text-xs text-muted-foreground max-w-xs'>新增後可快速查詢和對方的相性，並保存結果</p>
+            <p className='text-sm text-muted-foreground'>{t('v3.match.noSavedPartners')}</p>
+            <p className='text-xs text-muted-foreground max-w-xs'>{t('v3.match.pairLuckyDesc')}</p>
             <Button
               size='sm'
               onClick={() => { setEditPartner(null); setFormOpen(true) }}
               className='flex items-center gap-1'
             >
-              <Plus className='h-3.5 w-3.5' />
-              新增第一個對象
+              <Plus className='h-3.5 w-3.5' aria-hidden='true' />
+              {t('v3.match.addPartner')}
             </Button>
           </CardContent>
         </Card>
@@ -361,6 +357,7 @@ function PartnerMatrix({
   partnerCompatibilities: PartnerCompatibility[]
   onSelect: (id: string) => void
 }) {
+  const { t } = useTranslation()
   const grouped = RELATION_ORDER
     .map((type) => ({
       type,
@@ -374,9 +371,9 @@ function PartnerMatrix({
   return (
     <div className='flex flex-col gap-3 mt-2'>
       <div className='flex items-center gap-3'>
-        <h4 className='text-sm font-medium text-foreground'>相性分佈</h4>
+        <h4 className='text-sm font-medium text-foreground'>{t('v3.match.matrixMode')}</h4>
         <span className='text-xs text-muted-foreground'>
-          和諧率 <span className={cn('font-bold', harmony >= 50 ? 'text-emerald-600' : 'text-amber-600')}>{harmony}%</span>
+          {t('v3.match.harmonyRate')} <span className={cn('font-bold', harmony >= 50 ? 'text-emerald-600' : 'text-amber-600')}>{harmony}%</span>
         </span>
       </div>
       {grouped.map((group) => (

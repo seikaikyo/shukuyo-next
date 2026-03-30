@@ -2,27 +2,14 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '@/lib/i18n'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import type { CompatibilityResult } from '@/types/compatibility'
-
-// ---- スコアカラー helpers ----
-
-function scoreColor(score: number) {
-  if (score >= 80) return 'text-[var(--fortune-great)]'
-  if (score >= 60) return 'text-[var(--fortune-good)]'
-  if (score >= 40) return 'text-[var(--fortune-neutral)]'
-  if (score >= 20) return 'text-[var(--fortune-caution)]'
-  return 'text-[var(--fortune-bad)]'
-}
-
-function scoreBorderLeft(score: number) {
-  if (score >= 80) return 'border-l-[var(--fortune-great)]'
-  if (score >= 60) return 'border-l-[var(--fortune-good)]'
-  if (score >= 40) return 'border-l-[var(--fortune-neutral)]'
-  if (score >= 20) return 'border-l-[var(--fortune-caution)]'
-  return 'border-l-[var(--fortune-bad)]'
-}
+import { getRedFlag } from '@/utils/red-flags'
+import { getGapGuidance, getGapType, GAP_THRESHOLD } from '@/utils/gap-guidance'
+import { scoreColor, scoreBorderLeft } from '@/utils/score-colors'
+import { useProfileStore } from '@/stores/profile'
 
 function verdictBg(severity: string) {
   if (severity === 'good') return 'bg-emerald-50 dark:bg-emerald-950/30 border-l-emerald-500'
@@ -45,11 +32,13 @@ interface PairResultProps {
   partnerRelation?: string
 }
 
-export function PairResult({ result }: PairResultProps) {
+export function PairResult({ result, partnerRelation }: PairResultProps) {
+  const { t } = useTranslation()
   const { score, relation, person1, person2, calculation } = result
   const ds = result.directional_scores
   const da = result.direction_analysis
   const pg = result.practical_guidance
+  const locale = useProfileStore((s) => s.locale)
   const verdict = da?.verdict
   const initiative = relation.initiative
   const hasDirectional = ds && ds.person1_to_person2.score !== ds.person2_to_person1.score
@@ -93,7 +82,7 @@ export function PairResult({ result }: PairResultProps) {
       {ds && (
         <Card>
           <CardContent className='pt-4 pb-4 flex flex-col gap-2'>
-            <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1'>雙向影響力</p>
+            <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1'>{t('v3.match.directionTitle')}</p>
             {[
               { label: `${person1.mansion} → ${person2.mansion}`, dir: ds.person1_to_person2 },
               { label: `${person2.mansion} → ${person1.mansion}`, dir: ds.person2_to_person1 },
@@ -131,8 +120,8 @@ export function PairResult({ result }: PairResultProps) {
                 onClick={() => setShowDetail(!showDetail)}
                 className='text-xs text-primary text-left hover:underline flex items-center gap-0.5'
               >
-                {showDetail ? '收起' : '詳細說明'}
-                {showDetail ? <ChevronUp className='h-3 w-3' /> : <ChevronDown className='h-3 w-3' />}
+                {showDetail ? t('common.collapse') : t('common.details')}
+                {showDetail ? <ChevronUp className='h-3 w-3' aria-hidden='true' /> : <ChevronDown className='h-3 w-3' aria-hidden='true' />}
               </button>
               {showDetail && (
                 <p className='text-sm text-muted-foreground leading-relaxed'>{relation.detailed}</p>
@@ -162,7 +151,7 @@ export function PairResult({ result }: PairResultProps) {
         <Card className='border border-primary/20 bg-primary/5'>
           <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
             <div className='flex items-center gap-2 flex-wrap'>
-              <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>主導建議</p>
+              <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>{t('v3.match.deepAnalysis')}</p>
               {relation.direction && (
                 <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>
                   {relation.direction}宿
@@ -180,10 +169,10 @@ export function PairResult({ result }: PairResultProps) {
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1'>
               {initiative.do.length > 0 && (
                 <div className='flex flex-col gap-1'>
-                  <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>建議做</p>
+                  <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>{t('v3.match.doList')}</p>
                   <ul className='flex flex-col gap-0.5'>
                     {initiative.do.map((item, i) => (
-                      <li key={i} className='text-xs text-muted-foreground flex items-start gap-1'>
+                      <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
                         <span className='text-emerald-500 shrink-0 mt-0.5'>·</span>
                         {item}
                       </li>
@@ -193,10 +182,10 @@ export function PairResult({ result }: PairResultProps) {
               )}
               {initiative.avoid.length > 0 && (
                 <div className='flex flex-col gap-1'>
-                  <p className='text-xs font-medium text-red-600 dark:text-red-400'>避免</p>
+                  <p className='text-xs font-medium text-red-600 dark:text-red-400'>{t('v3.match.avoidList')}</p>
                   <ul className='flex flex-col gap-0.5'>
                     {initiative.avoid.map((item, i) => (
-                      <li key={i} className='text-xs text-muted-foreground flex items-start gap-1'>
+                      <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
                         <span className='text-red-500 shrink-0 mt-0.5'>·</span>
                         {item}
                       </li>
@@ -212,7 +201,7 @@ export function PairResult({ result }: PairResultProps) {
       {/* 建議 / tips / good_for */}
       <Card>
         <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-          <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>關係建議</p>
+          <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>{t('v3.match.relationDetail')}</p>
           {relation.advice && (
             <p className='text-sm text-muted-foreground leading-relaxed border-l-2 border-primary/40 pl-3'>
               {relation.advice}
@@ -221,10 +210,10 @@ export function PairResult({ result }: PairResultProps) {
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             {relation.tips && relation.tips.length > 0 && (
               <div className='flex flex-col gap-1'>
-                <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>訣竅</p>
+                <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>{t('v3.match.strengths')}</p>
                 <ul className='flex flex-col gap-0.5'>
                   {relation.tips.map((tip, i) => (
-                    <li key={i} className='text-xs text-muted-foreground flex items-start gap-1.5'>
+                    <li key={`${i}-${tip}`} className='text-xs text-muted-foreground flex items-start gap-1.5'>
                       <span className='text-emerald-500 shrink-0 mt-0.5'>·</span>
                       {tip}
                     </li>
@@ -234,10 +223,10 @@ export function PairResult({ result }: PairResultProps) {
             )}
             {relation.avoid && relation.avoid.length > 0 && (
               <div className='flex flex-col gap-1'>
-                <p className='text-xs font-medium text-red-600 dark:text-red-400'>禁忌</p>
+                <p className='text-xs font-medium text-red-600 dark:text-red-400'>{t('v3.match.caution')}</p>
                 <ul className='flex flex-col gap-0.5'>
                   {relation.avoid.map((item, i) => (
-                    <li key={i} className='text-xs text-muted-foreground flex items-start gap-1.5'>
+                    <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1.5'>
                       <span className='text-red-500 shrink-0 mt-0.5'>·</span>
                       {item}
                     </li>
@@ -248,7 +237,7 @@ export function PairResult({ result }: PairResultProps) {
           </div>
           {relation.good_for && relation.good_for.length > 0 && (
             <div className='flex flex-col gap-1'>
-              <p className='text-xs font-medium text-muted-foreground'>適合活動</p>
+              <p className='text-xs font-medium text-muted-foreground'>{t('v3.match.sceneTitle')}</p>
               <div className='flex flex-wrap gap-1'>
                 {relation.good_for.map((g) => (
                   <span key={g} className='text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
@@ -265,10 +254,10 @@ export function PairResult({ result }: PairResultProps) {
       {da && (
         <Card>
           <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
-            <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>方向分析</p>
+            <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>{t('v3.match.directionTitle')}</p>
             {[
               {
-                label: `${person1.mansion} 的視角`,
+                label: `${person1.mansion} ${t('v3.match.youToThem')}`,
                 direction: da.direction,
                 roleName: da.role_name,
                 narrative: da.narrative || da.person1_perspective,
@@ -278,7 +267,7 @@ export function PairResult({ result }: PairResultProps) {
                 careerAdvice: pg?.person1_to_person2?.career_advice,
               },
               {
-                label: `${person2.mansion} 的視角`,
+                label: `${person2.mansion} ${t('v3.match.youToThem')}`,
                 direction: da.inverse_direction,
                 roleName: da.inverse_role_name,
                 narrative: da.inverse_narrative || da.person2_perspective,
@@ -303,24 +292,24 @@ export function PairResult({ result }: PairResultProps) {
                 )}
                 {!initiative && (doList?.length || avoidList?.length || careerAdvice) && (
                   <div className='flex flex-col gap-1'>
-                    {doList?.length && (
+                    {!!doList?.length && (
                       <div>
-                        <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-0.5'>建議</p>
+                        <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-0.5'>{t('v3.match.doList')}</p>
                         <ul className='flex flex-col gap-0.5'>
                           {doList.map((item, i) => (
-                            <li key={i} className='text-xs text-muted-foreground flex items-start gap-1'>
+                            <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
                               <span className='shrink-0 mt-0.5 text-emerald-500'>·</span>{item}
                             </li>
                           ))}
                         </ul>
                       </div>
                     )}
-                    {avoidList?.length && (
+                    {!!avoidList?.length && (
                       <div>
-                        <p className='text-xs font-medium text-red-600 dark:text-red-400 mb-0.5'>避免</p>
+                        <p className='text-xs font-medium text-red-600 dark:text-red-400 mb-0.5'>{t('v3.match.avoidList')}</p>
                         <ul className='flex flex-col gap-0.5'>
                           {avoidList.map((item, i) => (
-                            <li key={i} className='text-xs text-muted-foreground flex items-start gap-1'>
+                            <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
                               <span className='shrink-0 mt-0.5 text-red-500'>·</span>{item}
                             </li>
                           ))}
@@ -338,6 +327,69 @@ export function PairResult({ result }: PairResultProps) {
         </Card>
       )}
 
+      {/* 紅旗分析 + 差距指引 */}
+      {da && ds && (() => {
+        const p1Score = ds.person1_to_person2.score
+        const p2Score = ds.person2_to_person1.score
+        const gap = Math.abs(p1Score - p2Score)
+        const direction = da.direction
+        const redFlag = getRedFlag(direction, 'personal', locale)
+        const showGap = gap > GAP_THRESHOLD && direction
+        const gapType = direction ? getGapType(direction, p1Score, p2Score) : null
+        const gapRelation = partnerRelation || 'friend'
+        const gapText = gapType && direction ? getGapGuidance(direction, gapType, gapRelation, locale) : null
+
+        if (!redFlag && !showGap) return null
+
+        return (
+          <Card>
+            <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
+              <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>{t('compat.healthIndicator')}</p>
+              {redFlag && (
+                <div className='flex flex-col gap-2'>
+                  <div className='flex items-start gap-2'>
+                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-emerald-500' />
+                    <div>
+                      <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>{t('compat.healthy')}</p>
+                      <p className='text-xs text-muted-foreground'>{redFlag.healthy}</p>
+                    </div>
+                  </div>
+                  <div className='flex items-start gap-2'>
+                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-red-500' />
+                    <div>
+                      <p className='text-xs font-medium text-red-600 dark:text-red-400'>{t('compat.redFlag')}</p>
+                      <p className='text-xs text-muted-foreground'>{redFlag.red_flag}</p>
+                    </div>
+                  </div>
+                  <div className='flex items-start gap-2'>
+                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-sky-500' />
+                    <div>
+                      <p className='text-xs font-medium text-sky-600 dark:text-sky-400'>{t('compat.selfTest')}</p>
+                      <p className='text-xs text-muted-foreground'>{redFlag.test}</p>
+                    </div>
+                  </div>
+                  <div className='flex items-start gap-2'>
+                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-primary' />
+                    <div>
+                      <p className='text-xs font-medium text-primary'>{t('compat.actionAdvice')}</p>
+                      <p className='text-xs text-muted-foreground'>{redFlag.action}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {showGap && gapText && (
+                <div className='mt-1 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-500/20 px-3 py-2.5'>
+                  <p className='text-xs font-medium text-amber-700 dark:text-amber-400 mb-1'>
+                    {t('compat.energyGap', { gap: String(gap) })}
+                  </p>
+                  <p className='text-xs text-muted-foreground leading-relaxed'>{gapText}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )
+      })()}
+
       {/* 角色別指南 */}
       {relation.roles && Object.keys(relation.roles).filter(k => !k.startsWith('_')).length > 0 && (
         <Card>
@@ -348,9 +400,9 @@ export function PairResult({ result }: PairResultProps) {
               className='flex items-center justify-between w-full text-left'
             >
               <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-                角色指南（{Object.keys(relation.roles).filter(k => !k.startsWith('_')).length} 種）
+                {t('compat.roleGuide')} ({Object.keys(relation.roles).filter(k => !k.startsWith('_')).length})
               </p>
-              {showRoles ? <ChevronUp className='h-4 w-4 text-muted-foreground' /> : <ChevronDown className='h-4 w-4 text-muted-foreground' />}
+              {showRoles ? <ChevronUp className='h-4 w-4 text-muted-foreground' aria-hidden='true' /> : <ChevronDown className='h-4 w-4 text-muted-foreground' aria-hidden='true' />}
             </button>
             {showRoles && (
               <PairRolesContent roles={relation.roles} />
@@ -369,9 +421,9 @@ export function PairResult({ result }: PairResultProps) {
               className='flex items-center justify-between w-full text-left'
             >
               <p className='text-xs font-medium text-muted-foreground uppercase tracking-widest'>
-                經典文獻解析
+                {t('compat.classicalAnalysis')}
               </p>
-              {showClassical ? <ChevronUp className='h-4 w-4 text-muted-foreground' /> : <ChevronDown className='h-4 w-4 text-muted-foreground' />}
+              {showClassical ? <ChevronUp className='h-4 w-4 text-muted-foreground' aria-hidden='true' /> : <ChevronDown className='h-4 w-4 text-muted-foreground' aria-hidden='true' />}
             </button>
             {showClassical && (
               <PairClassicalContent
@@ -385,23 +437,24 @@ export function PairResult({ result }: PairResultProps) {
       )}
 
       {/* 距離 */}
-      <p className='text-xs text-muted-foreground text-right'>宿距：{calculation.distance}</p>
+      <p className='text-xs text-muted-foreground text-right'>{t('compat.distance')}: {calculation.distance}</p>
     </div>
   )
 }
 
 // ---- 角色指南內容 ----
 
-const ROLE_LABELS: Record<string, string> = {
-  lover: '戀人',
-  spouse: '配偶',
-  friend: '朋友',
-  colleague: '同事',
-  family: '家人',
-  parent: '父母',
+const ROLE_LABEL_KEYS: Record<string, string> = {
+  lover: 'relationTypes.lover',
+  spouse: 'relationTypes.spouse',
+  friend: 'relationTypes.friend',
+  colleague: 'relationTypes.colleague',
+  family: 'relationTypes.family',
+  parent: 'relationTypes.parent',
 }
 
 function PairRolesContent({ roles }: { roles: Record<string, unknown> }) {
+  const { t } = useTranslation()
   const ROLE_ORDER = ['lover', 'spouse', 'friend', 'colleague', 'family', 'parent']
   const entries = ROLE_ORDER
     .filter((k) => roles[k])
@@ -410,19 +463,19 @@ function PairRolesContent({ roles }: { roles: Record<string, unknown> }) {
       const paragraphs = (val && typeof val === 'object' && 'paragraphs' in (val as object))
         ? (val as { paragraphs: { sutra: string; ref: string; cbeta_url?: string; interpretation: string }[] }).paragraphs
         : []
-      return { key: k, label: ROLE_LABELS[k] || k, paragraphs }
+      return { key: k, labelKey: ROLE_LABEL_KEYS[k] || k, paragraphs }
     })
 
   if (!entries.length) return null
 
   return (
     <div className='flex flex-col gap-4'>
-      <p className='text-xs text-muted-foreground'>依宿曜道原典，各關係角色的處世指引</p>
+      <p className='text-xs text-muted-foreground'>{t('compat.roleGuideDesc')}</p>
       {entries.map((entry) => (
         <div key={entry.key} className='flex flex-col gap-2 pb-3 border-b border-border last:border-0 last:pb-0'>
-          <p className='text-xs font-semibold text-primary'>{entry.label}</p>
+          <p className='text-xs font-semibold text-primary'>{t(entry.labelKey)}</p>
           {entry.paragraphs.map((p, i) => (
-            <div key={i} className='flex flex-col gap-0.5'>
+            <div key={`${i}-${p.ref}`} className='flex flex-col gap-0.5'>
               <p className='text-xs text-muted-foreground italic'>
                 {p.cbeta_url ? (
                   <a href={p.cbeta_url} target='_blank' rel='noopener noreferrer' className='underline text-primary/70 hover:text-primary'>
@@ -455,9 +508,10 @@ function PairClassicalContent({
   person1Mansion: string
   person2Mansion: string
 }) {
+  const { t } = useTranslation()
   return (
     <div className='flex flex-col gap-3'>
-      <p className='text-xs text-muted-foreground'>依《宿曜經》原典解析雙向關係</p>
+      <p className='text-xs text-muted-foreground'>{t('compat.classicalDesc')}</p>
       {[
         {
           label: `${person1Mansion} → ${person2Mansion}`,

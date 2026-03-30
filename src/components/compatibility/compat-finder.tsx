@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '@/lib/i18n'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCompatibilityFinder } from '@/hooks/use-compatibility'
 import type { CompatibilityFinderResult } from '@/types/compatibility'
@@ -30,6 +31,7 @@ function relationScoreColor(key: string) {
 }
 
 export function CompatFinder() {
+  const { t } = useTranslation()
   const { finder, loading, fetchFinder } = useCompatibilityFinder()
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export function CompatFinder() {
   if (!finder) {
     return (
       <p className='text-sm text-muted-foreground text-center py-8'>
-        請先設定你的出生日期，才能查看相性探索
+        {t('v3.match.noFinderData')}
       </p>
     )
   }
@@ -62,7 +64,7 @@ export function CompatFinder() {
           <span className='text-xs text-muted-foreground'>（{finder.your_mansion.reading}）</span>
           <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>{finder.your_mansion.element}</span>
         </div>
-        <p className='text-xs text-muted-foreground'>以下是與你的宿相性最佳至最差的關係分類</p>
+        <p className='text-xs text-muted-foreground'>{t('v3.match.suggestedMansions')}</p>
       </div>
 
       {/* 各關係分組 */}
@@ -82,7 +84,7 @@ export function CompatFinder() {
                 <span className='text-sm font-semibold text-foreground'>{group.relation}</span>
                 <span className='text-xs text-muted-foreground'>（{group.reading}）</span>
                 <span className={cn('text-sm font-bold tabular-nums ml-auto', relationScoreColor(relKey))}>
-                  {group.score} 分
+                  {t('common.score', { n: group.score })}
                 </span>
               </div>
               <p className='text-xs text-muted-foreground leading-relaxed'>{group.description}</p>
