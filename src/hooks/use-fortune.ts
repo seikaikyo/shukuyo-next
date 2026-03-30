@@ -9,15 +9,23 @@ export function useFortune() {
   const [monthlyFortune, setMonthlyFortune] = useState<MonthlyFortune | null>(null)
   const [yearlyFortune, setYearlyFortune] = useState<YearlyFortune | null>(null)
   const [yearlyRange, setYearlyRange] = useState<YearlyFortune[]>([])
-  const [loading, setLoading] = useState(false)
+
+  const [dailyLoading, setDailyLoading] = useState(false)
+  const [weeklyLoading, setWeeklyLoading] = useState(false)
+  const [monthlyLoading, setMonthlyLoading] = useState(false)
+  const [yearlyLoading, setYearlyLoading] = useState(false)
+  const [rangeLoading, setRangeLoading] = useState(false)
+
   const [error, setError] = useState<string | null>(null)
+
+  const loading = dailyLoading || weeklyLoading || monthlyLoading || yearlyLoading || rangeLoading
 
   const fetchDaily = useCallback(async (
     birthDate: string,
     targetDate?: string,
     lang = 'zh-TW'
   ) => {
-    setLoading(true)
+    setDailyLoading(true)
     setError(null)
     try {
       const date = targetDate || new Date().toISOString().split('T')[0]
@@ -30,7 +38,7 @@ export function useFortune() {
       setError('error.fetchFailed')
       return null
     } finally {
-      setLoading(false)
+      setDailyLoading(false)
     }
   }, [])
 
@@ -39,8 +47,7 @@ export function useFortune() {
     centerDate?: string,
     lang = 'zh-TW'
   ) => {
-    setLoading(true)
-    setError(null)
+    setWeeklyLoading(true)
     try {
       const date = centerDate || new Date().toISOString().split('T')[0]
       const data = await apiGet<WeeklyFortune>(
@@ -49,10 +56,9 @@ export function useFortune() {
       setWeeklyFortune(data)
       return data
     } catch {
-      setError('error.fetchFailed')
       return null
     } finally {
-      setLoading(false)
+      setWeeklyLoading(false)
     }
   }, [])
 
@@ -62,7 +68,7 @@ export function useFortune() {
     month: number,
     lang = 'zh-TW'
   ) => {
-    setLoading(true)
+    setMonthlyLoading(true)
     setError(null)
     try {
       const data = await apiGet<MonthlyFortune>(
@@ -74,7 +80,7 @@ export function useFortune() {
       setError('error.fetchFailed')
       return null
     } finally {
-      setLoading(false)
+      setMonthlyLoading(false)
     }
   }, [])
 
@@ -83,7 +89,7 @@ export function useFortune() {
     year: number,
     lang = 'zh-TW'
   ) => {
-    setLoading(true)
+    setYearlyLoading(true)
     setError(null)
     try {
       const data = await apiGet<YearlyFortune>(
@@ -95,7 +101,7 @@ export function useFortune() {
       setError('error.fetchFailed')
       return null
     } finally {
-      setLoading(false)
+      setYearlyLoading(false)
     }
   }, [])
 
@@ -105,7 +111,7 @@ export function useFortune() {
     endYear: number,
     lang = 'zh-TW'
   ) => {
-    setLoading(true)
+    setRangeLoading(true)
     setError(null)
     try {
       const data = await apiGet<YearlyFortune[]>(
@@ -117,7 +123,7 @@ export function useFortune() {
       setError('error.fetchFailed')
       return null
     } finally {
-      setLoading(false)
+      setRangeLoading(false)
     }
   }, [])
 
@@ -128,6 +134,8 @@ export function useFortune() {
     yearlyFortune,
     yearlyRange,
     loading,
+    dailyLoading,
+    weeklyLoading,
     error,
     fetchDaily,
     fetchWeekly,

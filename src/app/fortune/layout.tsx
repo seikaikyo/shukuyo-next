@@ -3,19 +3,22 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-
-const tabs = [
-  { href: '/fortune/daily', label: '日運' },
-  { href: '/fortune/weekly', label: '週運' },
-  { href: '/fortune/monthly', label: '月運' },
-  { href: '/fortune/yearly', label: '年運' },
-  { href: '/fortune/decade', label: '十年運' },
-  { href: '/fortune/lucky', label: '吉日' },
-  { href: '/fortune/startup', label: '創業運' },
-]
+import { useTranslation } from '@/lib/i18n'
 
 function FortuneTabBar() {
   const pathname = usePathname()
+  const { t } = useTranslation()
+
+  const tabs = [
+    { href: '/fortune/daily', label: t('fortune.daily') },
+    { href: '/fortune/weekly', label: t('fortune.weekly') },
+    { href: '/fortune/monthly', label: t('fortune.monthly') },
+    { href: '/fortune/yearly', label: t('fortune.yearly') },
+    { href: '/fortune/decade', label: t('fortune.decade') },
+    { href: '/fortune/lucky', label: t('fortune.luckyDays.tab') },
+    { href: '/fortune/calendar', label: t('fortune.calendarView') },
+    { href: '/fortune/startup', label: t('startup.navLabel') },
+  ]
 
   return (
     <div className='border-b border-border bg-background sticky top-16 z-30'>

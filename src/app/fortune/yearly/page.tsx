@@ -3,29 +3,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useProfileStore } from '@/stores/profile'
 import { useFortune } from '@/hooks/use-fortune'
+import { useTranslation } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { scoreColor, scoreBorder } from '@/utils/score-colors'
 import type { YearlyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
-
-function scoreColor(score: number) {
-  if (score >= 80) return 'text-[var(--fortune-great)]'
-  if (score >= 60) return 'text-[var(--fortune-good)]'
-  if (score >= 40) return 'text-[var(--fortune-neutral)]'
-  if (score >= 20) return 'text-[var(--fortune-caution)]'
-  return 'text-[var(--fortune-bad)]'
-}
-
-function scoreBorder(score: number) {
-  if (score >= 80) return 'border-[var(--fortune-great)]'
-  if (score >= 60) return 'border-[var(--fortune-good)]'
-  if (score >= 40) return 'border-[var(--fortune-neutral)]'
-  if (score >= 20) return 'border-[var(--fortune-caution)]'
-  return 'border-[var(--fortune-bad)]'
-}
 
 function scoreBg(score: number) {
   if (score >= 80) return 'bg-emerald-500/15'
@@ -43,28 +29,30 @@ function YearNav({
   onPrev,
   onNext,
   onToday,
+  t,
 }: {
   year: number
   currentYear: number
   onPrev: () => void
   onNext: () => void
   onToday: () => void
+  t: (key: string, params?: Record<string, string | number>) => string
 }) {
   return (
     <div className='flex items-center justify-center gap-2 py-4'>
       <button
         onClick={onPrev}
-        aria-label='上一年'
+        aria-label={t('fortune.prevYear')}
         className='h-8 w-8 rounded-full flex items-center justify-center text-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200'
       >
         ‹
       </button>
       <span className='text-sm font-medium text-foreground min-w-24 text-center'>
-        {year} 年
+        {year} {t('fortune.yearSuffix')}
       </span>
       <button
         onClick={onNext}
-        aria-label='下一年'
+        aria-label={t('fortune.nextYear')}
         className='h-8 w-8 rounded-full flex items-center justify-center text-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200'
       >
         ›
@@ -74,14 +62,14 @@ function YearNav({
           onClick={onToday}
           className='text-xs text-primary hover:text-primary/80 underline-offset-2 hover:underline transition-colors duration-200 ml-1'
         >
-          今年
+          {t('fortune.thisYear')}
         </button>
       )}
     </div>
   )
 }
 
-function YearOverviewCard({ yearly }: { yearly: YearlyFortune }) {
+function YearOverviewCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   const { overall, level_name, level } = yearly.fortune
   const star = yearly.kuyou_star
 
@@ -93,16 +81,16 @@ function YearOverviewCard({ yearly }: { yearly: YearlyFortune }) {
             <span className={cn('text-5xl font-bold tabular-nums leading-none', scoreColor(overall))}>
               {overall}
             </span>
-            <span className='text-xs text-muted-foreground'>分</span>
+            <span className='text-xs text-muted-foreground'>{t('fortune.scoreSuffix')}</span>
           </div>
           <div className='flex flex-col gap-1.5 flex-1'>
             <p className={cn('text-lg font-semibold', scoreColor(overall))}>
               {level_name || level || '—'}
             </p>
             <p className='text-xs text-muted-foreground'>
-              九曜：{star.name}（{star.reading}）
+              {t('fortune.kuyouLabel')}:{star.name}({star.reading})
               <span className='mx-1'>·</span>
-              {star.kazoe_age}歲
+              {star.kazoe_age}{t('common.ageSuffix')}
             </p>
             {star.description && (
               <p className='text-xs text-muted-foreground leading-relaxed'>{star.description}</p>
@@ -123,7 +111,7 @@ function YearOverviewCard({ yearly }: { yearly: YearlyFortune }) {
   )
 }
 
-function MonthlyTrendCard({ yearly }: { yearly: YearlyFortune }) {
+function MonthlyTrendCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   if (!yearly.monthly_trend?.length) return null
   const currentMonth = new Date().getMonth() + 1
 
@@ -131,7 +119,7 @@ function MonthlyTrendCard({ yearly }: { yearly: YearlyFortune }) {
     <Card className='border border-border'>
       <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
         <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          月份趨勢
+          {t('fortune.monthlyTrend')}
         </p>
         <div className='grid grid-cols-6 gap-1.5 sm:grid-cols-12'>
           {yearly.monthly_trend.map((m) => (
@@ -143,7 +131,7 @@ function MonthlyTrendCard({ yearly }: { yearly: YearlyFortune }) {
                 m.month === currentMonth && 'ring-1 ring-primary'
               )}
             >
-              <span className='text-[10px] text-muted-foreground'>{m.month}月</span>
+              <span className='text-[10px] text-muted-foreground'>{m.month}{t('fortune.monthSuffix')}</span>
               <span className={cn('text-xs font-semibold tabular-nums', scoreColor(m.score))}>
                 {m.score}
               </span>
@@ -155,7 +143,7 @@ function MonthlyTrendCard({ yearly }: { yearly: YearlyFortune }) {
   )
 }
 
-function CategoryCard({ yearly }: { yearly: YearlyFortune }) {
+function CategoryCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   const cats = yearly.category_descriptions
   if (!cats) return null
 
@@ -163,13 +151,13 @@ function CategoryCard({ yearly }: { yearly: YearlyFortune }) {
     <Card className='border border-border'>
       <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
         <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          各方面運勢
+          {t('fortune.categoryFortunes')}
         </p>
         {[
-          { label: '事業', key: 'career', score: yearly.fortune.career, desc: cats.career },
-          { label: '感情', key: 'love', score: yearly.fortune.love, desc: cats.love },
-          { label: '健康', key: 'health', score: yearly.fortune.health, desc: cats.health },
-          { label: '財運', key: 'wealth', score: yearly.fortune.wealth, desc: cats.wealth },
+          { label: t('fortune.career'), key: 'career', score: yearly.fortune.career, desc: cats.career },
+          { label: t('fortune.love'), key: 'love', score: yearly.fortune.love, desc: cats.love },
+          { label: t('fortune.health'), key: 'health', score: yearly.fortune.health, desc: cats.health },
+          { label: t('fortune.wealth'), key: 'wealth', score: yearly.fortune.wealth, desc: cats.wealth },
         ].map(({ label, key, score, desc }) => (
           <div key={key} className='flex flex-col gap-1.5'>
             <div className='flex items-center gap-3'>
@@ -194,7 +182,7 @@ function CategoryCard({ yearly }: { yearly: YearlyFortune }) {
   )
 }
 
-function OpportunitiesCard({ yearly }: { yearly: YearlyFortune }) {
+function OpportunitiesCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   const hasOpp = yearly.opportunities?.length > 0
   const hasWarn = yearly.warnings?.length > 0
   if (!hasOpp && !hasWarn) return null
@@ -205,7 +193,7 @@ function OpportunitiesCard({ yearly }: { yearly: YearlyFortune }) {
         {hasOpp && (
           <div className='flex flex-col gap-2'>
             <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-              機會
+              {t('fortune.opportunities')}
             </p>
             <ul className='flex flex-col gap-1'>
               {yearly.opportunities.map((o, i) => (
@@ -220,7 +208,7 @@ function OpportunitiesCard({ yearly }: { yearly: YearlyFortune }) {
         {hasWarn && (
           <div className='flex flex-col gap-2'>
             <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-              注意
+              {t('fortune.warnings')}
             </p>
             <ul className='flex flex-col gap-1'>
               {yearly.warnings.map((w, i) => (
@@ -240,7 +228,8 @@ function OpportunitiesCard({ yearly }: { yearly: YearlyFortune }) {
 // ---- Page ----
 
 export default function FortuneYearlyPage() {
-  const { birthDate } = useProfileStore()
+  const birthDate = useProfileStore((s) => s.birthDate)
+  const { t } = useTranslation()
   const currentYear = new Date().getFullYear()
   const [year, setYear] = useState(currentYear)
   const { yearlyFortune, loading, error, fetchYearly } = useFortune()
@@ -257,12 +246,12 @@ export default function FortuneYearlyPage() {
     return (
       <div className='flex-1 flex items-center justify-center py-24 px-4 text-center'>
         <div className='flex flex-col gap-3'>
-          <p className='text-sm text-muted-foreground'>請先設定出生日期</p>
+          <p className='text-sm text-muted-foreground'>{t('startup.noBirthDate')}</p>
           <a
             href='/'
             className='inline-flex h-7 items-center rounded-lg border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground hover:bg-muted transition-colors duration-200'
           >
-            前往設定
+            {t('fortune.goSetup')}
           </a>
         </div>
       </div>
@@ -277,12 +266,13 @@ export default function FortuneYearlyPage() {
         onPrev={() => setYear(y => y - 1)}
         onNext={() => setYear(y => y + 1)}
         onToday={() => setYear(currentYear)}
+        t={t}
       />
 
       {error && !loading && (
-        <div className='flex flex-col items-center gap-3 py-12 text-center'>
-          <p className='text-sm text-muted-foreground'>資料載入失敗，請稍後重試</p>
-          <Button variant='outline' size='sm' onClick={load}>重試</Button>
+        <div role='alert' className='flex flex-col items-center gap-3 py-12 text-center'>
+          <p className='text-sm text-muted-foreground'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' onClick={load}>{t('common.retry')}</Button>
         </div>
       )}
 
@@ -313,10 +303,10 @@ export default function FortuneYearlyPage() {
 
       {!loading && yearlyFortune && (
         <>
-          <YearOverviewCard yearly={yearlyFortune} />
-          <MonthlyTrendCard yearly={yearlyFortune} />
-          <CategoryCard yearly={yearlyFortune} />
-          <OpportunitiesCard yearly={yearlyFortune} />
+          <YearOverviewCard yearly={yearlyFortune} t={t} />
+          <MonthlyTrendCard yearly={yearlyFortune} t={t} />
+          <CategoryCard yearly={yearlyFortune} t={t} />
+          <OpportunitiesCard yearly={yearlyFortune} t={t} />
         </>
       )}
     </div>

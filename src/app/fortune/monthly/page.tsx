@@ -3,29 +3,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useProfileStore } from '@/stores/profile'
 import { useFortune } from '@/hooks/use-fortune'
+import { useTranslation } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { scoreColor, scoreBorder } from '@/utils/score-colors'
 import type { MonthlyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
-
-function scoreColor(score: number) {
-  if (score >= 80) return 'text-[var(--fortune-great)]'
-  if (score >= 60) return 'text-[var(--fortune-good)]'
-  if (score >= 40) return 'text-[var(--fortune-neutral)]'
-  if (score >= 20) return 'text-[var(--fortune-caution)]'
-  return 'text-[var(--fortune-bad)]'
-}
-
-function scoreBorder(score: number) {
-  if (score >= 80) return 'border-[var(--fortune-great)]'
-  if (score >= 60) return 'border-[var(--fortune-good)]'
-  if (score >= 40) return 'border-[var(--fortune-neutral)]'
-  if (score >= 20) return 'border-[var(--fortune-caution)]'
-  return 'border-[var(--fortune-bad)]'
-}
 
 function scoreBg(score: number) {
   if (score >= 80) return 'bg-emerald-500/15'
@@ -43,12 +29,14 @@ function MonthNav({
   onPrev,
   onNext,
   onToday,
+  t,
 }: {
   year: number
   month: number
   onPrev: () => void
   onNext: () => void
   onToday: () => void
+  t: (key: string, params?: Record<string, string | number>) => string
 }) {
   const now = new Date()
   const isCurrentMonth = year === now.getFullYear() && month === now.getMonth() + 1
@@ -57,17 +45,17 @@ function MonthNav({
     <div className='flex items-center justify-center gap-2 py-4'>
       <button
         onClick={onPrev}
-        aria-label='上個月'
+        aria-label={t('common.previousMonth')}
         className='h-8 w-8 rounded-full flex items-center justify-center text-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200'
       >
         ‹
       </button>
       <span className='text-sm font-medium text-foreground min-w-32 text-center'>
-        {year}年 {month}月
+        {t('common.yearMonth', { year, month })}
       </span>
       <button
         onClick={onNext}
-        aria-label='下個月'
+        aria-label={t('common.nextMonth')}
         className='h-8 w-8 rounded-full flex items-center justify-center text-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200'
       >
         ›
@@ -77,14 +65,14 @@ function MonthNav({
           onClick={onToday}
           className='text-xs text-primary hover:text-primary/80 underline-offset-2 hover:underline transition-colors duration-200 ml-1'
         >
-          本月
+          {t('fortune.thisMonth')}
         </button>
       )}
     </div>
   )
 }
 
-function MonthOverviewCard({ monthly }: { monthly: MonthlyFortune }) {
+function MonthOverviewCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   const { overall, level_name, level } = monthly.fortune
 
   return (
@@ -94,14 +82,14 @@ function MonthOverviewCard({ monthly }: { monthly: MonthlyFortune }) {
           <span className={cn('text-5xl font-bold tabular-nums leading-none', scoreColor(overall))}>
             {overall}
           </span>
-          <span className='text-xs text-muted-foreground'>分</span>
+          <span className='text-xs text-muted-foreground'>{t('fortune.scoreSuffix')}</span>
         </div>
         <div className='flex flex-col gap-2 flex-1'>
           <p className={cn('text-lg font-semibold', scoreColor(overall))}>
             {level_name || level || '—'}
           </p>
           <p className='text-xs text-muted-foreground'>
-            月宿：{monthly.month_mansion.name_jp}（{monthly.month_mansion.reading}）
+            {t('fortune.monthMansion')}:{monthly.month_mansion.name_jp}({monthly.month_mansion.reading})
             <span className='mx-1'>·</span>
             {monthly.relation.name}
           </p>
@@ -117,20 +105,20 @@ function MonthOverviewCard({ monthly }: { monthly: MonthlyFortune }) {
   )
 }
 
-function WeeklyBreakdownCard({ monthly }: { monthly: MonthlyFortune }) {
+function WeeklyBreakdownCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   if (!monthly.weekly?.length) return null
 
   return (
     <Card className='border border-border'>
       <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
         <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          各週概覽
+          {t('fortune.weeklyBreakdown')}
         </p>
         {monthly.weekly.map((week) => (
           <div key={week.week} className='flex flex-col gap-2'>
             <div className='flex items-center gap-3'>
               <span className='text-xs text-muted-foreground w-16 shrink-0'>
-                第{week.week}週
+                {t('fortune.weekN', { n: week.week })}
               </span>
               <div className='flex-1 h-1.5 bg-muted rounded-full overflow-hidden'>
                 <div
@@ -164,7 +152,7 @@ function WeeklyBreakdownCard({ monthly }: { monthly: MonthlyFortune }) {
   )
 }
 
-function StrategyCard({ monthly }: { monthly: MonthlyFortune }) {
+function StrategyCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   const strategy = monthly.strategy
   if (!strategy) return null
 
@@ -177,11 +165,11 @@ function StrategyCard({ monthly }: { monthly: MonthlyFortune }) {
     <Card className='border border-border'>
       <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
         <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          本月策略
+          {t('fortune.monthlyStrategy')}
         </p>
         {bestDays.length > 0 && (
           <div className='flex flex-col gap-2'>
-            <p className='text-xs font-medium text-emerald-500'>吉日</p>
+            <p className='text-xs font-medium text-emerald-500'>{t('fortune.recommendedDays')}</p>
             <div className='flex flex-wrap gap-2'>
               {bestDays.map((d) => {
                 const date = new Date(d.date + 'T00:00:00')
@@ -203,7 +191,7 @@ function StrategyCard({ monthly }: { monthly: MonthlyFortune }) {
         )}
         {avoidDays.length > 0 && (
           <div className='flex flex-col gap-2'>
-            <p className='text-xs font-medium text-orange-500'>需謹慎</p>
+            <p className='text-xs font-medium text-orange-500'>{t('fortune.avoidDays')}</p>
             <div className='flex flex-wrap gap-2'>
               {avoidDays.map((d) => {
                 const date = new Date(d.date + 'T00:00:00')
@@ -228,7 +216,7 @@ function StrategyCard({ monthly }: { monthly: MonthlyFortune }) {
   )
 }
 
-function SpecialDaysCard({ monthly }: { monthly: MonthlyFortune }) {
+function SpecialDaysCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   if (!monthly.special_days?.length && !monthly.ryouhan_info?.affected_days) return null
 
   const kanroCount = monthly.special_days?.filter(d => d.type === 'kanro').length ?? 0
@@ -239,32 +227,32 @@ function SpecialDaysCard({ monthly }: { monthly: MonthlyFortune }) {
     <Card className='border border-border'>
       <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
         <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          特殊日
+          {t('fortune.specialDays')}
         </p>
         <div className='flex flex-wrap gap-2'>
           {kanroCount > 0 && (
             <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30'>
               <span className='h-2 w-2 rounded-full bg-emerald-500 shrink-0' />
-              <span className='text-xs text-emerald-600 dark:text-emerald-400'>甘露日 {kanroCount}天</span>
+              <span className='text-xs text-emerald-600 dark:text-emerald-400'>{t('fortune.kanroDay')} {t('common.nDays', { n: kanroCount })}</span>
             </div>
           )}
           {kongouCount > 0 && (
             <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/30'>
               <span className='h-2 w-2 rounded-full bg-amber-500 shrink-0' />
-              <span className='text-xs text-amber-600 dark:text-amber-400'>金剛峯日 {kongouCount}天</span>
+              <span className='text-xs text-amber-600 dark:text-amber-400'>{t('fortune.kongouDay')} {t('common.nDays', { n: kongouCount })}</span>
             </div>
           )}
           {rasetsuCount > 0 && (
             <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-500/10 border border-red-500/30'>
               <span className='h-2 w-2 rounded-full bg-red-500 shrink-0' />
-              <span className='text-xs text-red-600 dark:text-red-400'>羅刹日 {rasetsuCount}天</span>
+              <span className='text-xs text-red-600 dark:text-red-400'>{t('fortune.rasetsuDay')} {t('common.nDays', { n: rasetsuCount })}</span>
             </div>
           )}
         </div>
         {monthly.ryouhan_info?.affected_days != null && (
           <p className='text-xs text-muted-foreground'>
-            凌犯期：{monthly.ryouhan_info.affected_days} / {monthly.ryouhan_info.total_days} 天
-            （{Math.round(monthly.ryouhan_info.ratio * 100)}%）
+            {t('fortune.ryouhanDaysInfo', { affected: monthly.ryouhan_info.affected_days, total: monthly.ryouhan_info.total_days })}
+            ({Math.round(monthly.ryouhan_info.ratio * 100)}%)
           </p>
         )}
         {monthly.month_warnings?.filter(w =>
@@ -280,7 +268,8 @@ function SpecialDaysCard({ monthly }: { monthly: MonthlyFortune }) {
 // ---- Page ----
 
 export default function FortuneMonthlyPage() {
-  const { birthDate } = useProfileStore()
+  const birthDate = useProfileStore((s) => s.birthDate)
+  const { t } = useTranslation()
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth() + 1)
@@ -314,12 +303,12 @@ export default function FortuneMonthlyPage() {
     return (
       <div className='flex-1 flex items-center justify-center py-24 px-4 text-center'>
         <div className='flex flex-col gap-3'>
-          <p className='text-sm text-muted-foreground'>請先設定出生日期</p>
+          <p className='text-sm text-muted-foreground'>{t('startup.noBirthDate')}</p>
           <a
             href='/'
             className='inline-flex h-7 items-center rounded-lg border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground hover:bg-muted transition-colors duration-200'
           >
-            前往設定
+            {t('fortune.goSetup')}
           </a>
         </div>
       </div>
@@ -334,12 +323,13 @@ export default function FortuneMonthlyPage() {
         onPrev={goPrev}
         onNext={goNext}
         onToday={goToday}
+        t={t}
       />
 
       {error && !loading && (
-        <div className='flex flex-col items-center gap-3 py-12 text-center'>
-          <p className='text-sm text-muted-foreground'>資料載入失敗，請稍後重試</p>
-          <Button variant='outline' size='sm' onClick={load}>重試</Button>
+        <div role='alert' className='flex flex-col items-center gap-3 py-12 text-center'>
+          <p className='text-sm text-muted-foreground'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' onClick={load}>{t('common.retry')}</Button>
         </div>
       )}
 
@@ -379,10 +369,10 @@ export default function FortuneMonthlyPage() {
 
       {!loading && monthlyFortune && (
         <>
-          <MonthOverviewCard monthly={monthlyFortune} />
-          <WeeklyBreakdownCard monthly={monthlyFortune} />
-          <StrategyCard monthly={monthlyFortune} />
-          <SpecialDaysCard monthly={monthlyFortune} />
+          <MonthOverviewCard monthly={monthlyFortune} t={t} />
+          <WeeklyBreakdownCard monthly={monthlyFortune} t={t} />
+          <StrategyCard monthly={monthlyFortune} t={t} />
+          <SpecialDaysCard monthly={monthlyFortune} t={t} />
         </>
       )}
     </div>

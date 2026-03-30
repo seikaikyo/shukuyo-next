@@ -3,22 +3,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useProfileStore } from '@/stores/profile'
 import { useStartup } from '@/hooks/use-startup'
+import { useTranslation } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { scoreColor } from '@/utils/score-colors'
 import type { IndustryRecommendation } from '@/types/startup'
 import type { LuckyCalendarData, LuckyCalendarDay } from '@/types/lucky-days'
 
 // ---- Helpers ----
-
-function scoreColor(score: number) {
-  if (score >= 80) return 'text-[var(--fortune-great)]'
-  if (score >= 60) return 'text-[var(--fortune-good)]'
-  if (score >= 40) return 'text-[var(--fortune-neutral)]'
-  if (score >= 20) return 'text-[var(--fortune-caution)]'
-  return 'text-[var(--fortune-bad)]'
-}
 
 function scoreBg(score: number) {
   if (score >= 80) return 'bg-emerald-500/10'
@@ -36,15 +30,14 @@ function getFirstDayOfMonth(year: number, month: number) {
   return new Date(year, month - 1, 1).getDay()
 }
 
-function formatDate(dateStr: string) {
+function formatDate(dateStr: string, locale: string) {
   const d = new Date(dateStr + 'T00:00:00')
-  const weekdays = ['日', '一', '二', '三', '四', '五', '六']
-  return `${d.getMonth() + 1}月${d.getDate()}日（${weekdays[d.getDay()]}）`
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric', weekday: 'short' })
 }
 
 // ---- Sub-components ----
 
-function IndustryCard({ recs }: { recs: IndustryRecommendation }) {
+function IndustryCard({ recs, t }: { recs: IndustryRecommendation; t: (key: string, params?: Record<string, string | number>) => string }) {
   const [showAll, setShowAll] = useState(false)
   const visible = showAll ? recs.favorable_mansions : recs.favorable_mansions.slice(0, 3)
 
@@ -74,7 +67,7 @@ function IndustryCard({ recs }: { recs: IndustryRecommendation }) {
         {recs.favorable_mansions.length > 0 && (
           <div className='flex flex-col gap-2'>
             <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-              適合共同創業的宿（{recs.favorable_mansions.length}）
+              {t('startup.favorableMansions')}({recs.favorable_mansions.length})
             </p>
             <div className='flex flex-col gap-2'>
               {visible.map((fm) => (
@@ -94,7 +87,7 @@ function IndustryCard({ recs }: { recs: IndustryRecommendation }) {
                 onClick={() => setShowAll(v => !v)}
                 className='text-xs text-primary hover:underline self-start'
               >
-                {showAll ? '收起' : `顯示全部 ${recs.favorable_mansions.length} 個`}
+                {showAll ? t('common.collapse') : `${t('fortune.showAll')} ${recs.favorable_mansions.length}`}
               </button>
             )}
           </div>
@@ -110,17 +103,24 @@ function CalendarView({
   month,
   onPrev,
   onNext,
+  t,
+  locale,
 }: {
   calendar: LuckyCalendarData
   year: number
   month: number
   onPrev: () => void
   onNext: () => void
+  t: (key: string, params?: Record<string, string | number>) => string
+  locale: string
 }) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const daysInMonth = getDaysInMonth(year, month)
   const firstDay = getFirstDayOfMonth(year, month)
-  const weekdays = ['日', '一', '二', '三', '四', '五', '六']
+  const weekdays = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(2024, 0, i) // i=0 -> Dec 31 2023 (Sun), i=1 -> Jan 1 (Mon), ...
+    return d.toLocaleDateString(locale, { weekday: 'narrow' })
+  })
 
   const selectedEntries: LuckyCalendarDay[] = selectedDate ? (calendar.days[selectedDate] || []) : []
 
@@ -129,12 +129,12 @@ function CalendarView({
       <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
         <div className='flex items-center justify-between'>
           <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-            開業吉日月曆
+            {t('startup.calendarTab')}
           </p>
           <div className='flex items-center gap-1'>
             <button
               onClick={onPrev}
-              aria-label='上個月'
+              aria-label={t('common.previousMonth')}
               className='h-6 w-6 flex items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-muted text-sm transition-colors'
             >
               ‹
@@ -144,7 +144,7 @@ function CalendarView({
             </span>
             <button
               onClick={onNext}
-              aria-label='下個月'
+              aria-label={t('common.nextMonth')}
               className='h-6 w-6 flex items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-muted text-sm transition-colors'
             >
               ›
@@ -202,7 +202,7 @@ function CalendarView({
         {selectedDate && selectedEntries.length > 0 && (
           <div className='flex flex-col gap-3 border-t border-border pt-3'>
             <p className='text-xs font-medium text-foreground'>
-              {formatDate(selectedDate)} 開業建議
+              {formatDate(selectedDate, locale)} {t('startup.openingAdvice')}
             </p>
             {selectedEntries.map((entry, i) => (
               <div key={i} className='flex flex-col gap-1.5 px-3 py-2 rounded-md bg-muted/40'>
@@ -222,12 +222,12 @@ function CalendarView({
                     )}
                     {entry.advice.do.length > 0 && (
                       <p className='text-xs text-emerald-500'>
-                        宜：{entry.advice.do.join('、')}
+                        {t('fortune.auspicious')}:{entry.advice.do.join('、')}
                       </p>
                     )}
                     {entry.advice.avoid.length > 0 && (
                       <p className='text-xs text-orange-400'>
-                        忌：{entry.advice.avoid.join('、')}
+                        {t('fortune.inauspicious')}:{entry.advice.avoid.join('、')}
                       </p>
                     )}
                   </div>
@@ -239,7 +239,7 @@ function CalendarView({
 
         {selectedDate && selectedEntries.length === 0 && (
           <p className='text-xs text-muted-foreground text-center py-2 border-t border-border pt-3'>
-            此日無特別開業吉兆
+            {t('startup.noOpeningDays')}
           </p>
         )}
       </CardContent>
@@ -252,7 +252,8 @@ function CalendarView({
 type View = 'industry' | 'calendar'
 
 export default function FortuneStartupPage() {
-  const { birthDate } = useProfileStore()
+  const birthDate = useProfileStore((s) => s.birthDate)
+  const { t, locale } = useTranslation()
   const {
     industryRecs,
     startupCalendar,
@@ -297,12 +298,12 @@ export default function FortuneStartupPage() {
     return (
       <div className='flex-1 flex items-center justify-center py-24 px-4 text-center'>
         <div className='flex flex-col gap-3'>
-          <p className='text-sm text-muted-foreground'>請先設定出生日期</p>
+          <p className='text-sm text-muted-foreground'>{t('startup.noBirthDate')}</p>
           <a
             href='/'
             className='inline-flex h-7 items-center rounded-lg border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground hover:bg-muted transition-colors duration-200'
           >
-            前往設定
+            {t('fortune.goSetup')}
           </a>
         </div>
       </div>
@@ -312,9 +313,9 @@ export default function FortuneStartupPage() {
   return (
     <div className='mx-auto w-full max-w-2xl px-4 pb-12 flex flex-col gap-4'>
       <div className='py-4 flex flex-col gap-1'>
-        <h2 className='text-base font-semibold text-foreground'>創業運勢</h2>
+        <h2 className='text-base font-semibold text-foreground'>{t('startup.title')}</h2>
         <p className='text-xs text-muted-foreground'>
-          依本命宿推算適合的行業與開業吉日
+          {t('startup.desc')}
         </p>
       </div>
 
@@ -331,16 +332,16 @@ export default function FortuneStartupPage() {
                 : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            {v === 'industry' ? '行業建議' : '開業吉日'}
+            {v === 'industry' ? t('startup.industryTab') : t('startup.calendarTab')}
           </button>
         ))}
       </div>
 
       {error && !industryLoading && !calendarLoading && (
-        <div className='flex flex-col items-center gap-3 py-12 text-center'>
-          <p className='text-sm text-muted-foreground'>資料載入失敗，請稍後重試</p>
+        <div role='alert' className='flex flex-col items-center gap-3 py-12 text-center'>
+          <p className='text-sm text-muted-foreground'>{t('error.fetchFailed')}</p>
           <Button variant='outline' size='sm' onClick={view === 'industry' ? loadIndustry : loadCalendar}>
-            重試
+            {t('common.retry')}
           </Button>
         </div>
       )}
@@ -358,7 +359,7 @@ export default function FortuneStartupPage() {
               </CardContent>
             </Card>
           )}
-          {!industryLoading && industryRecs && <IndustryCard recs={industryRecs} />}
+          {!industryLoading && industryRecs && <IndustryCard recs={industryRecs} t={t} />}
         </>
       )}
 
@@ -383,6 +384,8 @@ export default function FortuneStartupPage() {
               month={calMonth}
               onPrev={() => changeMonth(-1)}
               onNext={() => changeMonth(1)}
+              t={t}
+              locale={locale}
             />
           )}
         </>
