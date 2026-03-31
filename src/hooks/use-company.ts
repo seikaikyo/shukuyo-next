@@ -2,8 +2,10 @@
 import { useState, useCallback } from 'react'
 import { apiPost } from '@/config/api'
 import { useProfileStore } from '@/stores/profile'
-import type { CompanyBatchResult, ComparisonResult, CompanyJobsResult } from '@/types/company'
+import type { CompanyBatchResult, ComparisonResult, CompanyJobsResult, GcisCompany, GlobalSearchResult } from '@/types/company'
+import type { LuckyDatesResult } from '@/types/lucky-days'
 import type { CompatibilityResult } from '@/types/compatibility'
+import type { HrCandidate, JobSeeker } from '@/stores/profile'
 
 export function useCompanyAnalysis() {
   const { birthDate, companies } = useProfileStore()
@@ -166,4 +168,220 @@ export function useTeamMatrix() {
   }, [])
 
   return { matrix, loading, progress, fetchMatrix }
+}
+
+/** GCIS 公司搜尋（台灣經濟部商工登記） */
+export function useGcisSearch() {
+  const [results, setResults] = useState<GcisCompany[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const search = useCallback(async (keyword: string) => {
+    if (keyword.trim().length < 2) {
+      setResults([])
+      return
+    }
+    setLoading(true)
+    setResults([])
+    setError(null)
+    try {
+      const searchName = keyword.trim()
+        .replace(/股份有限公司/g, '')
+        .replace(/有限公司/g, '')
+        .replace(/^[A-Za-z0-9\s._-]+[_\-・]/g, '')
+        .replace(/^[A-Za-z0-9\s._-]+\s+/g, '')
+        .trim()
+      const params = new URLSearchParams({
+        '$format': 'json',
+        '$filter': `Company_Name like ${searchName} and Company_Status eq 01`,
+        '$top': '10',
+      })
+      const gcisApiId = '6BBA2268-1367-4B42-9CCA-BC17499EBE8C'
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 15000)
+      const res = await fetch(`/proxy/gcis/${gcisApiId}?${params}`, { signal: controller.signal })
+      clearTimeout(timer)
+      if (res.ok) {
+        const raw = await res.json()
+        if (Array.isArray(raw)) {
+          setResults(raw
+            .map((c: Record<string, string>) => {
+              const d = c.Company_Setup_Date || ''
+              if (d.length !== 7) return null
+              const rocYear = parseInt(d.substring(0, 3), 10)
+              const mm = d.substring(3, 5)
+              const dd = d.substring(5, 7)
+              return {
+                name: c.Company_Name || '',
+                business_no: c.Business_Accounting_NO || '',
+                founding_date: `${rocYear + 1911}-${mm}-${dd}`,
+                responsible: c.Responsible_Name || '',
+                capital: c.Capital_Stock_Amount || '0',
+              }
+            })
+            .filter((x): x is GcisCompany => x !== null)
+          )
+        }
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'GCIS 搜尋失敗')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  return { results, loading, error, search }
+}
+
+/** 全球公司搜尋 */
+export function useGlobalCompanySearch() {
+  const { birthDate } = useProfileStore()
+  const [result, setResult] = useState<GlobalSearchResult | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const search = useCallback(async (companyName: string, country: string) => {
+    if (companyName.trim().length < 2 || !birthDate) return
+    setLoading(true)
+    setResult(null)
+    setError(null)
+    try {
+      const data = await apiPost<GlobalSearchResult>('/company-search/global', {
+        company_name: companyName.trim(),
+        country,
+        birth_date: birthDate,
+      })
+      setResult(data)
+      return data
+    } catch (e) {
+      setError(e instanceof Error ? e.message : '搜尋失敗')
+      return null
+    } finally {
+      setLoading(false)
+    }
+  }, [birthDate])
+
+  return { result, loading, error, search }
+}
+
+/** HR 批次分析（候選人 vs 單一公司，3 worker 並行） */
+export function useHrBatchAnalysis() {
+  const [results, setResults] = useState<Record<string, CompanyBatchResult>>({})
+  const [loading, setLoading] = useState(false)
+  const [progress, setProgress] = useState({ done: 0, total: 0 })
+
+  const fetch_ = useCallback(async (
+    hrCompany: { name: string; foundingDate: string },
+    candidates: HrCandidate[],
+    lang = 'zh-TW'
+  ) => {
+    setLoading(true)
+    setResults({})
+    setProgress({ done: 0, total: candidates.length })
+    const newResults: Record<string, CompanyBatchResult> = {}
+
+    const concurrency = 3
+    let idx = 0
+
+    async function processNext() {
+      while (idx < candidates.length) {
+        const current = idx++
+        const candidate = candidates[current]
+        try {
+          const data = await apiPost<CompanyBatchResult>('/company-batch-analysis', {
+            birth_date: candidate.birthDate,
+            year: new Date().getFullYear(),
+            mode: 'hr',
+            lang,
+            companies: [{ id: hrCompany.name, name: hrCompany.name, founding_date: hrCompany.foundingDate, memo: '', job_url: '' }],
+          })
+          if (data) newResults[candidate.id] = data
+        } catch { /* skip */ }
+        setProgress(p => ({ ...p, done: p.done + 1 }))
+      }
+    }
+
+    await Promise.all(
+      Array.from({ length: Math.min(concurrency, candidates.length) }, () => processNext())
+    )
+    setResults({ ...newResults })
+    setLoading(false)
+  }, [])
+
+  return { results, loading, progress, fetchHrBatch: fetch_ }
+}
+
+/** 獵頭批次分析（多求職者 x 多公司） */
+export function useHeadhunterAnalysis() {
+  const [results, setResults] = useState<Record<string, CompanyBatchResult>>({})
+  const [loading, setLoading] = useState(false)
+  const [progress, setProgress] = useState({ done: 0, total: 0 })
+
+  const fetch_ = useCallback(async (seekers: JobSeeker[], companies: { id: string; name: string; foundingDate: string }[], lang = 'zh-TW') => {
+    const seekersWithCompanies = seekers.filter(s => (s.targetCompanyIds?.length ?? 0) > 0 || companies.length > 0)
+    if (!seekersWithCompanies.length) return
+    const totalPairs = seekersWithCompanies.length * companies.length
+    setLoading(true)
+    setResults({})
+    setProgress({ done: 0, total: totalPairs })
+    const newResults: Record<string, CompanyBatchResult> = {}
+
+    const concurrency = 3
+    let idx = 0
+
+    async function processNext() {
+      while (idx < seekersWithCompanies.length) {
+        const current = idx++
+        const seeker = seekersWithCompanies[current]
+        try {
+          const data = await apiPost<CompanyBatchResult>('/company-batch-analysis', {
+            birth_date: seeker.birthDate,
+            year: new Date().getFullYear(),
+            mode: 'seeker',
+            lang,
+            companies: companies.map(c => ({ id: c.id, name: c.name, founding_date: c.foundingDate, memo: '', job_url: '' })),
+          })
+          if (data) {
+            for (const company of data.companies) {
+              newResults[`${seeker.id}:${company.id}`] = data
+            }
+          }
+        } catch { /* skip */ }
+        setProgress(p => ({ ...p, done: p.done + companies.length }))
+      }
+    }
+
+    await Promise.all(
+      Array.from({ length: Math.min(concurrency, seekersWithCompanies.length) }, () => processNext())
+    )
+    setResults({ ...newResults })
+    setLoading(false)
+  }, [])
+
+  return { results, loading, progress, fetchHeadhunterBatch: fetch_ }
+}
+
+/** 職涯吉日查詢 */
+export function useCareerLuckyDates() {
+  const [luckyDates, setLuckyDates] = useState<LuckyDatesResult | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const fetch_ = useCallback(async (birthDate: string, days = 30, lang = 'zh-TW') => {
+    setLoading(true)
+    try {
+      const data = await apiPost<LuckyDatesResult>('/fortune/lucky-dates', {
+        birth_date: birthDate,
+        days,
+        lang,
+      })
+      setLuckyDates(data)
+      return data
+    } catch {
+      return null
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  return { luckyDates, loading, fetchLuckyDates: fetch_ }
 }

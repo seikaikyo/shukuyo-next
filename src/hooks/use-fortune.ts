@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { apiGet } from '@/config/api'
 import type { DailyFortune, WeeklyFortune, MonthlyFortune, YearlyFortune } from '@/types/fortune'
 
@@ -20,11 +20,15 @@ export function useFortune() {
 
   const loading = dailyLoading || weeklyLoading || monthlyLoading || yearlyLoading || rangeLoading
 
+  // 追蹤最後一次 fetchDaily 的參數，供 retryDaily 使用
+  const lastDailyArgs = useRef<[string, string | undefined, string] | null>(null)
+
   const fetchDaily = useCallback(async (
     birthDate: string,
     targetDate?: string,
     lang = 'zh-TW'
   ) => {
+    lastDailyArgs.current = [birthDate, targetDate, lang]
     setDailyLoading(true)
     setError(null)
     try {
@@ -127,6 +131,42 @@ export function useFortune() {
     }
   }, [])
 
+  /** 一次拉今日的日/週/月/年運勢 */
+  const fetchAllForToday = useCallback(async (birthDate: string, lang = 'zh-TW') => {
+    const now = new Date()
+    const today = now.toISOString().split('T')[0]
+    const year = now.getFullYear()
+    const month = now.getMonth() + 1
+    await Promise.all([
+      fetchDaily(birthDate, today, lang),
+      fetchWeekly(birthDate, today, lang),
+      fetchMonthly(birthDate, year, month, lang),
+      fetchYearly(birthDate, year, lang),
+    ])
+  }, [fetchDaily, fetchWeekly, fetchMonthly, fetchYearly])
+
+  /** 重試上一次 fetchDaily */
+  const retryDaily = useCallback(async () => {
+    if (!lastDailyArgs.current) return null
+    const [bd, td, lang] = lastDailyArgs.current
+    return fetchDaily(bd, td, lang)
+  }, [fetchDaily])
+
+  /** 單次查詢日運（不寫入 state） */
+  const fetchDailyOnce = useCallback(async (
+    birthDate: string,
+    targetDate: string,
+    lang = 'zh-TW'
+  ): Promise<DailyFortune | null> => {
+    try {
+      return await apiGet<DailyFortune>(
+        `/fortune/daily/${targetDate}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
+      )
+    } catch {
+      return null
+    }
+  }, [])
+
   return {
     dailyFortune,
     weeklyFortune,
@@ -142,5 +182,8 @@ export function useFortune() {
     fetchMonthly,
     fetchYearly,
     fetchYearlyRange,
+    fetchAllForToday,
+    retryDaily,
+    fetchDailyOnce,
   }
 }
