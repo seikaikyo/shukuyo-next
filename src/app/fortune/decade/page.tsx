@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { scoreColor, scoreBorderLeft } from '@/utils/score-colors'
+import { levelColor, levelBorderLeft } from '@/utils/fortune-helpers'
 import type { YearlyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
@@ -67,7 +67,7 @@ function DecadeCard({
   onClick: () => void
   t: (key: string, params?: Record<string, string | number>) => string
 }) {
-  const score = yearly.fortune.overall
+  const level = yearly.fortune.level
   const star = yearly.kuyou_star
 
   return (
@@ -80,13 +80,13 @@ function DecadeCard({
         isCurrentYear && 'ring-2 ring-primary',
         isPast && 'opacity-60',
         'border-l-4',
-        scoreBorderLeft(score)
+        levelBorderLeft(level)
       )}
     >
       <span className='text-sm font-semibold text-foreground'>{yearly.year}{t('fortune.yearSuffix')}</span>
       <span className='text-xs text-muted-foreground'>{star.name}</span>
-      <span className={cn('text-2xl font-bold tabular-nums', scoreColor(score))}>
-        {score}
+      <span className={cn('text-lg font-bold', levelColor(level))}>
+        {yearly.fortune.level_name || (level ? t('fortune.levels.' + level) : '—')}
       </span>
       <span className='text-xs text-muted-foreground'>{star.kazoe_age}{t('common.ageSuffix')}</span>
     </button>

@@ -8,18 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { scoreColor, scoreBorder } from '@/utils/score-colors'
+import { levelColor, levelBorder, levelBg, getLevelHeight } from '@/utils/fortune-helpers'
 import type { YearlyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
-
-function scoreBg(score: number) {
-  if (score >= 80) return 'bg-emerald-500/15'
-  if (score >= 60) return 'bg-sky-500/15'
-  if (score >= 40) return 'bg-amber-500/15'
-  if (score >= 20) return 'bg-orange-500/15'
-  return 'bg-red-500/15'
-}
 
 // ---- Sub-components ----
 
@@ -70,22 +62,21 @@ function YearNav({
 }
 
 function YearOverviewCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const { overall, level_name, level } = yearly.fortune
+  const { level_name, level } = yearly.fortune
   const star = yearly.kuyou_star
 
   return (
-    <Card className={cn('border-2', scoreBorder(overall))}>
+    <Card className={cn('border-2', levelBorder(level))}>
       <CardContent className='pt-6 pb-6 flex flex-col gap-4'>
         <div className='flex gap-4'>
           <div className='flex flex-col items-center gap-1 shrink-0'>
-            <span className={cn('text-5xl font-bold tabular-nums leading-none', scoreColor(overall))}>
-              {overall}
+            <span className={cn('text-3xl font-bold leading-none', levelColor(level))}>
+              {level_name || (level ? t('fortune.levels.' + level) : '—')}
             </span>
-            <span className='text-xs text-muted-foreground'>{t('fortune.scoreSuffix')}</span>
           </div>
           <div className='flex flex-col gap-1.5 flex-1'>
-            <p className={cn('text-lg font-semibold', scoreColor(overall))}>
-              {level_name || level || '—'}
+            <p className={cn('text-lg font-semibold', levelColor(level))}>
+              {level_name || (level ? t('fortune.levels.' + level) : '—')}
             </p>
             <p className='text-xs text-muted-foreground'>
               {t('fortune.kuyouLabel')}:{star.name}({star.reading})
@@ -127,13 +118,13 @@ function MonthlyTrendCard({ yearly, t }: { yearly: YearlyFortune; t: (key: strin
               key={m.month}
               className={cn(
                 'flex flex-col items-center gap-1 p-1.5 rounded-md',
-                scoreBg(m.score),
+                levelBg(m.level),
                 m.month === currentMonth && 'ring-1 ring-primary'
               )}
             >
               <span className='text-[10px] text-muted-foreground'>{m.month}{t('fortune.monthSuffix')}</span>
-              <span className={cn('text-xs font-semibold tabular-nums', scoreColor(m.score))}>
-                {m.score}
+              <span className={cn('text-xs font-semibold', levelColor(m.level))}>
+                {t('fortune.levels.' + m.level)}
               </span>
             </div>
           ))}
@@ -154,29 +145,16 @@ function CategoryCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, p
           {t('fortune.categoryFortunes')}
         </p>
         {[
-          { label: t('fortune.career'), key: 'career', score: yearly.fortune.career, desc: cats.career },
-          { label: t('fortune.love'), key: 'love', score: yearly.fortune.love, desc: cats.love },
-          { label: t('fortune.health'), key: 'health', score: yearly.fortune.health, desc: cats.health },
-          { label: t('fortune.wealth'), key: 'wealth', score: yearly.fortune.wealth, desc: cats.wealth },
-        ].map(({ label, key, score, desc }) => (
-          <div key={key} className='flex flex-col gap-1.5'>
-            <div className='flex items-center gap-3'>
-              <span className='text-xs text-muted-foreground w-10 shrink-0'>{label}</span>
-              <div className='flex-1 h-1.5 bg-muted rounded-full overflow-hidden'>
-                <div
-                  className='h-full rounded-full bg-primary transition-all duration-500'
-                  style={{ width: `${score}%` }}
-                />
-              </div>
-              <span className={cn('text-xs tabular-nums w-7 text-right', scoreColor(score))}>
-                {score}
-              </span>
-            </div>
-            {desc && (
-              <p className='text-xs text-muted-foreground pl-[52px] leading-relaxed'>{desc}</p>
-            )}
+          { label: t('fortune.career'), key: 'career', desc: cats.career },
+          { label: t('fortune.love'), key: 'love', desc: cats.love },
+          { label: t('fortune.health'), key: 'health', desc: cats.health },
+          { label: t('fortune.wealth'), key: 'wealth', desc: cats.wealth },
+        ].map(({ label, key, desc }) => desc ? (
+          <div key={key}>
+            <p className='text-xs font-medium text-primary mb-1'>{label}</p>
+            <p className='text-sm text-muted-foreground leading-relaxed'>{desc}</p>
           </div>
-        ))}
+        ) : null)}
       </CardContent>
     </Card>
   )

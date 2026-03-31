@@ -11,7 +11,7 @@ import { useTranslation } from '@/lib/i18n'
 import { FortuneCalendar, FortuneCalendarSkeleton } from '@/components/calendar/fortune-calendar'
 import Link from 'next/link'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
-import { scoreColor } from '@/utils/score-colors'
+import { levelColor } from '@/utils/fortune-helpers'
 import type { CalendarDay } from '@/types/calendar'
 
 function todayStr() {
@@ -133,8 +133,8 @@ export default function FortuneCalendarPage() {
               <p className='text-sm font-semibold text-foreground'>
                 {month}/{selectedDay.day}（{selectedDay.weekday}）
               </p>
-              <span className={cn('text-2xl font-bold tabular-nums', scoreColor(selectedDay.personal.fortune_score))}>
-                {selectedDay.personal.fortune_score}
+              <span className={cn('text-2xl font-bold', levelColor(selectedDay.personal.level))}>
+                {selectedDay.personal.level_name || selectedDay.personal.level || selectedDay.personal.fortune_score}
               </span>
             </div>
             <div className='flex flex-wrap gap-2 text-xs text-muted-foreground'>

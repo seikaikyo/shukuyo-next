@@ -122,7 +122,7 @@ export function use104Jobs() {
 
 /** 團隊矩陣 (HR/獵頭用) — 批次呼叫 compatibility-batch */
 export function useTeamMatrix() {
-  const [matrix, setMatrix] = useState<Map<string, { score: number; relation: string }>>(new Map())
+  const [matrix, setMatrix] = useState<Map<string, { level: string; level_name: string; relation: string }>>(new Map())
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState({ done: 0, total: 0 })
 
@@ -133,7 +133,7 @@ export function useTeamMatrix() {
     setLoading(true)
     const total = members.length - 1
     setProgress({ done: 0, total })
-    const newMatrix = new Map<string, { score: number; relation: string }>()
+    const newMatrix = new Map<string, { level: string; level_name: string; relation: string }>()
 
     for (let i = 0; i < members.length; i++) {
       const person1 = members[i]
@@ -149,7 +149,8 @@ export function useTeamMatrix() {
         for (const r of results) {
           if (r.data) {
             newMatrix.set(`${person1.id}:${r.id}`, {
-              score: r.data.score,
+              level: r.data.level,
+              level_name: r.data.level_name,
               relation: r.data.relation.name,
             })
           }

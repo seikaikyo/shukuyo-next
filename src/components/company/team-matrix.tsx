@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { scoreCellColor } from '@/utils/score-colors'
+import { levelColor, levelBg } from '@/utils/fortune-helpers'
 import { useTranslation } from '@/lib/i18n'
 
 interface Member {
@@ -13,7 +13,7 @@ interface Member {
 
 interface TeamMatrixProps {
   members: Member[]
-  matrix: Map<string, { score: number; relation: string }>
+  matrix: Map<string, { level: string; level_name: string; relation: string }>
   loading?: boolean
   progress?: { done: number; total: number }
 }
@@ -72,8 +72,8 @@ export function TeamMatrix({ members, matrix, loading, progress }: TeamMatrixPro
                   }
                   return (
                     <td key={col.id} className='p-1'>
-                      <div className={cn('rounded px-1.5 py-1 text-center', scoreCellColor(pair.score))}>
-                        <span className='font-bold tabular-nums'>{pair.score}</span>
+                      <div className={cn('rounded px-1.5 py-1 text-center', levelBg(pair.level), levelColor(pair.level))}>
+                        <span className='font-bold text-xs'>{pair.level_name}</span>
                         <br />
                         <span className='text-[9px] opacity-80'>{pair.relation}</span>
                       </div>

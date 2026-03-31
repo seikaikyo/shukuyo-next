@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { scoreColor } from '@/utils/score-colors'
+import { levelColor } from '@/utils/fortune-helpers'
 import { isSafeUrl } from '@/config/api'
 import { useTranslation } from '@/lib/i18n'
 import type { CompanyBatchResult, CompanyAnalysisItem } from '@/types/company'
@@ -36,9 +36,6 @@ function CompanyCard({ item }: { item: CompanyAnalysisItem }) {
             </div>
           </div>
           <div className='flex flex-col items-end gap-1'>
-            <span className={cn('text-2xl font-bold tabular-nums', scoreColor(compatibility.score))}>
-              {compatibility.score}
-            </span>
             <span className={cn('text-[10px] px-1.5 py-0.5 rounded border', tierBadge(tier.rank))}>
               {tier.label}
             </span>
@@ -98,8 +95,7 @@ interface CompanyBatchProps {
 export function CompanyBatch({ result }: CompanyBatchProps) {
   const { t } = useTranslation()
   const sorted = [...result.companies].sort((a, b) => {
-    if (a.tier.rank !== b.tier.rank) return a.tier.rank - b.tier.rank
-    return b.compatibility.score - a.compatibility.score
+    return a.tier.rank - b.tier.rank
   })
 
   return (
@@ -117,8 +113,8 @@ export function CompanyBatch({ result }: CompanyBatchProps) {
             </div>
             <div className='text-right'>
               <p className='text-xs text-muted-foreground'>{t('v3.company.yearlyFortune')}</p>
-              <p className={cn('text-sm font-bold tabular-nums', scoreColor(result.user.yearly_fortune?.overall))}>
-                {result.user.yearly_fortune?.overall}
+              <p className={cn('text-sm font-bold', levelColor(result.user.yearly_fortune?.kuyou_star?.level))}>
+                {result.user.yearly_fortune?.kuyou_star?.fortune_name}
               </p>
             </div>
           </div>

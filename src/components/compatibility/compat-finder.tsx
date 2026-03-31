@@ -62,7 +62,7 @@ export function CompatFinder() {
         <div className='flex items-center gap-2 flex-wrap'>
           <h3 className='text-base font-semibold text-foreground'>{finder.your_mansion.name_jp}</h3>
           <span className='text-xs text-muted-foreground'>（{finder.your_mansion.reading}）</span>
-          <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>{finder.your_mansion.element}</span>
+          <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>{finder.your_mansion.yosei}</span>
         </div>
         <p className='text-xs text-muted-foreground'>{t('v3.match.suggestedMansions')}</p>
       </div>
@@ -84,7 +84,7 @@ export function CompatFinder() {
                 <span className='text-sm font-semibold text-foreground'>{group.relation}</span>
                 <span className='text-xs text-muted-foreground'>（{group.reading}）</span>
                 <span className={cn('text-sm font-bold tabular-nums ml-auto', relationScoreColor(relKey))}>
-                  {t('common.score', { n: group.score })}
+                  {group.level}
                 </span>
               </div>
               <p className='text-xs text-muted-foreground leading-relaxed'>{group.description}</p>
@@ -99,7 +99,7 @@ export function CompatFinder() {
                 >
                   <span className='font-medium text-foreground'>{m.name_jp}</span>
                   <span className='text-muted-foreground'>（{m.reading}）</span>
-                  <span className='text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary'>{m.element}</span>
+                  <span className='text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary'>{m.yosei}</span>
                 </div>
               ))}
             </div>

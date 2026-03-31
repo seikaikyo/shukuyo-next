@@ -16,7 +16,7 @@ export interface SpecialDay {
 export interface CalendarDayMansion {
   name_jp: string
   index: number
-  element: string
+  yosei: string
 }
 
 export interface CalendarPersonal {

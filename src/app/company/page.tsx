@@ -101,7 +101,7 @@ function CompareTab() {
               <p className='text-sm text-foreground font-medium'>{comparisonResult.verdict.summary}</p>
               {comparisonResult.verdict.top_pick && (
                 <p className='text-xs text-muted-foreground mt-1'>
-                  {t('company.topPick')}: {comparisonResult.verdict.top_pick} ({t('v3.company.overall')} {comparisonResult.verdict.top_composite})
+                  {t('company.topPick')}: {comparisonResult.verdict.top_pick}
                 </p>
               )}
               {comparisonResult.verdict.warnings.length > 0 && (
@@ -120,18 +120,11 @@ function CompareTab() {
             <div key={c.id} className='rounded-lg border border-border p-4 flex flex-col gap-2'>
               <div className='flex items-center justify-between'>
                 <p className='text-sm font-semibold text-foreground'>{c.name}</p>
-                <div className='flex items-center gap-2'>
-                  <span className='text-xs text-muted-foreground'>{t('v3.company.overall')}</span>
-                  <span className={cn('text-lg font-bold tabular-nums', c.composite_score >= 70 ? 'text-[var(--fortune-great)]' : c.composite_score >= 50 ? 'text-[var(--fortune-good)]' : 'text-[var(--fortune-caution)]')}>
-                    {c.composite_score}
-                  </span>
-                </div>
               </div>
               <div className='flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground'>
-                <span>{t('company.comparison.compatScore')} {c.compatibility.score}</span>
                 <span>{c.compatibility.relation_name}</span>
+                <span>{c.compatibility.level}</span>
                 <span>{t('company.comparison.drainIndex')} {c.drain.label}</span>
-                <span>{t('company.comparison.alignmentScore')} {c.decade_alignment.score}</span>
               </div>
               <span className={cn(
                 'text-[10px] px-1.5 py-0.5 rounded self-start',

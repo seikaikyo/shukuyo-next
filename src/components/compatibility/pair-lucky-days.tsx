@@ -5,7 +5,7 @@ import { useTranslation } from '@/lib/i18n'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDate, getWeekdayName } from '@/utils/date'
-import { scoreColor } from '@/utils/score-colors'
+import { levelColor } from '@/utils/fortune-helpers'
 import type { PairLuckyDaysResult, LuckyDay } from '@/types/lucky-days'
 
 function ratingBadge(rating: string) {
@@ -27,7 +27,7 @@ function LuckyDayItem({ day, locale }: { day: LuckyDay; locale: string }) {
       </div>
       <div className='flex-1 flex flex-col gap-1 min-w-0'>
         <div className='flex items-center gap-2 flex-wrap'>
-          <span className={cn('text-sm font-bold tabular-nums', scoreColor(day.score))}>{day.score}</span>
+          <span className={cn('text-sm font-bold', levelColor(day.level))}>{day.level}</span>
           {day.rating && (
             <span className={cn('text-[10px] px-1.5 py-0.5 rounded border', ratingBadge(day.rating))}>
               {day.rating}

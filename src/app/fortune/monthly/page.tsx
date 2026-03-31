@@ -8,18 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { scoreColor, scoreBorder } from '@/utils/score-colors'
+import { levelColor, levelBorder, levelBg, getLevelHeight } from '@/utils/fortune-helpers'
 import type { MonthlyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
-
-function scoreBg(score: number) {
-  if (score >= 80) return 'bg-emerald-500/15'
-  if (score >= 60) return 'bg-sky-500/15'
-  if (score >= 40) return 'bg-amber-500/15'
-  if (score >= 20) return 'bg-orange-500/15'
-  return 'bg-red-500/15'
-}
 
 // ---- Sub-components ----
 
@@ -73,20 +65,19 @@ function MonthNav({
 }
 
 function MonthOverviewCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const { overall, level_name, level } = monthly.fortune
+  const { level_name, level } = monthly.fortune
 
   return (
-    <Card className={cn('border-2', scoreBorder(overall))}>
+    <Card className={cn('border-2', levelBorder(level))}>
       <CardContent className='pt-6 pb-6 flex gap-4'>
         <div className='flex flex-col items-center gap-1 shrink-0'>
-          <span className={cn('text-5xl font-bold tabular-nums leading-none', scoreColor(overall))}>
-            {overall}
+          <span className={cn('text-3xl font-bold leading-none', levelColor(level))}>
+            {level_name || (level ? t('fortune.levels.' + level) : '—')}
           </span>
-          <span className='text-xs text-muted-foreground'>{t('fortune.scoreSuffix')}</span>
         </div>
         <div className='flex flex-col gap-2 flex-1'>
-          <p className={cn('text-lg font-semibold', scoreColor(overall))}>
-            {level_name || level || '—'}
+          <p className={cn('text-lg font-semibold', levelColor(level))}>
+            {level_name || (level ? t('fortune.levels.' + level) : '—')}
           </p>
           <p className='text-xs text-muted-foreground'>
             {t('fortune.monthMansion')}:{monthly.month_mansion.name_jp}({monthly.month_mansion.reading})
@@ -123,11 +114,11 @@ function WeeklyBreakdownCard({ monthly, t }: { monthly: MonthlyFortune; t: (key:
               <div className='flex-1 h-1.5 bg-muted rounded-full overflow-hidden'>
                 <div
                   className='h-full rounded-full bg-primary transition-all duration-500'
-                  style={{ width: `${week.score}%` }}
+                  style={{ width: `${getLevelHeight(week.level)}%` }}
                 />
               </div>
-              <span className={cn('text-xs tabular-nums w-7 text-right shrink-0', scoreColor(week.score))}>
-                {week.score}
+              <span className={cn('text-xs w-12 text-right shrink-0', levelColor(week.level))}>
+                {t('fortune.levels.' + week.level)}
               </span>
             </div>
             {week.focus && (
@@ -138,10 +129,10 @@ function WeeklyBreakdownCard({ monthly, t }: { monthly: MonthlyFortune; t: (key:
               {week.daily_overview.map((day) => (
                 <div
                   key={day.date}
-                  className={cn('flex-1 h-6 rounded-sm flex items-center justify-center text-[9px] font-medium', scoreBg(day.score))}
-                  title={`${day.date} ${day.weekday} ${day.score}分`}
+                  className={cn('flex-1 h-6 rounded-sm flex items-center justify-center text-[9px] font-medium', levelBg(day.level))}
+                  title={`${day.date} ${day.weekday}`}
                 >
-                  <span className={scoreColor(day.score)}>{day.score}</span>
+                  <span className={levelColor(day.level)}>{t('fortune.levels.' + day.level)}</span>
                 </div>
               ))}
             </div>
@@ -182,7 +173,7 @@ function StrategyCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string
                       {date.getMonth() + 1}/{date.getDate()}
                     </span>
                     <span className='text-xs text-muted-foreground'>{d.weekday}</span>
-                    <span className='text-xs font-semibold text-emerald-500 tabular-nums'>{d.score}</span>
+                    <span className={cn('text-xs font-semibold', levelColor(d.level))}>{t('fortune.levels.' + d.level)}</span>
                   </div>
                 )
               })}
@@ -204,7 +195,7 @@ function StrategyCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string
                       {date.getMonth() + 1}/{date.getDate()}
                     </span>
                     <span className='text-xs text-muted-foreground'>{d.weekday}</span>
-                    <span className='text-xs font-semibold text-orange-500 tabular-nums'>{d.score}</span>
+                    <span className={cn('text-xs font-semibold', levelColor(d.level))}>{t('fortune.levels.' + d.level)}</span>
                   </div>
                 )
               })}

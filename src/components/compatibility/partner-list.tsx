@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Pencil, Trash2, Plus, ChevronRight, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n'
-import { scoreColor } from '@/utils/score-colors'
+import { levelColor } from '@/utils/fortune-helpers'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -159,7 +159,7 @@ function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCar
         {compat && (
           <div className='flex flex-col items-end gap-0.5 shrink-0'>
             <span className='text-xs text-muted-foreground'>{compat.mansion.name_jp}</span>
-            <span className='text-[10px] text-muted-foreground'>{compat.mansion.element}</span>
+            <span className='text-[10px] text-muted-foreground'>{compat.mansion.yosei}</span>
           </div>
         )}
 
@@ -168,22 +168,22 @@ function PartnerCard({ partner, compat, onSelect, onEdit, onDelete }: PartnerCar
           <div className='flex flex-col gap-0.5 items-end shrink-0 min-w-[80px]'>
             <div className='flex items-center gap-1 text-xs'>
               <span className='text-muted-foreground'>{t('common.me')}</span>
-              <span className={cn('font-bold tabular-nums', scoreColor(ds.person1_to_person2.score))}>
-                {ds.person1_to_person2.score}
+              <span className='font-medium text-foreground'>
+                {ds.person1_to_person2.position}
               </span>
               <span className='text-[10px] text-muted-foreground'>{ds.person1_to_person2.direction}</span>
             </div>
             <div className='flex items-center gap-1 text-xs'>
               <span className='text-muted-foreground'>{t('common.other')}</span>
-              <span className={cn('font-bold tabular-nums', scoreColor(ds.person2_to_person1.score))}>
-                {ds.person2_to_person1.score}
+              <span className='font-medium text-foreground'>
+                {ds.person2_to_person1.position}
               </span>
               <span className='text-[10px] text-muted-foreground'>{ds.person2_to_person1.direction}</span>
             </div>
           </div>
         ) : compat ? (
-          <span className={cn('text-xl font-bold tabular-nums shrink-0', scoreColor(compat.score))}>
-            {compat.score}
+          <span className={cn('text-base font-bold shrink-0', levelColor(compat.level))}>
+            {compat.level_name}
           </span>
         ) : null}
 
@@ -365,7 +365,7 @@ function PartnerMatrix({
     }))
     .filter((g) => g.items.length > 0)
 
-  const positive = partnerCompatibilities.filter((pc) => pc.score >= 60).length
+  const positive = partnerCompatibilities.filter((pc) => pc.level === 'daikichi' || pc.level === 'kichi').length
   const harmony = Math.round((positive / partnerCompatibilities.length) * 100)
 
   return (
@@ -393,7 +393,7 @@ function PartnerMatrix({
                 )}
               >
                 <span className='font-medium truncate max-w-full'>{pc.nickname}</span>
-                <span className='text-xl font-bold tabular-nums'>{pc.score}</span>
+                <span className='text-sm font-bold'>{pc.level_name}</span>
                 <span className='text-[10px] opacity-70'>{pc.mansion.name_jp}</span>
               </button>
             ))}

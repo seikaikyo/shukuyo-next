@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { scoreColor } from '@/utils/score-colors'
+import { levelColor } from '@/utils/fortune-helpers'
 import Link from 'next/link'
 import type { LuckyDayCategoryResult, LuckyDay } from '@/types/lucky-days'
 
@@ -54,8 +54,8 @@ function LuckyDayItem({ day, locale }: { day: LuckyDay; locale: string }) {
     <div className='flex flex-col gap-1 px-3 py-2 rounded-md bg-muted/40'>
       <div className='flex items-center gap-2'>
         <span className='text-xs text-muted-foreground min-w-24'>{formatDay(day.date, locale)}</span>
-        <span className={cn('text-xs font-semibold tabular-nums', scoreColor(day.score))}>
-          {day.score}
+        <span className={cn('text-xs font-semibold', levelColor(day.level))}>
+          {day.level}
         </span>
         {day.rating && (
           <span className='text-xs text-muted-foreground'>{day.rating}</span>

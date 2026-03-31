@@ -8,19 +8,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { scoreColor } from '@/utils/score-colors'
+import { levelColor, levelBg, getLevelHeight } from '@/utils/fortune-helpers'
 import type { IndustryRecommendation } from '@/types/startup'
 import type { LuckyCalendarData, LuckyCalendarDay } from '@/types/lucky-days'
 
 // ---- Helpers ----
-
-function scoreBg(score: number) {
-  if (score >= 80) return 'bg-emerald-500/10'
-  if (score >= 60) return 'bg-sky-500/10'
-  if (score >= 40) return 'bg-amber-500/10'
-  if (score >= 20) return 'bg-orange-500/10'
-  return 'bg-red-500/10'
-}
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month, 0).getDate()
@@ -169,7 +161,10 @@ function CalendarView({
             const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
             const entries = calendar.days[dateStr]
             const hasLucky = entries && entries.length > 0
-            const topScore = hasLucky ? Math.max(...entries.map(e => e.score)) : 0
+            const LEVEL_RANK: Record<string, number> = { daikichi: 4, kichi: 3, shokyo: 2, kyo: 1 }
+            const topLevel = hasLucky
+              ? entries.reduce((best, e) => (LEVEL_RANK[e.level] || 0) > (LEVEL_RANK[best] || 0) ? e.level : best, entries[0].level)
+              : ''
             const isSelected = selectedDate === dateStr
 
             return (
@@ -178,20 +173,20 @@ function CalendarView({
                 onClick={() => setSelectedDate(isSelected ? null : dateStr)}
                 className={cn(
                   'relative flex flex-col items-center py-1.5 rounded-md transition-all duration-150',
-                  hasLucky ? scoreBg(topScore) : '',
+                  hasLucky ? levelBg(topLevel) : '',
                   isSelected && 'ring-1 ring-primary',
                   'hover:opacity-80'
                 )}
               >
                 <span className={cn(
                   'text-xs tabular-nums',
-                  hasLucky ? scoreColor(topScore) : 'text-muted-foreground'
+                  hasLucky ? levelColor(topLevel) : 'text-muted-foreground'
                 )}>
                   {day}
                 </span>
                 {hasLucky && (
-                  <span className={cn('text-[9px] font-medium tabular-nums', scoreColor(topScore))}>
-                    {topScore}
+                  <span className={cn('text-[9px] font-medium', levelColor(topLevel))}>
+                    {topLevel}
                   </span>
                 )}
               </button>
@@ -208,8 +203,8 @@ function CalendarView({
               <div key={i} className='flex flex-col gap-1.5 px-3 py-2 rounded-md bg-muted/40'>
                 <div className='flex items-center gap-2'>
                   <span className='text-xs font-medium text-foreground'>{entry.action_name}</span>
-                  <span className={cn('text-xs font-semibold tabular-nums', scoreColor(entry.score))}>
-                    {entry.score}
+                  <span className={cn('text-xs font-semibold', levelColor(entry.level))}>
+                    {entry.level}
                   </span>
                 </div>
                 {entry.reason && (

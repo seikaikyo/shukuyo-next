@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { scoreColor } from '@/utils/score-colors'
+import { levelColor, levelBg, getLevelHeight } from '@/utils/fortune-helpers'
 import type { WeeklyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
@@ -21,14 +21,6 @@ function offsetDate(dateStr: string, days: number) {
   const d = new Date(dateStr + 'T00:00:00')
   d.setDate(d.getDate() + days)
   return d.toISOString().split('T')[0]
-}
-
-function scoreBg(score: number) {
-  if (score >= 80) return 'bg-emerald-500/10'
-  if (score >= 60) return 'bg-sky-500/10'
-  if (score >= 40) return 'bg-amber-500/10'
-  if (score >= 20) return 'bg-orange-500/10'
-  return 'bg-red-500/10'
 }
 
 function weekdayLabel(dateStr: string, locale: string) {
@@ -109,21 +101,20 @@ function WeekNav({
 }
 
 function WeekOverviewCard({ weekly, t }: { weekly: WeeklyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const { overall, level_name, level } = weekly.fortune
+  const { level_name, level } = weekly.fortune
 
   return (
     <Card className='border border-border dark:border-primary/20'>
       <CardContent className='pt-6 pb-6 flex flex-col gap-4'>
         <div className='flex items-center gap-4'>
           <div className='flex flex-col items-center gap-1 shrink-0'>
-            <span className={cn('text-5xl font-bold tabular-nums leading-none', scoreColor(overall))}>
-              {overall}
+            <span className={cn('text-3xl font-bold leading-none', levelColor(level))}>
+              {level_name || (level ? t('fortune.levels.' + level) : '—')}
             </span>
-            <span className='text-xs text-muted-foreground'>{t('fortune.scoreSuffix')}</span>
           </div>
           <div className='flex flex-col gap-1'>
-            <p className={cn('text-lg font-semibold', scoreColor(overall))}>
-              {level_name || level || '—'}
+            <p className={cn('text-lg font-semibold', levelColor(level))}>
+              {level_name || (level ? t('fortune.levels.' + level) : '—')}
             </p>
             {weekly.your_mansion && (
               <p className='text-xs text-muted-foreground'>
@@ -156,14 +147,14 @@ function DailyOverviewCard({ weekly, t, locale }: { weekly: WeeklyFortune; t: (k
               key={day.date}
               className={cn(
                 'flex flex-col items-center gap-1 p-2 rounded-md',
-                scoreBg(day.score),
+                levelBg(day.level),
                 day.is_today && 'ring-1 ring-primary'
               )}
             >
               <span className='text-xs text-muted-foreground'>{weekdayLabel(day.date, locale)}</span>
               <span className='text-[10px] text-muted-foreground'>{shortDateLabel(day.date)}</span>
-              <span className={cn('text-sm font-semibold tabular-nums', scoreColor(day.score))}>
-                {day.score}
+              <span className={cn('text-xs font-semibold', levelColor(day.level))}>
+                {t('fortune.levels.' + day.level)}
               </span>
               {day.special_day && (
                 <span className='text-[9px] text-primary truncate w-full text-center'>{day.special_day}</span>

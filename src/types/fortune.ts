@@ -13,11 +13,6 @@ export interface FortuneScores {
   level_name_ja?: string
   level_reading?: string
   base_level?: string
-  overall: number
-  career: number
-  love: number
-  health: number
-  wealth: number
   career_desc?: string
   love_desc?: string
   health_desc?: string
@@ -41,19 +36,19 @@ export interface DailyFortune {
   weekday: {
     name: string
     reading: string
-    element: string
+    yosei: string
     planet: string
   }
   your_mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
     index: number
   }
   day_mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
     index: number
     day_fortune?: {
       auspicious: string[]
@@ -127,23 +122,23 @@ export interface WeeklyFortune {
   center_date: string
   week_start: string
   week_end: string
-  today_element: {
+  today_yosei: {
     name: string
     reading: string
-    element: string
+    yosei: string
     planet: string
   }
   your_mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
     index: number
   }
   fortune: FortuneScores
   daily_overview: {
     date: string
     weekday: string
-    score: number
+    level: string
     is_today: boolean
     is_yesterday: boolean
     special_day?: string | null
@@ -176,7 +171,7 @@ export interface WeeklyFortune {
 export interface MonthlyStrategyDay {
   date: string
   weekday: string
-  score: number
+  level: string
   reason?: string
   reasons?: string[]
 }
@@ -185,7 +180,6 @@ export interface MonthlyActionWindow {
   start_date: string
   end_date: string
   days: number
-  avg_score: number
   description: string
 }
 
@@ -203,12 +197,12 @@ export interface MonthlyFortune {
     name_jp: string
     reading: string
     index: number
-    element: string
+    yosei: string
   }
   your_mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
     index: number
   }
   relation: {
@@ -232,14 +226,14 @@ export interface MonthlyFortune {
     week_start: string
     week_end: string
     days_count: number
-    score: number
+    level: string
     focus: string
     has_dark_week: boolean
     warnings?: string[]
     daily_overview: {
       date: string
       weekday: string
-      score: number
+      level: string
       sanki_period_index?: number
       sanki_day_in_period?: number
       sanki_day_type?: string
@@ -259,21 +253,20 @@ export interface MonthlyFortune {
 export interface YearlySafeHaven {
   start_month: number
   end_month: number
-  avg_score: number
   cluster_type: string | null
   description: string
 }
 
 export interface YearlyBestMonth {
   month: number
-  score: number
+  level: string
   relation_type: string
   description: string
 }
 
 export interface YearlyCautionMonth {
   month: number
-  score: number
+  level: string
   reasons: string[]
   description: string
 }
@@ -290,8 +283,6 @@ export interface YearlyStrategy {
   }
   yearly_rhythm: {
     type: string
-    first_half_avg: number
-    second_half_avg: number
     description: string
   }
   dynamic_tips: Record<number, string>
@@ -305,7 +296,7 @@ export interface YearlyFortune {
     level: string
     meta?: FortuneDescriptionMeta
     fortune_name: string
-    element: string | null
+    yosei: string | null
     buddha: string
     description: string
     kazoe_age: number
@@ -313,7 +304,7 @@ export interface YearlyFortune {
   your_mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
     index: number
   }
   fortune: FortuneScores
@@ -336,7 +327,7 @@ export interface YearlyFortune {
   }
   monthly_trend: {
     month: number
-    score: number
+    level: string
     relation_type?: string
     ryouhan_ratio?: number
     tip?: string

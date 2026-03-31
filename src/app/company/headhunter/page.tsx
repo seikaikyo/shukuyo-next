@@ -10,9 +10,18 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useProfileStore } from '@/stores/profile'
 import { apiPost } from '@/config/api'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
-import { scoreColor } from '@/utils/score-colors'
 import { useTranslation } from '@/lib/i18n'
 import type { CompanyBatchResult } from '@/types/company'
+
+function tierBadge(rank: number) {
+  const map: Record<number, string> = {
+    1: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+    2: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30',
+    3: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
+    4: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30',
+  }
+  return map[rank] || 'bg-muted/50 text-muted-foreground border-border'
+}
 
 export default function HeadhunterPage() {
   const { t } = useTranslation()
@@ -204,14 +213,14 @@ export default function HeadhunterPage() {
           </Card>
 
           {[...analysisResult.companies]
-            .sort((a, b) => a.tier.rank - b.tier.rank || b.compatibility.score - a.compatibility.score)
+            .sort((a, b) => a.tier.rank - b.tier.rank)
             .map((item) => (
               <Card key={item.id} className='border border-border'>
                 <CardContent className='pt-4 pb-4 flex flex-col gap-2'>
                   <div className='flex items-center justify-between'>
                     <p className='text-sm font-medium text-foreground'>{item.name}</p>
-                    <span className={cn('text-xl font-bold tabular-nums', scoreColor(item.compatibility.score))}>
-                      {item.compatibility.score}
+                    <span className={cn('text-xs px-1.5 py-0.5 rounded border', tierBadge(item.tier.rank))}>
+                      {item.tier.label}
                     </span>
                   </div>
                   <div className='flex flex-wrap gap-2 text-xs text-muted-foreground'>

@@ -11,10 +11,10 @@ export interface StartupDateEval {
     type: string
     name: string
     direction: string
-    score: number
+    level: string
   }
   is_opening_auspicious: boolean
-  score: number
+  level: string
   verdict: 'excellent' | 'good' | 'fair' | 'caution' | 'warning'
   delta_days?: number
 }

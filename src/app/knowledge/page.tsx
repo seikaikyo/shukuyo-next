@@ -24,8 +24,8 @@ const SHICHIYOU_COLORS: Record<string, string> = {
   '土': 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
 }
 
-function shichiyouClass(element: string) {
-  return SHICHIYOU_COLORS[element] || 'bg-muted/50 text-muted-foreground border-border'
+function shichiyouClass(yosei: string) {
+  return SHICHIYOU_COLORS[yosei] || 'bg-muted/50 text-muted-foreground border-border'
 }
 
 const RELATION_COLORS: Record<string, string> = {
@@ -104,9 +104,9 @@ function MansionCard({
       <div className='flex items-center justify-between'>
         <span className={cn(
           'text-[10px] px-1.5 py-0.5 rounded border',
-          shichiyouClass(mansion.element)
+          shichiyouClass(mansion.yosei)
         )}>
-          {mansion.element}
+          {mansion.yosei}
         </span>
         <span className='text-[10px] text-muted-foreground tabular-nums'>#{mansion.index}</span>
       </div>
@@ -150,9 +150,9 @@ function MansionDetailPanel({
                 <h3 className='text-xl font-bold text-foreground'>{mansion.name_jp}</h3>
                 <span className={cn(
                   'text-xs px-1.5 py-0.5 rounded border',
-                  shichiyouClass(mansion.element)
+                  shichiyouClass(mansion.yosei)
                 )}>
-                  {mansion.element}
+                  {mansion.yosei}
                 </span>
               </div>
               <p className='text-sm text-muted-foreground'>{mansion.reading}</p>
@@ -252,8 +252,8 @@ function RelationCard({ relation }: { relation: RelationType }) {
             </h3>
             <span className='text-sm text-muted-foreground'>{relation.name_jp}({relation.reading})</span>
           </div>
-          <span className={cn('text-sm font-semibold tabular-nums', relationColorByType(relation.type))}>
-            {t('common.score', { n: relation.score })}
+          <span className={cn('text-sm font-semibold', relationColorByType(relation.type))}>
+            {relation.level}
           </span>
         </div>
         {relation.description && (

@@ -137,10 +137,8 @@ export interface PracticalGuidance {
 
 export interface DirectionalScore {
   direction: string
-  score: number
-  modifier: number
+  position: string
   ryouhan_active: boolean
-  ryouhan_adjusted_score: number | null
 }
 
 export interface DirectionalScores {
@@ -173,7 +171,8 @@ export interface CompatibilityResult {
   person2: Person
   relation: Relation
   calculation: Calculation
-  score: number
+  level: string
+  level_name: string
   directional_scores?: DirectionalScores
   summary: string
   classical_analysis?: ClassicalAnalysis
@@ -202,7 +201,7 @@ export interface RelationType {
   name: string
   name_jp: string
   reading: string
-  score: number
+  level: string
   description: string
   description_classic?: string
   source?: string
@@ -223,10 +222,11 @@ export interface PartnerCompatibility {
   mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
   }
   relation: Relation
-  score: number
+  level: string
+  level_name: string
   directional_scores?: DirectionalScores
   verdict?: RelationshipVerdict
   direction_analysis?: DirectionAnalysis
@@ -249,8 +249,8 @@ export interface CompatibleMansion {
   name_zh: string
   reading: string
   index: number
-  element: string
-  element_reading: string
+  yosei: string
+  yosei_reading: string
   keywords: string[]
   personality: string
   lunar_dates: LunarDate[]
@@ -259,7 +259,7 @@ export interface CompatibleMansion {
 export interface CompatibilityCategory {
   relation: string
   reading: string
-  score: number
+  level: string
   description: string
   description_classic?: string
   description_meta?: NarrativeMeta
@@ -273,7 +273,7 @@ export interface CompatibilityFinderResult {
     name_zh: string
     reading: string
     index: number
-    element: string
+    yosei: string
     lunar_date: {
       year: number
       month: number

@@ -6,7 +6,7 @@ import { getIcsTranslations } from './ics-i18n'
 interface DayMansion {
   name_jp: string
   index: number
-  element: string
+  yosei: string
 }
 
 interface IcsSpecialDay {
@@ -53,7 +53,7 @@ export interface CalendarData {
     your_mansion: {
       name_jp: string
       reading: string
-      element: string
+      yosei: string
       index: number
     }
   }
@@ -221,7 +221,7 @@ function buildDayEvent(day: CalendarDay, index: number, lang: string): string[] 
   if (personal) {
     descParts.push(`${t.fortuneLabel}: ${personal.fortune_score} (${level})`)
     descParts.push(`${t.relationLabel}: ${personal.relation_name}`)
-    descParts.push(`${t.mansionLabel}: ${day.day_mansion.name_jp}(${day.day_mansion.element}) - ${day.weekday}`)
+    descParts.push(`${t.mansionLabel}: ${day.day_mansion.name_jp}(${day.day_mansion.yosei}) - ${day.weekday}`)
     descParts.push(`${t.sankiLabel}: ${personal.sanki_period}`)
   }
   if (day.special_day) {

@@ -70,10 +70,11 @@ export function usePartnerCompatibilities() {
           mansion: {
             name_jp: compat.person2.mansion,
             reading: compat.person2.reading,
-            element: compat.person2.element,
+            yosei: compat.person2.yosei,
           },
           relation: compat.relation,
-          score: compat.score,
+          level: compat.level,
+          level_name: compat.level_name,
           directional_scores: compat.directional_scores,
           verdict: compat.direction_analysis?.verdict ?? undefined,
           direction_analysis: compat.direction_analysis ?? undefined,
@@ -81,7 +82,8 @@ export function usePartnerCompatibilities() {
           calculation: { distance: compat.calculation.distance },
         })
       }
-      setPartnerCompatibilities(results.sort((a, b) => b.score - a.score))
+      const LEVEL_ORDER: Record<string, number> = { daikichi: 0, kichi: 1, shokyo: 2, kyo: 3 }
+      setPartnerCompatibilities(results.sort((a, b) => (LEVEL_ORDER[a.level] ?? 9) - (LEVEL_ORDER[b.level] ?? 9)))
     } catch {
       // 靜默失敗，保留上次結果
     } finally {

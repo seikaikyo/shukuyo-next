@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
 import Link from 'next/link'
-import { scoreColor, scoreBorder } from '@/utils/score-colors'
+import { levelColor, levelBorder, levelBg } from '@/utils/fortune-helpers'
 import type { DailyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
@@ -88,29 +88,27 @@ function DateNav({
 }
 
 function OverallScoreCard({ fortune, t }: { fortune: DailyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const { overall, level_name, level } = fortune.fortune
+  const { level_name, level } = fortune.fortune
 
   return (
     <Card className='border border-border dark:border-primary/20'>
       <CardContent className='flex flex-col items-center gap-3 pt-8 pb-8'>
-        {/* circular score ring */}
+        {/* level badge */}
         <div
           className={cn(
             'relative flex items-center justify-center rounded-full border-4 h-32 w-32',
-            scoreBorder(overall)
+            levelBorder(level),
+            levelBg(level)
           )}
         >
-          <div className='flex flex-col items-center'>
-            <span className={cn('text-4xl font-bold tabular-nums leading-none', scoreColor(overall))}>
-              {overall}
-            </span>
-            <span className='text-xs text-muted-foreground mt-0.5'>{t('fortune.scoreSuffix')}</span>
-          </div>
+          <span className={cn('text-2xl font-bold leading-none', levelColor(level))}>
+            {level_name || (level ? t('fortune.levels.' + level) : '—')}
+          </span>
         </div>
 
         {/* level label */}
-        <p className={cn('text-xl font-serif font-semibold', scoreColor(overall))}>
-          {level_name || level || '—'}
+        <p className={cn('text-xl font-serif font-semibold', levelColor(level))}>
+          {level_name || (level ? t('fortune.levels.' + level) : '—')}
         </p>
 
         {/* day mansion relation */}
@@ -145,22 +143,18 @@ function CategoryCard({ fortune, t }: { fortune: DailyFortune; t: (key: string, 
   const cats = [
     {
       label: t('fortune.career'),
-      score: fortune.fortune.career,
       desc: fortune.fortune.career_desc,
     },
     {
       label: t('fortune.love'),
-      score: fortune.fortune.love,
       desc: fortune.fortune.love_desc,
     },
     {
       label: t('fortune.health'),
-      score: fortune.fortune.health,
       desc: fortune.fortune.health_desc,
     },
     {
       label: t('fortune.wealth'),
-      score: fortune.fortune.wealth,
       desc: fortune.fortune.wealth_desc,
     },
   ]

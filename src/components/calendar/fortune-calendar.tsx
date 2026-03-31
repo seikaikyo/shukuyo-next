@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { scoreColor, scoreBg } from '@/utils/score-colors'
+import { levelColor, levelBg, getLevelKey } from '@/utils/fortune-helpers'
 import { useTranslation } from '@/lib/i18n'
 import type { CalendarMonthData, CalendarDay } from '@/types/calendar'
 
@@ -16,11 +16,13 @@ function CalendarDayCell({
   isToday: boolean
   onClick?: (day: CalendarDay) => void
 }) {
+  const { t } = useTranslation()
+
   if (!day) {
     return <div className='h-16' />
   }
 
-  const score = day.personal?.fortune_score ?? 0
+  const level = day.personal?.level
   const hasSpecial = !!day.special_day
   const hasRyouhan = day.ryouhan?.active
   const isDarkWeek = day.personal?.is_dark_week
@@ -31,7 +33,7 @@ function CalendarDayCell({
       onClick={() => onClick?.(day)}
       className={cn(
         'h-16 w-full rounded-md flex flex-col items-center justify-center gap-0.5 transition-colors',
-        scoreBg(score),
+        levelBg(level),
         isToday && 'ring-1 ring-primary',
         'hover:bg-muted/60'
       )}
@@ -42,8 +44,8 @@ function CalendarDayCell({
       )}>
         {day.day}
       </span>
-      <span className={cn('text-sm font-bold tabular-nums', scoreColor(score))}>
-        {score}
+      <span className={cn('text-[10px] font-bold', levelColor(level))}>
+        {level ? t(getLevelKey(level)) : ''}
       </span>
       <div className='flex gap-0.5'>
         {hasSpecial && <span className='w-1 h-1 rounded-full bg-amber-500' />}

@@ -30,13 +30,11 @@ export interface CompanyFortuneInfo {
     level: string
     meta?: CompanyNarrativeMeta
     fortune_name: string
-    element: string | null
+    yosei: string | null
     buddha: string
     description: string
     kazoe_age: number
   }
-  overall: number
-  career: number
 }
 
 export interface DrainInfo {
@@ -54,7 +52,6 @@ export interface DeepFortuneYear {
   year: number
   company_star: string
   company_level: string
-  company_overall: number
   cross_risk: 'danger' | 'warning' | 'safe'
 }
 
@@ -62,7 +59,6 @@ export interface CompanyAnalysisItem {
   id: string
   name: string
   compatibility: {
-    score: number
     relation: Relation
     person2: Person
     direction_analysis?: DirectionAnalysis
@@ -84,7 +80,6 @@ export interface CompanyAnalysisItem {
     bad_year_impact: string
     fit_for: string
   }
-  composite_score?: number
   cross_risk_current?: CrossRiskCurrent
   deep_fortune?: DeepFortuneYear[]
   memo: string
@@ -112,11 +107,11 @@ export interface CompanyBatchResult {
     mansion: {
       name_jp: string
       reading: string
-      element: string
+      yosei: string
       index: number
     }
     yearly_fortune: CompanyFortuneInfo
-    deep_fortune?: { year: number; star: string; level: string; overall: number }[]
+    deep_fortune?: { year: number; star: string; level: string }[]
   }
   companies: CompanyAnalysisItem[]
   tier_summary: {
@@ -146,6 +141,14 @@ export interface CompanyJobsResult {
   jobs: CompanyJob[]
 }
 
+export interface GcisCompany {
+  name: string
+  business_no: string
+  founding_date: string
+  responsible: string
+  capital: string
+}
+
 // 公司比較分析
 export interface ComparisonDrain {
   index: number
@@ -165,17 +168,15 @@ export interface ComparisonCompanyItem {
   name: string
   founding_date: string
   compatibility: {
-    score: number
     relation_type: string
     relation_name: string
     direction: string
     distance_type: string
-    score_to_company: number
-    score_from_company: number
+    level: string
   }
   company_mansion: {
     name: string
-    element: string
+    yosei: string
   }
   drain: ComparisonDrain
   cross_risk: {
@@ -184,16 +185,14 @@ export interface ComparisonCompanyItem {
     details: CrossRiskDetail[]
   }
   decade_alignment: {
-    score: number
     both_good_years: number
     both_bad_years: number
     complement_years: number
   }
-  composite_score: number
   decade_fortune: {
     year: number
-    company: { star: string; level: string; overall: number }
-    user: { star: string; level: string; overall: number }
+    company: { star: string; level: string }
+    user: { star: string; level: string }
     cross_risk: string
   }[]
   priority: {
@@ -207,7 +206,6 @@ export interface ComparisonVerdict {
   summary: string
   warnings: string[]
   top_pick: string
-  top_composite: number
 }
 
 export interface ComparisonResult {
@@ -215,18 +213,34 @@ export interface ComparisonResult {
     mansion: {
       name_jp: string
       reading: string
-      element: string
+      yosei: string
       index: number
     }
     decade_fortune: {
       year: number
       star: string
       level: string
-      overall: number
-      career: number
     }[]
   }
   companies: ComparisonCompanyItem[]
   verdict: ComparisonVerdict
 }
 
+export interface GlobalSearchResult {
+  name: string
+  founding_date: string
+  country: string
+  country_name: string
+  source: string
+  level: string
+  relation_name: string
+  relation_type: string
+  direction: string
+  distance_type: string
+  distance_type_name: string
+  verdict: string
+  person1_mansion: string
+  person1_yosei: string
+  person2_mansion: string
+  person2_yosei: string
+}

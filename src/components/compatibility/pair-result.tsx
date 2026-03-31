@@ -7,8 +7,8 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import type { CompatibilityResult } from '@/types/compatibility'
 import { getRedFlag } from '@/utils/red-flags'
-import { getGapGuidance, getGapType, GAP_THRESHOLD } from '@/utils/gap-guidance'
-import { scoreColor, scoreBorderLeft } from '@/utils/score-colors'
+// gap-guidance removed (no numeric scores)
+import { levelColor, levelBorderLeft } from '@/utils/fortune-helpers'
 import { useProfileStore } from '@/stores/profile'
 
 function verdictBg(severity: string) {
@@ -34,14 +34,14 @@ interface PairResultProps {
 
 export function PairResult({ result, partnerRelation }: PairResultProps) {
   const { t } = useTranslation()
-  const { score, relation, person1, person2, calculation } = result
+  const { level, level_name, relation, person1, person2, calculation } = result
   const ds = result.directional_scores
   const da = result.direction_analysis
   const pg = result.practical_guidance
   const locale = useProfileStore((s) => s.locale)
   const verdict = da?.verdict
   const initiative = relation.initiative
-  const hasDirectional = ds && ds.person1_to_person2.score !== ds.person2_to_person1.score
+  const hasDirectional = ds && ds.person1_to_person2.position !== ds.person2_to_person1.position
 
   const [showDetail, setShowDetail] = useState(false)
   const [showClassical, setShowClassical] = useState(false)
@@ -57,14 +57,14 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
             <div className='flex flex-col items-center gap-1 flex-1'>
               <span className='text-lg font-bold text-foreground'>{person1.mansion}</span>
               <span className='text-xs text-muted-foreground'>({person1.reading})</span>
-              <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>{person1.element}</span>
+              <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>{person1.yosei}</span>
             </div>
             <div className='flex flex-col items-center gap-1'>
               {hasDirectional ? (
                 <span className='text-base font-semibold text-primary'>{relation.name}</span>
               ) : (
                 <>
-                  <span className={cn('text-4xl font-bold tabular-nums', scoreColor(score))}>{score}</span>
+                  <span className={cn('text-lg font-bold', levelColor(level))}>{level_name}</span>
                   <span className='text-xs text-muted-foreground'>{relation.name}</span>
                 </>
               )}
@@ -72,7 +72,7 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
             <div className='flex flex-col items-center gap-1 flex-1'>
               <span className='text-lg font-bold text-foreground'>{person2.mansion}</span>
               <span className='text-xs text-muted-foreground'>({person2.reading})</span>
-              <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>{person2.element}</span>
+              <span className='text-xs px-2 py-0.5 rounded bg-primary/10 text-primary'>{person2.yosei}</span>
             </div>
           </div>
         </CardContent>
@@ -90,11 +90,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
               <div key={label} className='flex items-center gap-2 text-sm'>
                 <span className='flex-1 text-foreground font-medium'>{label}</span>
                 <span className='text-xs text-muted-foreground'>({dir.direction}宿)</span>
-                <span className={cn('text-base font-bold tabular-nums', scoreColor(dir.score))}>
-                  {dir.score}
+                <span className='text-sm font-medium text-foreground'>
+                  {dir.position}
                 </span>
-                {dir.ryouhan_active && dir.ryouhan_adjusted_score !== null && (
-                  <span className='text-xs text-muted-foreground line-through'>→ {dir.ryouhan_adjusted_score}</span>
+                {dir.ryouhan_active && (
+                  <span className='text-xs text-amber-600 dark:text-amber-400'>{t('v3.match.ryouhanActive')}</span>
                 )}
               </div>
             ))}
@@ -103,7 +103,7 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
       )}
 
       {/* 関係タイプ */}
-      <Card className={cn('border-l-4', scoreBorderLeft(score))}>
+      <Card className={cn('border-l-4', levelBorderLeft(level))}>
         <CardContent className='pt-5 pb-5 flex flex-col gap-2'>
           <div className='flex items-baseline gap-2 flex-wrap'>
             <h3 className='text-base font-semibold text-foreground'>{relation.name}</h3>
@@ -261,7 +261,7 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
                 direction: da.direction,
                 roleName: da.role_name,
                 narrative: da.narrative || da.person1_perspective,
-                score: ds?.person1_to_person2?.score,
+                position: ds?.person1_to_person2?.position,
                 doList: pg?.person1_to_person2?.do,
                 avoidList: pg?.person1_to_person2?.avoid,
                 careerAdvice: pg?.person1_to_person2?.career_advice,
@@ -271,20 +271,20 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
                 direction: da.inverse_direction,
                 roleName: da.inverse_role_name,
                 narrative: da.inverse_narrative || da.person2_perspective,
-                score: ds?.person2_to_person1?.score,
+                position: ds?.person2_to_person1?.position,
                 doList: pg?.person2_to_person1?.do,
                 avoidList: pg?.person2_to_person1?.avoid,
                 careerAdvice: pg?.person2_to_person1?.career_advice,
               },
-            ].map(({ label, direction, roleName, narrative, score: dirScore, doList, avoidList, careerAdvice }) => (
+            ].map(({ label, direction, roleName, narrative, position, doList, avoidList, careerAdvice }) => (
               <div key={label} className='flex flex-col gap-2 pb-4 border-b border-border last:border-0 last:pb-0'>
                 <div className='flex items-center gap-2 flex-wrap'>
                   <p className='text-sm font-medium text-foreground'>{label}</p>
                   {direction && (
                     <span className='text-xs text-muted-foreground'>（{direction}{roleName ? ` / ${roleName}` : ''}宿）</span>
                   )}
-                  {dirScore !== undefined && (
-                    <span className={cn('text-sm font-bold tabular-nums ml-auto', scoreColor(dirScore))}>{dirScore}</span>
+                  {position && (
+                    <span className='text-sm font-medium text-foreground ml-auto'>{position}</span>
                   )}
                 </div>
                 {narrative && (
@@ -328,18 +328,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
       )}
 
       {/* 紅旗分析 + 差距指引 */}
-      {da && ds && (() => {
-        const p1Score = ds.person1_to_person2.score
-        const p2Score = ds.person2_to_person1.score
-        const gap = Math.abs(p1Score - p2Score)
+      {da && (() => {
         const direction = da.direction
         const redFlag = getRedFlag(direction, 'personal', locale)
-        const showGap = gap > GAP_THRESHOLD && direction
-        const gapType = direction ? getGapType(direction, p1Score, p2Score) : null
-        const gapRelation = partnerRelation || 'friend'
-        const gapText = gapType && direction ? getGapGuidance(direction, gapType, gapRelation, locale) : null
 
-        if (!redFlag && !showGap) return null
+        if (!redFlag) return null
 
         return (
           <Card>
@@ -375,14 +368,6 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
                       <p className='text-xs text-muted-foreground'>{redFlag.action}</p>
                     </div>
                   </div>
-                </div>
-              )}
-              {showGap && gapText && (
-                <div className='mt-1 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-500/20 px-3 py-2.5'>
-                  <p className='text-xs font-medium text-amber-700 dark:text-amber-400 mb-1'>
-                    {t('compat.energyGap', { gap: String(gap) })}
-                  </p>
-                  <p className='text-xs text-muted-foreground leading-relaxed'>{gapText}</p>
                 </div>
               )}
             </CardContent>

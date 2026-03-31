@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { Star, Sparkles, BookOpen, CalendarDays, Briefcase } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
-import { scoreColor, scoreBorder } from '@/utils/score-colors'
+import { levelColor, levelBorder, getLevelHeight, getLevelKey } from '@/utils/fortune-helpers'
 import type { DailyFortune, WeeklyFortune } from '@/types/fortune'
 
 // ---- Setup card (no birth date set) ----
@@ -256,11 +256,15 @@ function WeekPreview({ weeklyFortune, activeDate }: { weeklyFortune: WeeklyFortu
                 )}
               >
                 <span className='text-[10px] text-muted-foreground'>{day.weekday}</span>
+                <div
+                  className={cn('w-5 rounded-sm', levelColor(day.level))}
+                  style={{ height: `${getLevelHeight(day.level) * 0.3}px` }}
+                />
                 <span className={cn(
-                  'text-sm font-bold tabular-nums',
-                  scoreColor(day.score)
+                  'text-[10px] font-medium',
+                  levelColor(day.level)
                 )}>
-                  {day.score}
+                  {t(getLevelKey(day.level))}
                 </span>
                 {day.special_day && (
                   <span className='w-1.5 h-1.5 rounded-full bg-amber-500' />
@@ -361,22 +365,22 @@ function HomeContent({ birthDate }: { birthDate: string }) {
             <div
               className={cn(
                 'relative flex items-center justify-center rounded-full border-4 h-28 w-28',
-                scoreBorder(fortune.fortune.overall)
+                levelBorder(fortune.fortune.level)
               )}
             >
               <span
                 className={cn(
-                  'text-4xl font-bold tabular-nums',
-                  scoreColor(fortune.fortune.overall)
+                  'text-2xl font-bold font-serif',
+                  levelColor(fortune.fortune.level)
                 )}
               >
-                {fortune.fortune.overall}
+                {fortune.fortune.level_name || t(getLevelKey(fortune.fortune.level || '')) || '—'}
               </span>
             </div>
             <p
               className={cn(
                 'text-lg font-serif font-semibold',
-                scoreColor(fortune.fortune.overall)
+                levelColor(fortune.fortune.level)
               )}
             >
               {fortune.fortune.level_name || fortune.fortune.level || '—'}

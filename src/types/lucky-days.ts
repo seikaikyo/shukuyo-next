@@ -3,13 +3,25 @@ import type { FortuneDescriptionMeta } from './fortune'
 export interface LuckyDay {
   date: string
   weekday: string
-  score: number
+  level: string
   rating?: string
   reason: string
   reason_meta?: FortuneDescriptionMeta
   tip?: string
   boosts?: string[]
   conflicts?: string[]
+}
+
+export interface LuckyDaySummaryItem {
+  name: string
+  lucky_days: LuckyDay[]
+}
+
+export interface LuckyDayCategoryMeta {
+  key: string
+  name: string
+  icon: string
+  actions: { key: string; name: string }[]
 }
 
 export interface LuckyDayActionResult {
@@ -29,7 +41,7 @@ export interface LuckyDaySummary {
   your_mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
     index: number
   }
   categories: LuckyDayCategoryResult[]
@@ -46,7 +58,7 @@ export interface LuckyCalendarDay {
   category_name: string
   action: string
   action_name: string
-  score: number
+  level: string
   rating: string
   reason: string
   reason_meta?: FortuneDescriptionMeta
@@ -67,8 +79,29 @@ export interface LuckyCalendarData {
   your_mansion: {
     name_jp: string
     reading: string
-    element: string
+    yosei: string
     index: number
+  }
+  days: Record<string, LuckyCalendarDay[]>
+}
+
+export interface PairLuckyCalendarData {
+  year: number
+  month: number
+  person1: {
+    mansion: string
+    reading: string
+    yosei: string
+  }
+  person2: {
+    mansion: string
+    reading: string
+    yosei: string
+  }
+  compatibility: {
+    relation: string
+    level: string
+    description: string
   }
   days: Record<string, LuckyCalendarDay[]>
 }
@@ -79,18 +112,35 @@ export interface PairLuckyDaysResult {
   person1: {
     mansion: string
     reading: string
-    element: string
+    yosei: string
   }
   person2: {
     mansion: string
     reading: string
-    element: string
+    yosei: string
   }
   compatibility: {
     relation: string
-    score: number
+    level: string
     description: string
   }
   actions: PairLuckyAction[]
 }
 
+export interface CareerLuckyDate {
+  date: string
+  weekday: string
+  level: string
+  level_label: string
+  day_mansion: string
+  relation: string
+  flags: string[]
+  reason: string
+  reason_meta?: FortuneDescriptionMeta
+}
+
+export interface LuckyDatesResult {
+  good_dates: CareerLuckyDate[]
+  bad_dates: CareerLuckyDate[]
+  dark_weeks: { start: string; end: string }[]
+}
