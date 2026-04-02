@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { apiGet } from '@/config/api'
+import { apiGet, ENGINE } from '@/config/api'
 import type { Metadata } from '@/types/knowledge'
 import type { Mansion } from '@/types/mansion'
 import type { RelationType } from '@/types/compatibility'
@@ -17,7 +17,7 @@ export function useKnowledge() {
     setLoading(true)
     setError(null)
     try {
-      const res = await apiGet<{ mansions: Mansion[] }>('/mansions')
+      const res = await apiGet<{ mansions: Mansion[] }>(`${ENGINE}/mansions`)
       setMansions(res.mansions)
       return res.mansions
     } catch {
@@ -31,7 +31,7 @@ export function useKnowledge() {
   const fetchMetadata = useCallback(async () => {
     if (metadata) return metadata
     try {
-      const data = await apiGet<Metadata>('/metadata')
+      const data = await apiGet<Metadata>(`${ENGINE}/metadata`)
       setMetadata(data)
       return data
     } catch {
@@ -42,7 +42,7 @@ export function useKnowledge() {
   const fetchRelations = useCallback(async () => {
     if (relations.length > 0) return relations
     try {
-      const res = await apiGet<{ relations: RelationType[] }>('/relations')
+      const res = await apiGet<{ relations: RelationType[] }>(`${ENGINE}/relations`)
       setRelations(res.relations)
       return res.relations
     } catch {

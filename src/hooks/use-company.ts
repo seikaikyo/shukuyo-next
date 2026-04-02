@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { apiPost } from '@/config/api'
+import { apiPost, CAREER, ENGINE, FORTUNE } from '@/config/api'
 import { useProfileStore } from '@/stores/profile'
 import type { CompanyBatchResult, ComparisonResult, CompanyJobsResult, GcisCompany, GlobalSearchResult } from '@/types/company'
 import type { LuckyDatesResult } from '@/types/lucky-days'
@@ -24,7 +24,7 @@ export function useCompanyAnalysis() {
     setLoading(true)
     setError(null)
     try {
-      const data = await apiPost<CompanyBatchResult>('/company-batch-analysis', {
+      const data = await apiPost<CompanyBatchResult>(`${CAREER}/batch`, {
         birth_date: birthDate,
         companies: validCompanies.map((c) => ({
           id: c.id,
@@ -57,7 +57,7 @@ export function useCompanyAnalysis() {
     setComparing(true)
     setError(null)
     try {
-      const data = await apiPost<ComparisonResult>('/company-comparison', {
+      const data = await apiPost<ComparisonResult>(`${CAREER}/comparison`, {
         birth_date: birthDate,
         companies: targets.map((c) => ({
           id: c.id,
@@ -103,7 +103,7 @@ export function use104Jobs() {
     setError(null)
     setJobs(null)
     try {
-      const data = await apiPost<CompanyJobsResult>('/104/company-jobs', {
+      const data = await apiPost<CompanyJobsResult>(`${CAREER}/104/company-jobs`, {
         company_name: companyName,
         founding_date: foundingDate,
         birth_date: birthDate,
@@ -142,7 +142,7 @@ export function useTeamMatrix() {
       const others = members.filter((_, j) => j !== i)
       try {
         const results = await apiPost<{ id: string; data?: CompatibilityResult; error?: string }[]>(
-          '/compatibility-batch',
+          `${ENGINE}/compatibility-batch`,
           {
             date1: person1.birthDate,
             partners: others.map((o) => ({ id: o.id, date: o.birthDate })),
@@ -246,7 +246,7 @@ export function useGlobalCompanySearch() {
     setResult(null)
     setError(null)
     try {
-      const data = await apiPost<GlobalSearchResult>('/company-search/global', {
+      const data = await apiPost<GlobalSearchResult>(`${CAREER}/company-search`, {
         company_name: companyName.trim(),
         country,
         birth_date: birthDate,
@@ -288,7 +288,7 @@ export function useHrBatchAnalysis() {
         const current = idx++
         const candidate = candidates[current]
         try {
-          const data = await apiPost<CompanyBatchResult>('/company-batch-analysis', {
+          const data = await apiPost<CompanyBatchResult>(`${CAREER}/batch`, {
             birth_date: candidate.birthDate,
             year: new Date().getFullYear(),
             mode: 'hr',
@@ -334,7 +334,7 @@ export function useHeadhunterAnalysis() {
         const current = idx++
         const seeker = seekersWithCompanies[current]
         try {
-          const data = await apiPost<CompanyBatchResult>('/company-batch-analysis', {
+          const data = await apiPost<CompanyBatchResult>(`${CAREER}/batch`, {
             birth_date: seeker.birthDate,
             year: new Date().getFullYear(),
             mode: 'seeker',
@@ -369,7 +369,7 @@ export function useCareerLuckyDates() {
   const fetch_ = useCallback(async (birthDate: string, days = 30, lang = 'zh-TW') => {
     setLoading(true)
     try {
-      const data = await apiPost<LuckyDatesResult>('/fortune/lucky-dates', {
+      const data = await apiPost<LuckyDatesResult>(`${FORTUNE}/lucky-dates`, {
         birth_date: birthDate,
         days,
         lang,

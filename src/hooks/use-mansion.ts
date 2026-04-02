@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback, useRef } from 'react'
-import { apiGet } from '@/config/api'
+import { apiGet, ENGINE } from '@/config/api'
 import { useProfileStore } from '@/stores/profile'
 import type { PersonMansion } from '@/types/mansion'
 
@@ -18,7 +18,7 @@ export function useMansion() {
     setLoading(true)
     setError(null)
     try {
-      const data = await apiGet<PersonMansion>(`/mansion/${birthDate}`)
+      const data = await apiGet<PersonMansion>(`${ENGINE}/mansion/${birthDate}`)
       setMyMansion(data)
       cachedDate.current = birthDate
       return data
@@ -32,7 +32,7 @@ export function useMansion() {
 
   const fetchMansionByDate = useCallback(async (date: string): Promise<PersonMansion | null> => {
     try {
-      return await apiGet<PersonMansion>(`/mansion/${date}`)
+      return await apiGet<PersonMansion>(`${ENGINE}/mansion/${date}`)
     } catch {
       return null
     }
@@ -45,7 +45,7 @@ export function useMansion() {
     setLoading(true)
     setError(null)
     try {
-      const data = await apiGet<PersonMansion>(`/mansion/${birthDate}`)
+      const data = await apiGet<PersonMansion>(`${ENGINE}/mansion/${birthDate}`)
       setMyMansion(data)
       cachedDate.current = birthDate
       return data

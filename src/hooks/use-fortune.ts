@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback, useRef } from 'react'
-import { apiGet } from '@/config/api'
+import { apiGet, FORTUNE } from '@/config/api'
 import type { DailyFortune, WeeklyFortune, MonthlyFortune, YearlyFortune } from '@/types/fortune'
 
 export function useFortune() {
@@ -34,7 +34,7 @@ export function useFortune() {
     try {
       const date = targetDate || new Date().toISOString().split('T')[0]
       const data = await apiGet<DailyFortune>(
-        `/fortune/daily/${date}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/daily/${date}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
       )
       setDailyFortune(data)
       return data
@@ -55,7 +55,7 @@ export function useFortune() {
     try {
       const date = centerDate || new Date().toISOString().split('T')[0]
       const data = await apiGet<WeeklyFortune>(
-        `/fortune/weekly/${date}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/weekly/${date}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
       )
       setWeeklyFortune(data)
       return data
@@ -76,7 +76,7 @@ export function useFortune() {
     setError(null)
     try {
       const data = await apiGet<MonthlyFortune>(
-        `/fortune/monthly/${year}/${month}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/monthly/${year}/${month}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
       )
       setMonthlyFortune(data)
       return data
@@ -97,7 +97,7 @@ export function useFortune() {
     setError(null)
     try {
       const data = await apiGet<YearlyFortune>(
-        `/fortune/yearly/${year}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/yearly/${year}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
       )
       setYearlyFortune(data)
       return data
@@ -119,7 +119,7 @@ export function useFortune() {
     setError(null)
     try {
       const data = await apiGet<YearlyFortune[]>(
-        `/fortune/yearly-range?birth_date=${birthDate}&start_year=${startYear}&end_year=${endYear}&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/yearly-range?birth_date=${birthDate}&start_year=${startYear}&end_year=${endYear}&lang=${encodeURIComponent(lang)}`
       )
       setYearlyRange(data)
       return data
@@ -160,7 +160,7 @@ export function useFortune() {
   ): Promise<DailyFortune | null> => {
     try {
       return await apiGet<DailyFortune>(
-        `/fortune/daily/${targetDate}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/daily/${targetDate}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
       )
     } catch {
       return null

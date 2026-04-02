@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { apiGet } from '@/config/api'
+import { apiGet, FORTUNE } from '@/config/api'
 import type { IndustryRecommendation } from '@/types/startup'
 import type { LuckyCalendarData } from '@/types/lucky-days'
 
@@ -19,7 +19,7 @@ export function useStartup() {
     setError(null)
     try {
       const data = await apiGet<IndustryRecommendation>(
-        `/startup/industry/${birthDate}?lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/startup/industry/${birthDate}?lang=${encodeURIComponent(lang)}`
       )
       setIndustryRecs(data)
       return data
@@ -41,7 +41,7 @@ export function useStartup() {
     setError(null)
     try {
       const data = await apiGet<LuckyCalendarData>(
-        `/lucky-days/calendar/${birthDate}/${year}/${month}?categories=career&actions=founding&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/lucky-days/calendar/${birthDate}/${year}/${month}?categories=career&actions=founding&lang=${encodeURIComponent(lang)}`
       )
       setStartupCalendar(data)
       return data

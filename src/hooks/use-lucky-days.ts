@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { apiGet } from '@/config/api'
+import { apiGet, FORTUNE } from '@/config/api'
 import type { LuckyDaySummary, LuckyCalendarData } from '@/types/lucky-days'
 
 export function useLuckyDays() {
@@ -18,7 +18,7 @@ export function useLuckyDays() {
     setError(null)
     try {
       const data = await apiGet<LuckyDaySummary>(
-        `/lucky-days/summary/${birthDate}?lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/lucky-days/summary/${birthDate}?lang=${encodeURIComponent(lang)}`
       )
       setLuckyDaySummary(data)
       return data
@@ -40,7 +40,7 @@ export function useLuckyDays() {
     setError(null)
     try {
       const data = await apiGet<LuckyCalendarData>(
-        `/lucky-days/calendar/${birthDate}/${year}/${month}?lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/lucky-days/calendar/${birthDate}/${year}/${month}?lang=${encodeURIComponent(lang)}`
       )
       setLuckyCalendar(data)
       return data

@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { apiGet } from '@/config/api'
+import { apiGet, FORTUNE } from '@/config/api'
 import type { PairLuckyDaysResult } from '@/types/lucky-days'
 
 /** PartnerRelationType → API relation 參數映射 */
@@ -34,7 +34,7 @@ export function usePairLuckyDays() {
     try {
       const apiRelation = relation ? (RELATION_API_MAP[relation] || 'friend') : 'friend'
       const data = await apiGet<PairLuckyDaysResult>(
-        `/lucky-days/pair/${date1}/${date2}?relation=${apiRelation}&lang=${lang}`
+        `${FORTUNE}/lucky-days/pair/${date1}/${date2}?relation=${apiRelation}&lang=${lang}`
       )
       setPairLuckyDays(data)
       return data

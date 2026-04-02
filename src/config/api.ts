@@ -1,6 +1,12 @@
 import * as Sentry from '@sentry/nextjs'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashai-api.onrender.com/shukuyo/api/sukuyodo'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://dashai-go.onrender.com'
+
+// Go API mount points
+export const ENGINE  = '/shukuyo/engine'
+export const FORTUNE = '/shukuyo/fortune'
+export const CAREER  = '/shukuyo/career'
+export const USER    = '/shukuyo/user'
 
 const REQUEST_TIMEOUT_MS = 15000
 const CACHE_TTL_MS = 60_000

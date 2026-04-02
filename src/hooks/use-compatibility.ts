@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { apiPost, apiGet } from '@/config/api'
+import { apiPost, apiGet, ENGINE } from '@/config/api'
 import { useProfileStore } from '@/stores/profile'
 import type {
   CompatibilityResult,
@@ -22,7 +22,7 @@ export function useCompatibility() {
     setError(null)
     setCompatibility(null)
     try {
-      const data = await apiPost<CompatibilityResult>('/compatibility', { date1, date2 })
+      const data = await apiPost<CompatibilityResult>(`${ENGINE}/compatibility`, { date1, date2 })
       setCompatibility(data)
       return data
     } catch (e) {
@@ -50,7 +50,7 @@ export function usePartnerCompatibilities() {
     setLoading(true)
     try {
       const batchResult = await apiPost<{ id: string; data?: CompatibilityResult; error?: string }[]>(
-        '/compatibility-batch',
+        `${ENGINE}/compatibility-batch`,
         {
           date1: birthDate,
           partners: validPartners.map((p) => ({ id: p.id, date: p.birthDate })),
@@ -103,7 +103,7 @@ export function useCompatibilityFinder() {
     if (!birthDate) return
     setLoading(true)
     try {
-      const data = await apiGet<CompatibilityFinderResult>(`/compatibility-finder/${birthDate}`)
+      const data = await apiGet<CompatibilityFinderResult>(`${ENGINE}/compatibility-finder/${birthDate}`)
       setFinder(data)
     } catch {
       // 靜默失敗

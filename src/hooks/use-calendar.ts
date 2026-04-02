@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import { apiGet } from '@/config/api'
+import { apiGet, FORTUNE } from '@/config/api'
 import type { CalendarMonthData } from '@/types/calendar'
 
 export function useCalendar() {
@@ -18,7 +18,7 @@ export function useCalendar() {
     setError(null)
     try {
       const data = await apiGet<CalendarMonthData>(
-        `/calendar/monthly/${year}/${month}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
+        `${FORTUNE}/calendar/${year}/${month}?birth_date=${birthDate}&lang=${encodeURIComponent(lang)}`
       )
       setCalendarData(data)
       return data
