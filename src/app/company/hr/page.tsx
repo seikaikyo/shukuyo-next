@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { Fragment, useState, useCallback } from 'react'
 import { useProfileStore, useProfileHydrated } from '@/stores/profile'
 import { useTranslation } from '@/lib/i18n'
 import { useCompatibility } from '@/hooks/use-compatibility'
@@ -165,8 +165,8 @@ function HrContent() {
                 <div key={n} className='text-center text-xs text-muted-foreground truncate'>{n}</div>
               ))}
               {allNames.map((row) => (
-                <>
-                  <div key={`r-${row}`} className='flex items-center text-xs text-muted-foreground truncate'>{row}</div>
+                <Fragment key={row}>
+                  <div className='flex items-center text-xs text-muted-foreground truncate'>{row}</div>
                   {allNames.map((col) => {
                     const cell = matrix[row]?.[col]
                     return (
@@ -181,7 +181,7 @@ function HrContent() {
                       </div>
                     )
                   })}
-                </>
+                </Fragment>
               ))}
             </div>
           </CardContent>

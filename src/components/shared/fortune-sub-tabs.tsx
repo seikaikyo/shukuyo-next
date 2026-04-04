@@ -21,7 +21,7 @@ export function FortuneSubTabs() {
   const { t } = useTranslation()
 
   return (
-    <div className='mb-4 flex gap-0.5 overflow-x-auto rounded-lg border border-border bg-muted p-[3px]'>
+    <div className='mb-4 flex gap-0.5 overflow-x-auto rounded-lg border border-border bg-muted p-[3px] scrollbar-none' role='tablist'>
       {FORTUNE_TABS.map((tab) => (
         <Link
           key={tab.href}

@@ -47,16 +47,7 @@ function DailyContent() {
 
   useEffect(() => { load(activeDate) }, [activeDate, load])
 
-  if (dailyLoading || !df) {
-    return (
-      <div className='space-y-3'>
-        <Skeleton className='h-40 w-full rounded-xl' />
-        <Skeleton className='h-24 w-full rounded-xl' />
-      </div>
-    )
-  }
-
-  if (error) {
+  if (error && !dailyLoading && !df) {
     return (
       <Card>
         <CardContent className='py-8 text-center'>
@@ -66,6 +57,15 @@ function DailyContent() {
           </Button>
         </CardContent>
       </Card>
+    )
+  }
+
+  if (dailyLoading || !df) {
+    return (
+      <div className='space-y-3'>
+        <Skeleton className='h-40 w-full rounded-xl' />
+        <Skeleton className='h-24 w-full rounded-xl' />
+      </div>
     )
   }
 

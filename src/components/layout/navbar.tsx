@@ -8,11 +8,11 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/', labelKey: 'nav.home' },
-  { href: '/fortune/daily', labelKey: 'nav.fortune' },
-  { href: '/compatibility', labelKey: 'nav.match' },
-  { href: '/company', labelKey: 'nav.company' },
-  { href: '/knowledge', labelKey: 'nav.knowledge' },
+  { href: '/', matchPrefix: '/', labelKey: 'nav.home' },
+  { href: '/fortune/daily', matchPrefix: '/fortune', labelKey: 'nav.fortune' },
+  { href: '/compatibility', matchPrefix: '/compatibility', labelKey: 'nav.match' },
+  { href: '/company', matchPrefix: '/company', labelKey: 'nav.company' },
+  { href: '/knowledge', matchPrefix: '/knowledge', labelKey: 'nav.knowledge' },
 ]
 
 const LOCALES = [
@@ -27,9 +27,9 @@ export function Navbar() {
   const locale = useProfileStore((s) => s.locale)
   const setLocale = useProfileStore((s) => s.setLocale)
 
-  function isActive(href: string) {
-    if (href === '/') return pathname === '/'
-    return pathname.startsWith(href)
+  function isActive(prefix: string) {
+    if (prefix === '/') return pathname === '/'
+    return pathname.startsWith(prefix)
   }
 
   return (
@@ -49,7 +49,7 @@ export function Navbar() {
               href={item.href}
               className={cn(
                 'relative text-muted-foreground transition-colors hover:text-foreground',
-                isActive(item.href) &&
+                isActive(item.matchPrefix) &&
                   'text-foreground after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-primary'
               )}
             >

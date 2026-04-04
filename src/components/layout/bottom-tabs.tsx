@@ -6,20 +6,20 @@ import { useTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 const TABS = [
-  { href: '/', labelKey: 'nav.home', icon: '\u5BB6' },
-  { href: '/fortune/daily', labelKey: 'nav.fortune', icon: '\u661F' },
-  { href: '/compatibility', labelKey: 'nav.match', icon: '\u7E01' },
-  { href: '/company', labelKey: 'nav.company', icon: '\u793E' },
-  { href: '/knowledge', labelKey: 'nav.knowledge', icon: '\u66F8' },
+  { href: '/', matchPrefix: '/', labelKey: 'nav.home', icon: '\u5BB6' },
+  { href: '/fortune/daily', matchPrefix: '/fortune', labelKey: 'nav.fortune', icon: '\u661F' },
+  { href: '/compatibility', matchPrefix: '/compatibility', labelKey: 'nav.match', icon: '\u7E01' },
+  { href: '/company', matchPrefix: '/company', labelKey: 'nav.company', icon: '\u793E' },
+  { href: '/knowledge', matchPrefix: '/knowledge', labelKey: 'nav.knowledge', icon: '\u66F8' },
 ]
 
 export function BottomTabs() {
   const pathname = usePathname()
   const { t } = useTranslation()
 
-  function isActive(href: string) {
-    if (href === '/') return pathname === '/'
-    return pathname.startsWith(href)
+  function isActive(prefix: string) {
+    if (prefix === '/') return pathname === '/'
+    return pathname.startsWith(prefix)
   }
 
   return (
@@ -30,7 +30,7 @@ export function BottomTabs() {
           href={tab.href}
           className={cn(
             'flex flex-1 flex-col items-center py-2 text-[10px] transition-colors',
-            isActive(tab.href)
+            isActive(tab.matchPrefix)
               ? 'text-primary'
               : 'text-muted-foreground'
           )}

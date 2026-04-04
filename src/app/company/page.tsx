@@ -135,7 +135,7 @@ function CompanyContent() {
                 <h3 className='text-sm font-semibold'>{t('company.batchResult')}</h3>
                 <div className='mt-2 flex flex-col gap-2'>
                   {[1, 2, 3, 4].map((tierRank) => {
-                    const items = batchResult.companies.filter((c) => c.tier.rank === tierRank)
+                    const items = batchResult.companies.filter((c) => c.tier?.rank === tierRank)
                     if (items.length === 0) return null
                     return (
                       <div key={tierRank}>

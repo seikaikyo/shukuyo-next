@@ -42,6 +42,11 @@ export const metadata: Metadata = {
     description: '\u5370\u5EA6\u5360\u661F\u8853\u300C\u5BBF\u66DC\u7D4C\u300D\u306B\u57FA\u3065\u304F\u904B\u52E2\u30FB\u76F8\u6027\u8A3A\u65AD',
     type: 'website',
   },
+  other: {
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'DENY',
+    'referrer-policy': 'strict-origin-when-cross-origin',
+  },
 }
 
 export default function RootLayout({

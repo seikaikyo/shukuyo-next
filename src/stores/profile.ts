@@ -178,7 +178,22 @@ export const useProfileStore = create<ProfileState>()(
     }),
     {
       name: 'shukuyo-profile',
-      version: 1,
+      version: 2,
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as Record<string, unknown>
+        if (version < 2) {
+          // v1 → v2: 確保所有 array 欄位有預設值
+          return {
+            ...state,
+            partners: state.partners ?? [],
+            companies: state.companies ?? [],
+            jobSeekers: state.jobSeekers ?? [],
+            hrCandidates: state.hrCandidates ?? [],
+            hrCompany: state.hrCompany ?? null,
+          }
+        }
+        return state
+      },
       partialize: (state) => ({
         birthDate: state.birthDate,
         gender: state.gender,

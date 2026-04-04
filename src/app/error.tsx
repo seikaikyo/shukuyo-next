@@ -22,7 +22,7 @@ export default function Error({
       <div className='flex flex-col items-center gap-4 text-center max-w-sm'>
         <h2 className='text-lg font-semibold text-foreground'>{t('error.renderError')}</h2>
         <p className='text-sm text-muted-foreground'>
-          {error.message || t('error.renderErrorDesc')}
+          {t('error.renderErrorDesc')}
         </p>
         <button
           onClick={reset}
