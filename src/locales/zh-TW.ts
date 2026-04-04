@@ -1039,6 +1039,9 @@ export default {
     suitableIndustries: '的適合產業',
     favorableMansionsLabel: '適合合作的宿',
     favorableMansionsDesc: '創業夥伴推薦宿位',
+    lucky: '吉日',
+    calendar: '日曆',
+    startup: '創業',
     luckyDays: {
       tab: '吉日',
       summaryView: '摘要',

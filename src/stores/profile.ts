@@ -201,9 +201,23 @@ export const useProfileStore = create<ProfileState>()(
 export function useProfileHydrated() {
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => {
+    // 訂閱 hydration 完成事件
     const unsub = useProfileStore.persist.onFinishHydration(() => setHydrated(true))
-    if (useProfileStore.getState()._hasHydrated) setHydrated(true)
-    return unsub
+    // 如果已經 hydrated（effect 執行前就完成了），直接設 true
+    if (useProfileStore.getState()._hasHydrated) {
+      setHydrated(true)
+    }
+    // 雙保險：如果 persist 從未觸發（例如 localStorage 不可用），500ms 後強制 hydrate
+    const timer = setTimeout(() => {
+      if (!useProfileStore.getState()._hasHydrated) {
+        useProfileStore.setState({ _hasHydrated: true })
+      }
+      setHydrated(true)
+    }, 500)
+    return () => {
+      unsub()
+      clearTimeout(timer)
+    }
   }, [])
   return hydrated
 }
