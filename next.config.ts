@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
 }
 
 export default withSentryConfig(nextConfig, {
-  org: 'dashai-vs',
-  project: 'shukuyo',
+  org: 'dashai-jz',
+  project: 'shukuyo-next',
   silent: !process.env.CI,
 })
