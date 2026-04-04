@@ -216,12 +216,12 @@ function CalendarView({
                       <p className='text-xs text-muted-foreground'>{entry.advice.summary}</p>
                     )}
                     {entry.advice.do.length > 0 && (
-                      <p className='text-xs text-emerald-500'>
+                      <p className='text-xs text-[var(--fortune-great)]'>
                         {t('fortune.auspicious')}:{entry.advice.do.join('、')}
                       </p>
                     )}
                     {entry.advice.avoid.length > 0 && (
-                      <p className='text-xs text-orange-400'>
+                      <p className='text-xs text-[var(--fortune-caution)]'>
                         {t('fortune.inauspicious')}:{entry.advice.avoid.join('、')}
                       </p>
                     )}

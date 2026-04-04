@@ -67,7 +67,7 @@ function LuckyDayItem({ day, locale }: { day: LuckyDay; locale: string }) {
       {(day.boosts?.length || day.conflicts?.length) && (
         <div className='flex flex-wrap gap-1 mt-0.5'>
           {day.boosts?.map((b) => (
-            <span key={b} className='text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
+            <span key={b} className='text-[10px] px-1.5 py-0.5 rounded bg-[var(--fortune-great)]/12 text-[var(--fortune-great)]'>
               {b}
             </span>
           ))}

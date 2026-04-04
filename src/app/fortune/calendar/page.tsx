@@ -152,22 +152,22 @@ export default function FortuneCalendarPage() {
             </div>
             {selectedDay.special_day && (
               <div className='flex items-center gap-1.5'>
-                <span className='w-1.5 h-1.5 rounded-full bg-amber-500' />
-                <span className='text-xs font-medium text-amber-600 dark:text-amber-400'>
+                <span className='w-1.5 h-1.5 rounded-full bg-[var(--kanro)]' />
+                <span className='text-xs font-medium text-[var(--kanro)]'>
                   {selectedDay.special_day.name}
                 </span>
               </div>
             )}
             {selectedDay.ryouhan?.active && (
               <div className='flex items-center gap-1.5'>
-                <span className='w-1.5 h-1.5 rounded-full bg-purple-500' />
-                <span className='text-xs text-purple-600 dark:text-purple-400'>{t('fortune.ryouhanPeriod')}</span>
+                <span className='w-1.5 h-1.5 rounded-full bg-[var(--ryouhan)]' />
+                <span className='text-xs text-[var(--ryouhan)]'>{t('fortune.ryouhanPeriod')}</span>
               </div>
             )}
             {selectedDay.personal.is_dark_week && (
               <div className='flex items-center gap-1.5'>
-                <span className='w-1.5 h-1.5 rounded-full bg-slate-500' />
-                <span className='text-xs text-slate-600 dark:text-slate-400'>{t('fortune.darkWeek')}</span>
+                <span className='w-1.5 h-1.5 rounded-full bg-muted-foreground' />
+                <span className='text-xs text-muted-foreground'>{t('fortune.darkWeek')}</span>
               </div>
             )}
             <Link

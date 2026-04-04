@@ -48,9 +48,9 @@ function CalendarDayCell({
         {level ? t(getLevelKey(level)) : ''}
       </span>
       <div className='flex gap-0.5'>
-        {hasSpecial && <span className='w-1 h-1 rounded-full bg-amber-500' />}
-        {hasRyouhan && <span className='w-1 h-1 rounded-full bg-purple-500' />}
-        {isDarkWeek && <span className='w-1 h-1 rounded-full bg-slate-500' />}
+        {hasSpecial && <span className='w-1 h-1 rounded-full bg-[var(--kanro)]' />}
+        {hasRyouhan && <span className='w-1 h-1 rounded-full bg-[var(--ryouhan)]' />}
+        {isDarkWeek && <span className='w-1 h-1 rounded-full bg-muted-foreground' />}
       </div>
     </button>
   )
@@ -122,15 +122,15 @@ export function FortuneCalendar({ data, today, onDayClick }: FortuneCalendarProp
         {/* legend */}
         <div className='flex flex-wrap gap-3 mt-3 pt-2 border-t border-border'>
           <div className='flex items-center gap-1'>
-            <span className='w-1.5 h-1.5 rounded-full bg-amber-500' />
+            <span className='w-1.5 h-1.5 rounded-full bg-[var(--kanro)]' />
             <span className='text-[10px] text-muted-foreground'>{t('fortune.specialDays')}</span>
           </div>
           <div className='flex items-center gap-1'>
-            <span className='w-1.5 h-1.5 rounded-full bg-purple-500' />
+            <span className='w-1.5 h-1.5 rounded-full bg-[var(--ryouhan)]' />
             <span className='text-[10px] text-muted-foreground'>{t('fortune.ryouhanShort')}</span>
           </div>
           <div className='flex items-center gap-1'>
-            <span className='w-1.5 h-1.5 rounded-full bg-slate-500' />
+            <span className='w-1.5 h-1.5 rounded-full bg-muted-foreground' />
             <span className='text-[10px] text-muted-foreground'>{t('fortune.darkWeek')}</span>
           </div>
         </div>
