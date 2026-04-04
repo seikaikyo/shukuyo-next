@@ -160,7 +160,7 @@ function DailyOverviewCard({ weekly, t, locale }: { weekly: WeeklyFortune; t: (k
                 <span className='text-[9px] text-primary truncate w-full text-center'>{day.special_day}</span>
               )}
               {day.ryouhan_active && (
-                <span className='text-[9px] text-orange-400'>{t('fortune.ryouhanShort')}</span>
+                <span className='text-[9px] text-[var(--ryouhan)]'>{t('fortune.ryouhanShort')}</span>
               )}
             </div>
           ))}
@@ -170,61 +170,52 @@ function DailyOverviewCard({ weekly, t, locale }: { weekly: WeeklyFortune; t: (k
   )
 }
 
-function CategoryTipsCard({ weekly, t }: { weekly: WeeklyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  if (!weekly.category_tips) return null
-  const tips = weekly.category_tips
+function WeekSpecialDaysCard({ weekly, t }: { weekly: WeeklyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
+  const counts = { kanro: 0, kongou: 0, rasetsu: 0, ryouhan: 0 }
+  for (const day of weekly.daily_overview) {
+    if (day.special_day) {
+      const sd = typeof day.special_day === 'string' ? day.special_day : ''
+      if (sd.includes('甘露')) counts.kanro++
+      else if (sd.includes('金剛')) counts.kongou++
+      else if (sd.includes('羅刹')) counts.rasetsu++
+    }
+    if (day.ryouhan_active) counts.ryouhan++
+  }
 
-  return (
-    <Card className='border border-border'>
-      <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
-        <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          {t('fortune.categoryTips')}
-        </p>
-        {[
-          { label: t('fortune.career'), text: tips.career },
-          { label: t('fortune.love'), text: tips.love },
-          { label: t('fortune.health'), text: tips.health },
-        ].map(({ label, text }) => text ? (
-          <div key={label} className='flex gap-3'>
-            <span className='text-xs text-muted-foreground w-10 shrink-0 pt-0.5'>{label}</span>
-            <p className='text-xs text-muted-foreground leading-relaxed flex-1'>{text}</p>
-          </div>
-        ) : null)}
-      </CardContent>
-    </Card>
-  )
-}
-
-function WeeklyLuckyCard({ weekly, t }: { weekly: WeeklyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const { lucky } = weekly
-  if (!lucky) return null
+  const hasAny = counts.kanro + counts.kongou + counts.rasetsu + counts.ryouhan > 0
+  if (!hasAny) return null
 
   return (
     <Card className='border border-border'>
       <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
         <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          {t('fortune.weeklyLucky')}
+          {t('fortune.specialDateInfo')}
         </p>
-        <div className='grid grid-cols-2 gap-3'>
-          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-muted/50'>
-            <span className='text-xs text-muted-foreground'>{t('home.direction')}</span>
-            <span className='text-sm font-medium text-foreground'>{lucky.direction}</span>
-            <span className='text-xs text-muted-foreground'>{lucky.direction_reading}</span>
+        <div className='grid grid-cols-3 gap-2'>
+          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-[var(--kanro-bg)]'>
+            <span className='text-[11px] text-[var(--kanro)]'>{t('fortune.kanroDay')}</span>
+            <span className='text-lg font-bold text-[var(--kanro)]'>{counts.kanro}</span>
           </div>
-          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-muted/50'>
-            <span className='text-xs text-muted-foreground'>{t('home.luckyColor')}</span>
-            <span
-              className='h-5 w-5 rounded-full border border-border'
-              style={{ backgroundColor: lucky.color_hex }}
-              aria-label={lucky.color}
-            />
-            <span className='text-xs text-foreground'>{lucky.color}</span>
+          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-[var(--kongou-bg)]'>
+            <span className='text-[11px] text-[var(--kongou)]'>{t('fortune.kongouDay')}</span>
+            <span className='text-lg font-bold text-[var(--kongou)]'>{counts.kongou}</span>
+          </div>
+          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-[var(--fortune-bad)]/12'>
+            <span className='text-[11px] text-[var(--fortune-bad)]'>{t('fortune.rasetsuDay')}</span>
+            <span className='text-lg font-bold text-[var(--fortune-bad)]'>{counts.rasetsu}</span>
           </div>
         </div>
+        {counts.ryouhan > 0 && (
+          <p className='text-[11px] text-[var(--ryouhan)]'>
+            {t('fortune.ryouhanShort')}: {counts.ryouhan} {t('fortune.sankiDays')}
+          </p>
+        )}
       </CardContent>
     </Card>
   )
 }
+
+// CategoryTipsCard (四領域) 和 WeeklyLuckyCard (五行方位/色) 已移除 — 非原典內容
 
 // ---- Page ----
 
@@ -309,8 +300,7 @@ export default function FortuneWeeklyPage() {
         <>
           <WeekOverviewCard weekly={weeklyFortune} t={t} />
           <DailyOverviewCard weekly={weeklyFortune} t={t} locale={locale} />
-          <CategoryTipsCard weekly={weeklyFortune} t={t} />
-          <WeeklyLuckyCard weekly={weeklyFortune} t={t} />
+          <WeekSpecialDaysCard weekly={weeklyFortune} t={t} />
         </>
       )}
     </div>
