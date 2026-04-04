@@ -1,7 +1,7 @@
 ---
 title: 宿曜道前端 UI 全面重建
 type: refactor
-status: in-progress
+status: completed
 created: 2026-04-04
 ---
 
@@ -52,9 +52,9 @@ created: 2026-04-04
 3. 三尺寸截圖驗證（375/768/1280）
 
 ## Checklist
-- [ ] Phase 1: layout + 首頁
-- [ ] Phase 2: fortune 日/週/月/年/十年
-- [ ] Phase 3: fortune 吉日/日曆/創業
-- [ ] Phase 4: 相性/企業/HR/獵頭
-- [ ] Phase 5: 知識庫/關於/技術
-- [ ] Phase 6: error + API routes
+- [x] Phase 1: layout + 首頁
+- [x] Phase 2: fortune 日/週/月/年/十年
+- [x] Phase 3: fortune 吉日/日曆/創業
+- [x] Phase 4: 相性/企業/HR/獵頭
+- [x] Phase 5: 知識庫/關於/技術
+- [x] Phase 6: error + API routes (Phase 1 已含)
