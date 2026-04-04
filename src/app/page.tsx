@@ -11,6 +11,9 @@ import { cn } from '@/lib/utils'
 import { Star, Sparkles, BookOpen, CalendarDays, Briefcase } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
 import { levelColor, levelBorder, getLevelHeight, getLevelKey } from '@/utils/fortune-helpers'
+import { specialDayBadgeClass, ryouhanBadgeClass } from '@/utils/special-day-colors'
+import { SankiCard } from '@/components/shared/sanki-card'
+import { AuspiciousCard } from '@/components/shared/auspicious-card'
 import type { DailyFortune, WeeklyFortune } from '@/types/fortune'
 
 // ---- Setup card (no birth date set) ----
@@ -139,31 +142,20 @@ function DetailSkeleton() {
 // ---- 今日特殊日 ----
 
 function TodaySpecialDays({ fortune }: { fortune: DailyFortune }) {
+  const { t } = useTranslation()
   const badges: { label: string; color: string }[] = []
 
   if (fortune.special_day) {
-    const sdColors: Record<string, string> = {
-      kanro: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
-      kongou: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
-      rasetsu: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30',
-    }
     badges.push({
       label: fortune.special_day.name,
-      color: sdColors[fortune.special_day.type] || 'bg-muted/50 text-muted-foreground border-border',
+      color: specialDayBadgeClass(fortune.special_day.type),
     })
   }
 
   if (fortune.ryouhan?.active) {
     badges.push({
-      label: '両半',
-      color: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30',
-    })
-  }
-
-  if (fortune.sanki?.is_dark_week) {
-    badges.push({
-      label: '暗週',
-      color: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30',
+      label: t('fortune.ryouhan'),
+      color: ryouhanBadgeClass(),
     })
   }
 
@@ -172,8 +164,8 @@ function TodaySpecialDays({ fortune }: { fortune: DailyFortune }) {
       badges.push({
         label: c.name,
         color: c.severity >= 3
-          ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30'
-          : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
+          ? 'bg-[var(--fortune-bad)]/12 text-[var(--fortune-bad)]'
+          : 'bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)]',
       })
     }
   }
@@ -185,7 +177,7 @@ function TodaySpecialDays({ fortune }: { fortune: DailyFortune }) {
       {badges.map((b) => (
         <span
           key={b.label}
-          className={cn('text-[11px] px-2 py-0.5 rounded-full border', b.color)}
+          className={cn('text-[11px] px-2 py-0.5 rounded-full border border-transparent', b.color)}
         >
           {b.label}
         </span>
@@ -194,42 +186,12 @@ function TodaySpecialDays({ fortune }: { fortune: DailyFortune }) {
   )
 }
 
-// ---- 今日行動建議 ----
+// ---- 今日宜忌 (T1299) ----
 
-function TodayActions({ fortune }: { fortune: DailyFortune }) {
-  const { t } = useTranslation()
-  const items: { label: string; value: string; color?: string }[] = []
-
-  if (fortune.lucky) {
-    items.push(
-      { label: t('home.direction'), value: fortune.lucky.direction },
-      { label: t('home.luckyColor'), value: fortune.lucky.color, color: fortune.lucky.color_hex },
-      { label: t('home.luckyNumber'), value: fortune.lucky.numbers.join(', ') },
-    )
-  }
-
-  if (fortune.day_mansion.day_fortune?.is_most_auspicious) {
-    items.push({ label: t('fortune.dayMansion'), value: t('home.dayMansionBest') })
-  }
-
-  if (!items.length) return null
-
-  return (
-    <div className='flex flex-wrap justify-center gap-x-4 gap-y-1'>
-      {items.map((item) => (
-        <div key={item.label} className='flex items-center gap-1'>
-          <span className='text-[10px] text-muted-foreground'>{item.label}</span>
-          {item.color && (
-            <span
-              className='inline-block w-2.5 h-2.5 rounded-full border border-border'
-              style={{ backgroundColor: item.color }}
-            />
-          )}
-          <span className='text-xs font-medium text-foreground'>{item.value}</span>
-        </div>
-      ))}
-    </div>
-  )
+function TodayAuspicious({ fortune }: { fortune: DailyFortune }) {
+  const dayFortune = fortune.day_mansion?.day_fortune
+  if (!dayFortune) return null
+  return <AuspiciousCard dayFortune={dayFortune} />
 }
 
 // ---- 週運預覽 ----
@@ -267,10 +229,10 @@ function WeekPreview({ weeklyFortune, activeDate }: { weeklyFortune: WeeklyFortu
                   {t(getLevelKey(day.level))}
                 </span>
                 {day.special_day && (
-                  <span className='w-1.5 h-1.5 rounded-full bg-amber-500' />
+                  <span className='w-1.5 h-1.5 rounded-full bg-[var(--kanro)]' />
                 )}
                 {day.ryouhan_active && !day.special_day && (
-                  <span className='w-1.5 h-1.5 rounded-full bg-purple-500' />
+                  <span className='w-1.5 h-1.5 rounded-full bg-[var(--ryouhan)]' />
                 )}
               </div>
             )
@@ -394,36 +356,22 @@ function HomeContent({ birthDate }: { birthDate: string }) {
         </Card>
       ) : null}
 
-      {/* today special days + actions */}
+      {/* today special days + auspicious */}
       {!loading && fortune && (
         <>
           <TodaySpecialDays fortune={fortune} />
-          <TodayActions fortune={fortune} />
+          <TodayAuspicious fortune={fortune} />
         </>
+      )}
+
+      {/* sanki (三九秘法) */}
+      {!loading && fortune?.sanki && (
+        <SankiCard sanki={fortune.sanki} />
       )}
 
       {/* week preview */}
       {!loading && weeklyFortune && (
         <WeekPreview weeklyFortune={weeklyFortune} activeDate={activeDate} />
-      )}
-
-      {/* fortune descriptions */}
-      {!loading && fortune?.fortune?.career_desc && (
-        <Card className='border border-border'>
-          <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
-            {[
-              { label: t('fortune.career'), desc: fortune.fortune.career_desc },
-              { label: t('fortune.love'), desc: fortune.fortune.love_desc },
-              { label: t('fortune.health'), desc: fortune.fortune.health_desc },
-              { label: t('fortune.wealth'), desc: fortune.fortune.wealth_desc },
-            ].filter(({ desc }) => desc).map(({ label, desc }) => (
-              <div key={label}>
-                <p className='text-xs font-medium text-primary mb-1'>{label}</p>
-                <p className='text-sm text-muted-foreground leading-relaxed'>{desc}</p>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
       )}
 
       {/* quick action links */}
