@@ -136,7 +136,6 @@ function KnowledgeContent() {
                       <span className='text-muted-foreground'>{t('fortune.unsuitable')}: </span>
                       {selectedMansion.day_fortune.inauspicious.join('、')}
                     </div>
-                    <p className='mt-1 text-xs italic text-muted-foreground'>T21n1299</p>
                   </>
                 )}
               </CardContent>

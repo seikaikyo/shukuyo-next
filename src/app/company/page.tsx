@@ -115,7 +115,7 @@ function CompanyContent() {
                 ))}
                 {companies.length === 0 && (
                   <p className='py-4 text-center text-xs text-muted-foreground'>
-                    {t('company.noCompanies')}
+                    {t('company.noCompanies', { country: '' })}
                   </p>
                 )}
               </div>

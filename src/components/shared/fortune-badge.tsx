@@ -23,6 +23,12 @@ export function levelToKey(level: string): string {
     'small_misfortune': 'caution',
     'misfortune': 'bad',
     'great_misfortune': 'bad',
+    // Go API 日文 level 名
+    'daikichi': 'great',
+    'kichi': 'good',
+    'shokyo': 'caution',
+    'kyo': 'bad',
+    'daikyo': 'bad',
   }
   return map[level] || 'good'
 }

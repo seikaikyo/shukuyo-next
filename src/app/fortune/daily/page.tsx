@@ -81,7 +81,7 @@ function DailyContent() {
             {df.your_mansion.name_jp} x {df.day_mansion.name_jp}
           </div>
           <div className='text-sm text-muted-foreground'>
-            {df.mansion_relation.name}（{df.mansion_relation.reading}）— {df.mansion_relation.description}
+            {df.mansion_relation.name}{df.mansion_relation.reading ? `（${df.mansion_relation.reading}）` : ''}{df.mansion_relation.description ? ` — ${df.mansion_relation.description}` : ''}
           </div>
           {(df.special_day || df.ryouhan?.active) && (
             <div className='mt-2 flex flex-wrap justify-center gap-2'>
@@ -105,13 +105,12 @@ function DailyContent() {
           <CardContent className='py-4'>
             <h3 className='text-sm font-semibold'>{t('fortune.sanki')}</h3>
             <div className='mt-2 flex items-center gap-2'>
-              <FortuneBadge label={`${df.sanki.period}（${df.sanki.period_reading}）`} />
+              <FortuneBadge label={df.sanki.period ? `${df.sanki.period}${df.sanki.period_reading ? `（${df.sanki.period_reading}）` : ''}` : t('fortune.sanki')} />
               <span className='text-xs text-muted-foreground'>
                 {t('fortune.sankiDay', { day: String(df.sanki.day_in_period) })} · {df.sanki.day_type}
               </span>
             </div>
             <p className='mt-2 text-sm text-muted-foreground'>{df.sanki.day_description}</p>
-            <p className='mt-2 text-xs italic text-muted-foreground'>T21n1299 p.397c</p>
           </CardContent>
         </Card>
       )}
@@ -135,9 +134,6 @@ function DailyContent() {
                 ))}
               </div>
             </div>
-            <p className='mt-2 text-xs italic text-muted-foreground'>
-              {df.day_mansion.day_fortune.source || 'T21n1299'}
-            </p>
           </CardContent>
         </Card>
       )}

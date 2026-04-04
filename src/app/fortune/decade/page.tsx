@@ -12,23 +12,13 @@ import { DateNav } from '@/components/shared/date-nav'
 import { FortuneBadge, levelToKey } from '@/components/shared/fortune-badge'
 import { MansionTag } from '@/components/shared/mansion-tag'
 import { cn } from '@/lib/utils'
+import { levelLabel } from '@/utils/level-label'
 
 const BORDER_COLORS: Record<string, string> = {
   great: 'border-l-[var(--fortune-great)]',
   good: 'border-l-[var(--fortune-good)]',
   caution: 'border-l-[var(--fortune-caution)]',
   bad: 'border-l-[var(--fortune-bad)]',
-}
-
-function levelLabel(level: string, locale: string): string {
-  const m: Record<string, Record<string, string>> = {
-    great_fortune: { 'zh-TW': '\u5927\u5409', en: 'Great', ja: '\u5927\u5409' },
-    good_fortune: { 'zh-TW': '\u5409', en: 'Good', ja: '\u5409' },
-    small_misfortune: { 'zh-TW': '\u5C0F\u51F6', en: 'Caution', ja: '\u5C0F\u51F6' },
-    misfortune: { 'zh-TW': '\u51F6', en: 'Bad', ja: '\u51F6' },
-    great_misfortune: { 'zh-TW': '\u5927\u51F6', en: 'Bad', ja: '\u5927\u51F6' },
-  }
-  return m[level]?.[locale] || m[level]?.['zh-TW'] || level
 }
 
 function DecadeContent() {

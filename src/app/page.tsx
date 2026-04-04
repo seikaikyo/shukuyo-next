@@ -7,6 +7,7 @@ import { useTranslation } from '@/lib/i18n'
 import { useFortune } from '@/hooks/use-fortune'
 import { useMansion } from '@/hooks/use-mansion'
 import { getYoseiFullName } from '@/utils/yosei'
+import { levelLabel } from '@/utils/level-label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -138,7 +139,7 @@ function HomeContent() {
             <CardContent className='flex flex-col items-center gap-2 py-6 text-center'>
               <LevelRing level={level} label={levelName} />
               <p className='mt-2 text-sm text-muted-foreground'>
-                {df.your_mansion.name_jp} x {df.day_mansion.name_jp} — {df.mansion_relation.name}（{df.mansion_relation.reading}）
+                {df.your_mansion.name_jp} x {df.day_mansion.name_jp} — {df.mansion_relation.name}{df.mansion_relation.reading ? `（${df.mansion_relation.reading}）` : ''}
               </p>
               {df.advice && (
                 <p className='mt-2 max-w-[360px] text-sm text-muted-foreground'>
@@ -190,9 +191,6 @@ function HomeContent() {
                     </div>
                   </div>
                 )}
-                <p className='mt-3 text-xs italic text-muted-foreground'>
-                  {df.day_mansion.day_fortune.source || 'T21n1299'}
-                </p>
               </CardContent>
             </Card>
           )}
@@ -206,7 +204,7 @@ function HomeContent() {
                 </h3>
                 <div className='mt-2 flex items-center gap-2'>
                   <FortuneBadge
-                    label={`${df.sanki.period}（${df.sanki.period_reading}）`}
+                    label={df.sanki.period ? `${df.sanki.period}${df.sanki.period_reading ? `（${df.sanki.period_reading}）` : ''}` : t('fortune.sanki')}
                   />
                   <span className='text-xs text-muted-foreground'>
                     {t('fortune.sankiDay', {
@@ -216,9 +214,6 @@ function HomeContent() {
                 </div>
                 <p className='mt-2 text-sm text-muted-foreground'>
                   {df.sanki.day_description}
-                </p>
-                <p className='mt-2 text-xs italic text-muted-foreground'>
-                  T21n1299 p.397c
                 </p>
               </CardContent>
             </Card>
@@ -285,16 +280,6 @@ function HomeContent() {
   )
 }
 
-function levelLabel(level: string, locale: string): string {
-  const labels: Record<string, Record<string, string>> = {
-    great_fortune: { 'zh-TW': '\u5927\u5409', en: 'Great', ja: '\u5927\u5409' },
-    good_fortune: { 'zh-TW': '\u5409', en: 'Good', ja: '\u5409' },
-    small_misfortune: { 'zh-TW': '\u5C0F\u51F6', en: 'Caution', ja: '\u5C0F\u51F6' },
-    misfortune: { 'zh-TW': '\u51F6', en: 'Bad', ja: '\u51F6' },
-    great_misfortune: { 'zh-TW': '\u5927\u51F6', en: 'Bad', ja: '\u5927\u51F6' },
-  }
-  return labels[level]?.[locale] || labels[level]?.['zh-TW'] || level
-}
 
 export default function HomePage() {
   const hydrated = useProfileHydrated()

@@ -160,11 +160,11 @@
   --sidebar-accent-foreground: oklch(0.896 0.018 74.0);
   --sidebar-border: oklch(0.210 0.014 68.0);
   --sidebar-ring: oklch(0.740 0.155 83.6);
-  /* fortune level colors */
-  --fortune-great: #4ade80;
-  --fortune-good: #86efac;
-  --fortune-caution: #fbbf24;
-  --fortune-bad: #f87171;
+  /* fortune level colors (柔和版，避免螢光感) */
+  --fortune-great: #6bc48f;
+  --fortune-good: #8ab89a;
+  --fortune-caution: #d4a537;
+  --fortune-bad: #d46a6a;
   /* special day colors (T1299 卷五) */
   --kanro: #d4af37;
   --kanro-bg: rgba(212, 175, 55, 0.15);

@@ -5,6 +5,7 @@ import { useProfileStore, useProfileHydrated } from '@/stores/profile'
 import { useTranslation } from '@/lib/i18n'
 import { useFortune } from '@/hooks/use-fortune'
 import { getYoseiFullName } from '@/utils/yosei'
+import { levelLabel } from '@/utils/level-label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
@@ -14,17 +15,6 @@ import { LevelRing } from '@/components/shared/level-ring'
 import { LevelBar } from '@/components/shared/level-bar'
 import { FortuneBadge } from '@/components/shared/fortune-badge'
 import { MansionTag } from '@/components/shared/mansion-tag'
-
-function levelLabel(level: string, locale: string): string {
-  const m: Record<string, Record<string, string>> = {
-    great_fortune: { 'zh-TW': '\u5927\u5409', en: 'Great', ja: '\u5927\u5409' },
-    good_fortune: { 'zh-TW': '\u5409', en: 'Good', ja: '\u5409' },
-    small_misfortune: { 'zh-TW': '\u5C0F\u51F6', en: 'Caution', ja: '\u5C0F\u51F6' },
-    misfortune: { 'zh-TW': '\u51F6', en: 'Bad', ja: '\u51F6' },
-    great_misfortune: { 'zh-TW': '\u5927\u51F6', en: 'Bad', ja: '\u5927\u51F6' },
-  }
-  return m[level]?.[locale] || m[level]?.['zh-TW'] || level
-}
 
 function MonthlyContent() {
   const { t, locale } = useTranslation()
