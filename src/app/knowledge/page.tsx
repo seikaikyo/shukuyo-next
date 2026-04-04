@@ -107,7 +107,7 @@ function KnowledgeContent() {
               <CardContent className='py-4'>
                 <div className='flex items-center justify-between'>
                   <h3 className='font-serif text-base font-semibold'>{selectedMansion.name_jp} {t('knowledge.detail')}</h3>
-                  <button className='text-xs text-muted-foreground' onClick={() => setSelectedMansion(null)}>x</button>
+                  <button className='text-xs text-muted-foreground' aria-label='Close' onClick={() => setSelectedMansion(null)}>x</button>
                 </div>
                 <Separator className='my-2' />
                 <div className='grid grid-cols-2 gap-2 text-sm'>

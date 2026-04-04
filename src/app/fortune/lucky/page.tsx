@@ -28,7 +28,7 @@ function LuckyContent() {
 
   if (loading || !luckyDaySummary) return <Skeleton className='h-60 w-full rounded-xl' />
 
-  const categories = luckyDaySummary.categories
+  const categories = luckyDaySummary.categories || []
   const filtered = activeCategory
     ? categories.filter((c) => c.key === activeCategory)
     : categories
@@ -95,7 +95,7 @@ function LuckyContent() {
                   {cat.name} — {action.name}
                 </h3>
                 <div className='mt-2 flex flex-col gap-2.5'>
-                  {action.lucky_days.map((day) => (
+                  {(action.lucky_days || []).map((day) => (
                     <div
                       key={day.date}
                       className='rounded-lg bg-muted p-3'
@@ -130,9 +130,10 @@ function LuckyContent() {
 }
 
 export default function LuckyPage() {
+  const { t } = useTranslation()
   const hydrated = useProfileHydrated()
   const birthDate = useProfileStore((s) => s.birthDate)
   if (!hydrated) return <Skeleton className='h-60 w-full rounded-xl' />
-  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>Please set your birth date first.</p>
+  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>{t('setup.welcomeDesc')}</p>
   return <LuckyContent />
 }

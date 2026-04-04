@@ -84,7 +84,7 @@ function WeeklyContent() {
         <CardContent className='py-4'>
           <h3 className='text-sm font-semibold'>{t('fortune.dailyOverview')}</h3>
           <div className='mt-2 grid grid-cols-7 gap-1.5'>
-            {wf.daily_overview.map((day) => (
+            {(wf.daily_overview || []).map((day) => (
               <div key={day.date} className='text-center'>
                 <div className={day.is_today ? 'text-xs font-bold text-primary' : 'text-xs text-muted-foreground'}>
                   {day.weekday}
@@ -119,7 +119,7 @@ function WeeklyContent() {
               { key: 'kongou', label: '\u91D1\u525B\u5CF0\u65E5', color: 'var(--kongou)', bg: 'var(--kongou-bg)' },
               { key: 'rasetsu', label: '\u7F85\u5239\u65E5', color: 'var(--fortune-bad)', bg: 'var(--fortune-bad)/10' },
             ].map((s) => {
-              const count = wf.daily_overview.filter(d => d.special_day === s.key).length
+              const count = (wf.daily_overview || []).filter(d => d.special_day === s.key).length
               return (
                 <div key={s.key} className='rounded-lg p-3 text-center' style={{ background: s.bg }}>
                   <div className='text-xs' style={{ color: s.color }}>{s.label}</div>
@@ -135,11 +135,12 @@ function WeeklyContent() {
 }
 
 export default function WeeklyPage() {
+  const { t } = useTranslation()
   const hydrated = useProfileHydrated()
   const birthDate = useProfileStore((s) => s.birthDate)
 
   if (!hydrated) return <Skeleton className='h-60 w-full rounded-xl' />
-  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>Please set your birth date first.</p>
+  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>{t('setup.welcomeDesc')}</p>
 
   return <WeeklyContent />
 }

@@ -70,8 +70,8 @@ function HrContent() {
                 date1: allDates[i], date2: allDates[j]
               })
               result[allNames[i]][allNames[j]] = {
-                relation: compat.relation.name,
-                level: compat.level,
+                relation: compat?.relation?.name || '?',
+                level: compat?.level || '',
               }
             } catch {
               result[allNames[i]][allNames[j]] = { relation: '?', level: '' }
@@ -139,7 +139,7 @@ function HrContent() {
                   <span className='text-sm font-semibold'>{c.name}</span>
                   <span className='text-xs text-muted-foreground'> · {c.birthDate}</span>
                 </div>
-                <button onClick={() => deleteHrCandidate(c.id)} className='text-xs text-destructive'>x</button>
+                <button onClick={() => deleteHrCandidate(c.id)} className='text-xs text-destructive' aria-label='Delete'>x</button>
               </div>
             ))}
           </div>

@@ -78,7 +78,7 @@ function HeadhunterContent() {
                 <Button variant='outline' size='sm' className='text-xs' onClick={() => setSelectedSeeker(s.id)}>
                   {t('company.analyze')}
                 </Button>
-                <button onClick={() => deleteJobSeeker(s.id)} className='text-xs text-destructive'>x</button>
+                <button onClick={() => deleteJobSeeker(s.id)} className='text-xs text-destructive' aria-label='Delete'>x</button>
               </div>
             </div>
           ))}

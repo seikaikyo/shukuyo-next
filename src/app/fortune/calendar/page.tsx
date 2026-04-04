@@ -103,6 +103,7 @@ function CalendarContent() {
                 <button
                   key={dayNum}
                   onClick={() => setSelectedDay(dayData || null)}
+                  aria-label={`${month}月${dayNum}日`}
                   className={cn(
                     'flex aspect-square flex-col items-center justify-center rounded-md border border-transparent text-xs transition-all hover:border-border',
                     key && LEVEL_BG[key],
@@ -189,9 +190,10 @@ function CalendarContent() {
 }
 
 export default function CalendarPage() {
+  const { t } = useTranslation()
   const hydrated = useProfileHydrated()
   const birthDate = useProfileStore((s) => s.birthDate)
   if (!hydrated) return <Skeleton className='h-60 w-full rounded-xl' />
-  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>Please set your birth date first.</p>
+  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>{t('setup.welcomeDesc')}</p>
   return <CalendarContent />
 }

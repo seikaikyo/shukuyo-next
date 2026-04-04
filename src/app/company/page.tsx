@@ -34,11 +34,12 @@ function CompanyContent() {
   const [name, setName] = useState('')
   const [foundingDate, setFoundingDate] = useState('')
   const [country, setCountry] = useState('')
+  const [memo, setMemo] = useState('')
 
   function handleAdd() {
     if (!name || !foundingDate) return
-    addCompany({ name, foundingDate, country })
-    setName(''); setFoundingDate(''); setCountry('')
+    addCompany({ name, foundingDate, country, memo })
+    setName(''); setFoundingDate(''); setCountry(''); setMemo('')
   }
 
   function handleAnalyze() {
@@ -80,10 +81,10 @@ function CompanyContent() {
               <h3 className='text-sm font-semibold'>{t('company.addCompany')}</h3>
               <div className='mt-2 flex flex-col gap-2'>
                 <Input placeholder={t('company.companyNameLabel')} value={name} onChange={(e) => setName(e.target.value)} />
-                <Input type='date' min='1800-01-01' max='2025-12-31' value={foundingDate} onChange={(e) => setFoundingDate(e.target.value)} />
+                <Input type='date' min='1800-01-01' max='2030-12-31' value={foundingDate} onChange={(e) => setFoundingDate(e.target.value)} />
                 <div className='grid grid-cols-2 gap-2'>
                   <Input placeholder={t('company.country')} value={country} onChange={(e) => setCountry(e.target.value)} />
-                  <Input placeholder={t('company.memo')} />
+                  <Input placeholder={t('company.memo')} value={memo} onChange={(e) => setMemo(e.target.value)} />
                 </div>
                 <Button className='self-end' onClick={handleAdd} disabled={!name || !foundingDate}>
                   {t('company.add')}
@@ -211,9 +212,10 @@ function CompanyContent() {
 }
 
 export default function CompanyPage() {
+  const { t } = useTranslation()
   const hydrated = useProfileHydrated()
   const birthDate = useProfileStore((s) => s.birthDate)
   if (!hydrated) return <Skeleton className='h-60 w-full rounded-xl' />
-  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>Please set your birth date first.</p>
+  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>{t('setup.welcomeDesc')}</p>
   return <CompanyContent />
 }

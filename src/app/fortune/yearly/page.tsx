@@ -76,7 +76,7 @@ function YearlyContent() {
         <CardContent className='py-4'>
           <h3 className='text-sm font-semibold'>{t('fortune.monthlyTrend')}</h3>
           <div className='mt-2 grid grid-cols-6 gap-1.5'>
-            {yf.monthly_trend.map((m) => {
+            {(yf.monthly_trend || []).map((m) => {
               const isCurrent = m.month === new Date().getMonth() + 1 && year === thisYear
               return (
                 <div key={m.month} className='text-center'>
@@ -108,7 +108,7 @@ function YearlyContent() {
               <div className='rounded-lg bg-muted p-3'>
                 <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.bestMonths')}</div>
                 <div className='flex flex-wrap gap-1.5'>
-                  {yf.strategy.best_months.map((m) => (
+                  {(yf.strategy?.best_months || []).map((m) => (
                     <FortuneBadge key={m.month} label={`${m.month}\u6708`} level='great_fortune' />
                   ))}
                 </div>
@@ -116,7 +116,7 @@ function YearlyContent() {
               <div className='rounded-lg bg-muted p-3'>
                 <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.cautionMonths')}</div>
                 <div className='flex flex-wrap gap-1.5'>
-                  {yf.strategy.caution_months.map((m) => (
+                  {(yf.strategy?.caution_months || []).map((m) => (
                     <FortuneBadge key={m.month} label={`${m.month}\u6708`} level='misfortune' />
                   ))}
                 </div>
@@ -130,9 +130,10 @@ function YearlyContent() {
 }
 
 export default function YearlyPage() {
+  const { t } = useTranslation()
   const hydrated = useProfileHydrated()
   const birthDate = useProfileStore((s) => s.birthDate)
   if (!hydrated) return <Skeleton className='h-60 w-full rounded-xl' />
-  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>Please set your birth date first.</p>
+  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>{t('setup.welcomeDesc')}</p>
   return <YearlyContent />
 }

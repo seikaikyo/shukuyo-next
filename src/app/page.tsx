@@ -38,7 +38,7 @@ function SetupCard() {
         />
         <Button
           className='w-full'
-          disabled={!date || date.length !== 10}
+          disabled={!date || !/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(new Date(date + 'T00:00:00').getTime())}
           onClick={() => setBirthDate(date)}
         >
           {t('setup.start')}

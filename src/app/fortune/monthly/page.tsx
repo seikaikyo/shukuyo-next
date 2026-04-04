@@ -93,7 +93,7 @@ function MonthlyContent() {
         <CardContent className='py-4'>
           <h3 className='text-sm font-semibold'>{t('fortune.weeklyAnalysis')}</h3>
           <div className='mt-2 flex flex-col gap-3'>
-            {mf.weekly.map((w, i) => (
+            {(mf.weekly || []).map((w, i) => (
               <div key={i}>
                 {i > 0 && <Separator className='mb-3' />}
                 <div className='mb-2 flex items-center justify-between'>
@@ -130,21 +130,21 @@ function MonthlyContent() {
         <Card>
           <CardContent className='py-4'>
             <h3 className='text-sm font-semibold'>{t('fortune.monthStrategy')}</h3>
-            {mf.strategy.best_days.length > 0 && (
+            {(mf.strategy.best_days || []).length > 0 && (
               <div className='mt-2'>
                 <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.recommendedDays')}</div>
                 <div className='flex flex-wrap gap-1.5'>
-                  {mf.strategy.best_days.map((d) => (
+                  {(mf.strategy.best_days || []).map((d) => (
                     <FortuneBadge key={d.date} label={d.date.slice(5)} level='great_fortune' />
                   ))}
                 </div>
               </div>
             )}
-            {mf.strategy.avoid_days.length > 0 && (
+            {(mf.strategy.avoid_days || []).length > 0 && (
               <div className='mt-3'>
                 <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.cautionDays')}</div>
                 <div className='flex flex-wrap gap-1.5'>
-                  {mf.strategy.avoid_days.map((d) => (
+                  {(mf.strategy.avoid_days || []).map((d) => (
                     <FortuneBadge key={d.date} label={d.date.slice(5)} level='small_misfortune' />
                   ))}
                 </div>
@@ -165,7 +165,7 @@ function MonthlyContent() {
                 { key: 'kongou', label: '\u91D1\u525B\u5CF0\u65E5', color: 'var(--kongou)', bg: 'var(--kongou-bg)' },
                 { key: 'rasetsu', label: '\u7F85\u5239\u65E5', color: 'var(--fortune-bad)', bg: 'rgba(var(--fortune-bad), 0.1)' },
               ].map((s) => {
-                const count = mf.special_days!.filter(d => d.type === s.key).length
+                const count = (mf.special_days || []).filter(d => d.type === s.key).length
                 return (
                   <div key={s.key} className='rounded-lg p-3 text-center' style={{ background: s.bg }}>
                     <div className='text-xs' style={{ color: s.color }}>{s.label}</div>
@@ -182,9 +182,10 @@ function MonthlyContent() {
 }
 
 export default function MonthlyPage() {
+  const { t } = useTranslation()
   const hydrated = useProfileHydrated()
   const birthDate = useProfileStore((s) => s.birthDate)
   if (!hydrated) return <Skeleton className='h-60 w-full rounded-xl' />
-  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>Please set your birth date first.</p>
+  if (!birthDate) return <p className='py-12 text-center text-sm text-muted-foreground'>{t('setup.welcomeDesc')}</p>
   return <MonthlyContent />
 }
