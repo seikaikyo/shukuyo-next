@@ -72,7 +72,7 @@ function LuckyDayItem({ day, locale }: { day: LuckyDay; locale: string }) {
             </span>
           ))}
           {day.conflicts?.map((c) => (
-            <span key={c} className='text-[10px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-600 dark:text-orange-400'>
+            <span key={c} className='text-[10px] px-1.5 py-0.5 rounded bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)]'>
               {c}
             </span>
           ))}

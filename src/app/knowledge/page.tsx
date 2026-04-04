@@ -15,11 +15,11 @@ import type { RelationType } from '@/types/compatibility'
 
 /** 七曜 (七つの曜) 配色 — 宿曜道核心屬性，非五行 */
 const SHICHIYOU_COLORS: Record<string, string> = {
-  '日': 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30',
+  '日': 'bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)] border-orange-500/30',
   '月': 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30',
   '火': 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30',
   '水': 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30',
-  '木': 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+  '木': 'bg-[var(--fortune-great)]/12 text-[var(--fortune-great)] border-emerald-500/30',
   '金': 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/30',
   '土': 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
 }
@@ -29,12 +29,12 @@ function shichiyouClass(yosei: string) {
 }
 
 const RELATION_COLORS: Record<string, string> = {
-  mei: 'text-emerald-500',
-  gyotai: 'text-amber-500',
-  eishin: 'text-sky-500',
-  yusui: 'text-violet-500',
-  ankai: 'text-rose-500',
-  kisei: 'text-orange-500',
+  mei: 'text-[var(--fortune-caution)]',
+  gyotai: 'text-[var(--fortune-caution)]',
+  eishin: 'text-[var(--fortune-great)]',
+  yusui: 'text-[var(--fortune-good)]',
+  ankai: 'text-[var(--fortune-bad)]',
+  kisei: 'text-[var(--fortune-caution)]',
 }
 
 function relationColorByType(type: string) {
@@ -106,7 +106,7 @@ function MansionCard({
           'text-[10px] px-1.5 py-0.5 rounded border',
           shichiyouClass(mansion.yosei)
         )}>
-          {mansion.yosei}
+          {mansion.yosei}曜
         </span>
         <span className='text-[10px] text-muted-foreground tabular-nums'>#{mansion.index}</span>
       </div>
@@ -152,7 +152,7 @@ function MansionDetailPanel({
                   'text-xs px-1.5 py-0.5 rounded border',
                   shichiyouClass(mansion.yosei)
                 )}>
-                  {mansion.yosei}
+                  {mansion.yosei}曜
                 </span>
               </div>
               <p className='text-sm text-muted-foreground'>{mansion.reading}</p>
@@ -212,20 +212,20 @@ function MansionDetailPanel({
               )}
               {mansion.day_fortune.auspicious?.length > 0 && (
                 <div className='flex flex-col gap-0.5'>
-                  <p className='text-xs text-emerald-500'>{t('lucky.adviceDo')}</p>
+                  <p className='text-xs text-[var(--fortune-great)]'>{t('lucky.adviceDo')}</p>
                   <div className='flex flex-wrap gap-1'>
                     {mansion.day_fortune.auspicious.map((a) => (
-                      <span key={a} className='text-xs px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>{a}</span>
+                      <span key={a} className='text-xs px-1.5 py-0.5 rounded bg-[var(--fortune-great)]/12 text-[var(--fortune-great)]'>{a}</span>
                     ))}
                   </div>
                 </div>
               )}
               {mansion.day_fortune.inauspicious?.length > 0 && (
                 <div className='flex flex-col gap-0.5'>
-                  <p className='text-xs text-orange-400'>{t('lucky.adviceAvoid')}</p>
+                  <p className='text-xs text-[var(--fortune-caution)]'>{t('lucky.adviceAvoid')}</p>
                   <div className='flex flex-wrap gap-1'>
                     {mansion.day_fortune.inauspicious.map((a) => (
-                      <span key={a} className='text-xs px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-600 dark:text-orange-400'>{a}</span>
+                      <span key={a} className='text-xs px-1.5 py-0.5 rounded bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)]'>{a}</span>
                     ))}
                   </div>
                 </div>
@@ -272,7 +272,7 @@ function RelationCard({ relation }: { relation: RelationType }) {
             {relation.good_for?.length > 0 && (
               <div className='flex flex-wrap gap-1'>
                 {relation.good_for.map((g) => (
-                  <span key={g} className='text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
+                  <span key={g} className='text-xs px-2 py-0.5 rounded-full bg-[var(--fortune-great)]/12 text-[var(--fortune-great)]'>
                     {g}
                   </span>
                 ))}

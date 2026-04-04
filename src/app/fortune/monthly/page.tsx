@@ -160,16 +160,16 @@ function StrategyCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string
         </p>
         {bestDays.length > 0 && (
           <div className='flex flex-col gap-2'>
-            <p className='text-xs font-medium text-emerald-500'>{t('fortune.recommendedDays')}</p>
+            <p className='text-xs font-medium text-[var(--fortune-great)]'>{t('fortune.recommendedDays')}</p>
             <div className='flex flex-wrap gap-2'>
               {bestDays.map((d) => {
                 const date = new Date(d.date + 'T00:00:00')
                 return (
                   <div
                     key={d.date}
-                    className='flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md bg-emerald-500/10 min-w-12'
+                    className='flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md bg-[var(--fortune-great)]/12 min-w-12'
                   >
-                    <span className='text-xs text-emerald-600 dark:text-emerald-400 font-medium'>
+                    <span className='text-xs text-[var(--fortune-great)] font-medium'>
                       {date.getMonth() + 1}/{date.getDate()}
                     </span>
                     <span className='text-xs text-muted-foreground'>{d.weekday}</span>
@@ -182,16 +182,16 @@ function StrategyCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: string
         )}
         {avoidDays.length > 0 && (
           <div className='flex flex-col gap-2'>
-            <p className='text-xs font-medium text-orange-500'>{t('fortune.avoidDays')}</p>
+            <p className='text-xs font-medium text-[var(--fortune-caution)]'>{t('fortune.avoidDays')}</p>
             <div className='flex flex-wrap gap-2'>
               {avoidDays.map((d) => {
                 const date = new Date(d.date + 'T00:00:00')
                 return (
                   <div
                     key={d.date}
-                    className='flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md bg-orange-500/10 min-w-12'
+                    className='flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-md bg-[var(--fortune-caution)]/12 min-w-12'
                   >
-                    <span className='text-xs text-orange-600 dark:text-orange-400 font-medium'>
+                    <span className='text-xs text-[var(--fortune-caution)] font-medium'>
                       {date.getMonth() + 1}/{date.getDate()}
                     </span>
                     <span className='text-xs text-muted-foreground'>{d.weekday}</span>
