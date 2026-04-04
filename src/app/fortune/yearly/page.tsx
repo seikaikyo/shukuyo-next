@@ -134,31 +134,8 @@ function MonthlyTrendCard({ yearly, t }: { yearly: YearlyFortune; t: (key: strin
   )
 }
 
-function CategoryCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const cats = yearly.category_descriptions
-  if (!cats) return null
-
-  return (
-    <Card className='border border-border'>
-      <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
-        <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          {t('fortune.categoryFortunes')}
-        </p>
-        {[
-          { label: t('fortune.career'), key: 'career', desc: cats.career },
-          { label: t('fortune.love'), key: 'love', desc: cats.love },
-          { label: t('fortune.health'), key: 'health', desc: cats.health },
-          { label: t('fortune.wealth'), key: 'wealth', desc: cats.wealth },
-        ].map(({ label, key, desc }) => desc ? (
-          <div key={key}>
-            <p className='text-xs font-medium text-primary mb-1'>{label}</p>
-            <p className='text-sm text-muted-foreground leading-relaxed'>{desc}</p>
-          </div>
-        ) : null)}
-      </CardContent>
-    </Card>
-  )
-}
+// CategoryCard (四領域) 已移除 — 非原典內容
+// 九曜年運建議直接由 YearOverviewCard 的 kuyou_star.description 呈現
 
 function OpportunitiesCard({ yearly, t }: { yearly: YearlyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   const hasOpp = yearly.opportunities?.length > 0
@@ -176,7 +153,7 @@ function OpportunitiesCard({ yearly, t }: { yearly: YearlyFortune; t: (key: stri
             <ul className='flex flex-col gap-1'>
               {yearly.opportunities.map((o, i) => (
                 <li key={i} className='flex items-start gap-2 text-xs text-muted-foreground'>
-                  <span className='text-emerald-500 shrink-0 mt-0.5'>+</span>
+                  <span className='text-[var(--fortune-great)] shrink-0 mt-0.5'>+</span>
                   {o}
                 </li>
               ))}
@@ -191,7 +168,7 @@ function OpportunitiesCard({ yearly, t }: { yearly: YearlyFortune; t: (key: stri
             <ul className='flex flex-col gap-1'>
               {yearly.warnings.map((w, i) => (
                 <li key={i} className='flex items-start gap-2 text-xs text-muted-foreground'>
-                  <span className='text-orange-400 shrink-0 mt-0.5'>!</span>
+                  <span className='text-[var(--fortune-caution)] shrink-0 mt-0.5'>!</span>
                   {w}
                 </li>
               ))}
@@ -283,7 +260,6 @@ export default function FortuneYearlyPage() {
         <>
           <YearOverviewCard yearly={yearlyFortune} t={t} />
           <MonthlyTrendCard yearly={yearlyFortune} t={t} />
-          <CategoryCard yearly={yearlyFortune} t={t} />
           <OpportunitiesCard yearly={yearlyFortune} t={t} />
         </>
       )}

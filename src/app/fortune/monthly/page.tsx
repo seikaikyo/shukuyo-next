@@ -222,21 +222,21 @@ function SpecialDaysCard({ monthly, t }: { monthly: MonthlyFortune; t: (key: str
         </p>
         <div className='flex flex-wrap gap-2'>
           {kanroCount > 0 && (
-            <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30'>
-              <span className='h-2 w-2 rounded-full bg-emerald-500 shrink-0' />
-              <span className='text-xs text-emerald-600 dark:text-emerald-400'>{t('fortune.kanroDay')} {t('common.nDays', { n: kanroCount })}</span>
+            <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-[var(--kanro-bg)] border border-[var(--kanro)]/30'>
+              <span className='h-2 w-2 rounded-full bg-[var(--kanro)] shrink-0' />
+              <span className='text-xs text-[var(--kanro)]'>{t('fortune.kanroDay')} {t('common.nDays', { n: kanroCount })}</span>
             </div>
           )}
           {kongouCount > 0 && (
-            <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/30'>
-              <span className='h-2 w-2 rounded-full bg-amber-500 shrink-0' />
-              <span className='text-xs text-amber-600 dark:text-amber-400'>{t('fortune.kongouDay')} {t('common.nDays', { n: kongouCount })}</span>
+            <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-[var(--kongou-bg)] border border-[var(--kongou)]/30'>
+              <span className='h-2 w-2 rounded-full bg-[var(--kongou)] shrink-0' />
+              <span className='text-xs text-[var(--kongou)]'>{t('fortune.kongouDay')} {t('common.nDays', { n: kongouCount })}</span>
             </div>
           )}
           {rasetsuCount > 0 && (
-            <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-500/10 border border-red-500/30'>
-              <span className='h-2 w-2 rounded-full bg-red-500 shrink-0' />
-              <span className='text-xs text-red-600 dark:text-red-400'>{t('fortune.rasetsuDay')} {t('common.nDays', { n: rasetsuCount })}</span>
+            <div className='flex items-center gap-1.5 px-2 py-1 rounded-full bg-[var(--fortune-bad)]/12 border border-[var(--fortune-bad)]/30'>
+              <span className='h-2 w-2 rounded-full bg-[var(--fortune-bad)] shrink-0' />
+              <span className='text-xs text-[var(--fortune-bad)]'>{t('fortune.rasetsuDay')} {t('common.nDays', { n: rasetsuCount })}</span>
             </div>
           )}
         </div>
