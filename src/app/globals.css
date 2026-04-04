@@ -101,9 +101,15 @@
   /* fortune level colors */
   --fortune-great: #2d6a4f;
   --fortune-good: #4a7c59;
-  --fortune-neutral: #6b6b6b;
   --fortune-caution: #b45309;
   --fortune-bad: #991b1b;
+  /* special day colors (T1299 卷五) */
+  --kanro: #b8860b;
+  --kanro-bg: rgba(184, 134, 11, 0.12);
+  --kongou: #7c3aed;
+  --kongou-bg: rgba(124, 58, 237, 0.10);
+  --ryouhan: #c2410c;
+  --ryouhan-bg: rgba(194, 65, 12, 0.10);
 }
 
 /* 黒金 dark theme */
@@ -157,9 +163,15 @@
   /* fortune level colors */
   --fortune-great: #4ade80;
   --fortune-good: #86efac;
-  --fortune-neutral: #8a8078;
   --fortune-caution: #fbbf24;
   --fortune-bad: #f87171;
+  /* special day colors (T1299 卷五) */
+  --kanro: #d4af37;
+  --kanro-bg: rgba(212, 175, 55, 0.15);
+  --kongou: #a78bfa;
+  --kongou-bg: rgba(167, 139, 250, 0.15);
+  --ryouhan: #fb923c;
+  --ryouhan-bg: rgba(251, 146, 60, 0.12);
 }
 
 html {
