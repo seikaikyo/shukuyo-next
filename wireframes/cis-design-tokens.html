@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宿曜道 — CIS Design Tokens v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a; --bg-card: #141414; --bg-input: #1a1710;
+    --border: #2a2520; --text: #e8e0d0; --text-muted: #8a8078; --text-dim: #5a5550;
+    --primary: #d4af37; --primary-fg: #0a0a0a; --primary-dim: rgba(212,175,55,0.15);
+    --accent: #b8941f; --accent-dim: rgba(184,148,31,0.15);
+    --font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+    --font-serif: 'Noto Serif JP', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: var(--bg); color: var(--text); line-height: 1.7; padding: 32px 20px 120px; max-width: 960px; margin: 0 auto; }
+  h1 { font-family: var(--font-serif); font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--primary); }
+  h2 { font-family: var(--font-serif); font-size: 20px; font-weight: 600; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 14px; font-weight: 600; margin: 24px 0 8px; color: var(--primary); }
+  p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  code { background: var(--bg-input); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  th { text-align: left; padding: 8px 10px; background: var(--bg-input); border: 1px solid var(--border); font-weight: 600; color: var(--text-muted); }
+  td { padding: 8px 10px; border: 1px solid var(--border); vertical-align: top; }
+  .sw { width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border); display: inline-block; vertical-align: middle; margin-right: 4px; }
+  .badge { display: inline-flex; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+  .note { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 4px; }
+  .id { color: var(--primary); font-weight: 700; font-size: 11px; font-family: monospace; }
+  .section-id { background: var(--primary-dim); color: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; font-family: monospace; margin-right: 8px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<h1>宿曜道 CIS Design Tokens</h1>
+<p>所有 UI 元件的顏色、字型、間距、用途統一定義。實作時引用 CSS 變數，禁止 hardcode 色碼。<br>討論時用區塊編號引用（如「調整 C1.4.1 甘露日深色值」）。</p>
+<p class="note">v2 · 2026-04-04 · 基於 src/app/globals.css · 原典：T21n1299 宿曜經 · 規範：cis-design-system SKILL</p>
+
+<!-- ================================================================ -->
+<h2><span class="section-id">C1</span>色彩系統</h2>
+
+<h3><span class="id">C1.1</span> 品牌色（雙主題）</h3>
+<table>
+  <tr><th>ID</th><th>Token</th><th>和風 Light</th><th>黒金 Dark</th><th>用途</th></tr>
+  <tr><td class="id">C1.1.1</td><td><code>--primary</code></td><td><span class="sw" style="background:#8b4513"></span><code>#8b4513</code> 赤銅</td><td><span class="sw" style="background:#d4af37"></span><code>#d4af37</code> 真金</td><td>Logo、主按鈕、選中態、ring、active tab</td></tr>
+  <tr><td class="id">C1.1.2</td><td><code>--primary-foreground</code></td><td><code>#faf9f6</code></td><td><code>#0a0a0a</code></td><td>primary 上的文字（反色）</td></tr>
+  <tr><td class="id">C1.1.3</td><td><code>--accent</code></td><td><span class="sw" style="background:#c9a96e"></span><code>#c9a96e</code> 淡金</td><td><span class="sw" style="background:#b8941f"></span><code>#b8941f</code> 深金</td><td>次要強調、chart-2、hover hint、theme toggle icon</td></tr>
+</table>
+
+<h3><span class="id">C1.2</span> 背景色</h3>
+<table>
+  <tr><th>ID</th><th>Token</th><th>Light</th><th>Dark</th><th>用途</th></tr>
+  <tr><td class="id">C1.2.1</td><td><code>--background</code></td><td><span class="sw" style="background:#faf9f6"></span><code>#faf9f6</code> 暖白</td><td><span class="sw" style="background:#0a0a0a"></span><code>#0a0a0a</code> 墨黑</td><td>body 底色</td></tr>
+  <tr><td class="id">C1.2.2</td><td><code>--card</code></td><td><span class="sw" style="background:#fff"></span><code>#ffffff</code></td><td><span class="sw" style="background:#141414"></span><code>#141414</code></td><td>Card / Popover / Dialog 底色</td></tr>
+  <tr><td class="id">C1.2.3</td><td><code>--secondary</code></td><td><span class="sw" style="background:#f5f0eb"></span><code>#f5f0eb</code></td><td><span class="sw" style="background:#1a1710"></span><code>#1a1710</code></td><td>Sidebar、次要區塊底色</td></tr>
+  <tr><td class="id">C1.2.4</td><td><code>--muted</code></td><td><span class="sw" style="background:#f0ebe4"></span><code>#f0ebe4</code></td><td><span class="sw" style="background:#1a1710"></span><code>#1a1710</code></td><td>Input / Tab-bar 底色</td></tr>
+</table>
+
+<h3><span class="id">C1.3</span> 文字色</h3>
+<table>
+  <tr><th>ID</th><th>Token</th><th>Light</th><th>Dark</th><th>用途</th></tr>
+  <tr><td class="id">C1.3.1</td><td><code>--foreground</code></td><td><code>#1a1a1a</code></td><td><code>#e8e0d0</code></td><td>主文字、Card Title</td></tr>
+  <tr><td class="id">C1.3.2</td><td><code>--muted-foreground</code></td><td><code>#6b6b6b</code></td><td><code>#8a8078</code></td><td>次要文字、說明文、描述</td></tr>
+  <tr><td class="id">C1.3.3</td><td>text-dim (非 CSS var)</td><td><code>#999</code></td><td><code>#5a5550</code></td><td>標籤、出處引用、placeholder</td></tr>
+</table>
+
+<h3><span class="id">C1.4</span> 邊框 / Ring</h3>
+<table>
+  <tr><th>ID</th><th>Token</th><th>Light</th><th>Dark</th><th>用途</th></tr>
+  <tr><td class="id">C1.4.1</td><td><code>--border</code></td><td><span class="sw" style="background:#e8e4df"></span><code>#e8e4df</code></td><td><span class="sw" style="background:#2a2520"></span><code>#2a2520</code></td><td>Card border、separator、tab-bar border</td></tr>
+  <tr><td class="id">C1.4.2</td><td><code>--input</code></td><td>同 border</td><td>同 border</td><td>Input border（focus 時切 --ring）</td></tr>
+  <tr><td class="id">C1.4.3</td><td><code>--ring</code></td><td>同 primary</td><td>同 primary</td><td>Focus ring、selected state</td></tr>
+</table>
+
+<h3><span class="id">C1.5</span> 語意色</h3>
+<table>
+  <tr><th>ID</th><th>Token</th><th>Light</th><th>Dark</th><th>用途</th></tr>
+  <tr><td class="id">C1.5.1</td><td><code>--destructive</code></td><td><span class="sw" style="background:#991b1b"></span><code>#991b1b</code></td><td><span class="sw" style="background:#f87171"></span><code>#f87171</code></td><td>刪除按鈕、危險操作確認</td></tr>
+</table>
+
+<h3><span class="id">C1.6</span> 領域專用色 — 四等級（T1299 推導）</h3>
+<p>僅四等級。禁止「平」「小吉」「末吉」。levels.go 有經文頁碼引用。</p>
+<table>
+  <tr><th>ID</th><th>等級</th><th>Token</th><th>Light</th><th>Dark</th><th>原典 / 用途</th></tr>
+  <tr><td class="id">C1.6.1</td><td><span class="badge" style="background:rgba(74,222,128,0.12);color:#4ade80">大吉</span></td><td><code>--fortune-great</code></td><td><span class="sw" style="background:#2d6a4f"></span><code>#2d6a4f</code></td><td><span class="sw" style="background:#4ade80"></span><code>#4ade80</code></td><td>榮親 base / 甘露+金剛 shift up / Tier 1</td></tr>
+  <tr><td class="id">C1.6.2</td><td><span class="badge" style="background:rgba(134,239,172,0.10);color:#86efac">吉</span></td><td><code>--fortune-good</code></td><td><span class="sw" style="background:#4a7c59"></span><code>#4a7c59</code></td><td><span class="sw" style="background:#86efac"></span><code>#86efac</code></td><td>友衰 base / 成日 override / Tier 2</td></tr>
+  <tr><td class="id">C1.6.3</td><td><span class="badge" style="background:rgba(251,191,36,0.10);color:#fbbf24">小凶</span></td><td><code>--fortune-caution</code></td><td><span class="sw" style="background:#b45309"></span><code>#b45309</code></td><td><span class="sw" style="background:#fbbf24"></span><code>#fbbf24</code></td><td>危成/業胎/命 base / 安日 override / Tier 3</td></tr>
+  <tr><td class="id">C1.6.4</td><td><span class="badge" style="background:rgba(248,113,113,0.12);color:#f87171">凶</span></td><td><code>--fortune-bad</code></td><td><span class="sw" style="background:#991b1b"></span><code>#991b1b</code></td><td><span class="sw" style="background:#f87171"></span><code>#f87171</code></td><td>安壞 base / 羅刹 shift down / Tier 4</td></tr>
+</table>
+<p class="note">凌犯期間自動反轉：大吉 ↔ 凶、吉 ↔ 小凶（RyouhanLevelFlip）</p>
+<p class="note">Badge/Bar 背景一律用 12% 透明度；文字用實色。</p>
+
+<h3><span class="id">C1.7</span> 領域專用色 — 特殊日（T1299 卷五）</h3>
+<table>
+  <tr><th>ID</th><th>特殊日</th><th>Token</th><th>Light</th><th>Dark</th><th>原典</th></tr>
+  <tr><td class="id">C1.7.1</td><td><span class="badge" style="background:rgba(184,134,11,0.12);color:#d4af37">甘露日</span></td><td><code>--kanro</code></td><td><span class="sw" style="background:#b8860b"></span><code>#b8860b</code> 金</td><td><span class="sw" style="background:#d4af37"></span><code>#d4af37</code> 金</td><td>諸吉事並大吉</td></tr>
+  <tr><td class="id">C1.7.2</td><td><span class="badge" style="background:rgba(124,58,237,0.10);color:#a78bfa">金剛峯日</span></td><td><code>--kongou</code></td><td><span class="sw" style="background:#7c3aed"></span><code>#7c3aed</code> 紫</td><td><span class="sw" style="background:#a78bfa"></span><code>#a78bfa</code> 紫</td><td>修法護摩吉</td></tr>
+  <tr><td class="id">C1.7.3</td><td><span class="badge" style="background:rgba(248,113,113,0.12);color:#f87171">羅刹日</span></td><td>共用 <code>--fortune-bad</code></td><td colspan="2">同 C1.6.4</td><td>百事忌</td></tr>
+  <tr><td class="id">C1.7.4</td><td><span class="badge" style="background:rgba(251,146,60,0.12);color:#fb923c">凌犯</span></td><td><code>--ryouhan</code></td><td><span class="sw" style="background:#c2410c"></span><code>#c2410c</code> 橘</td><td><span class="sw" style="background:#fb923c"></span><code>#fb923c</code> 橘</td><td>吉凶逆轉（品二）</td></tr>
+</table>
+
+<h3><span class="id">C1.8</span> 領域專用色 — 七曜</h3>
+<p>七曜屬性必須寫全名（日曜/月曜/火曜...），禁止只寫單字。</p>
+<table>
+  <tr><th>ID</th><th>七曜</th><th>CSS class</th><th>Light</th><th>Dark</th><th>對應宿（index, 0-based）</th></tr>
+  <tr><td class="id">C1.8.1</td><td>日曜</td><td><code>.el-sun</code></td><td><span class="sw" style="background:#ea580c"></span><code>#ea580c</code></td><td><span class="sw" style="background:#fb923c"></span><code>#fb923c</code></td><td>#3 房、#10 危、#17 畢、#24 張</td></tr>
+  <tr><td class="id">C1.8.2</td><td>月曜</td><td><code>.el-moon</code></td><td><span class="sw" style="background:#7c3aed"></span><code>#7c3aed</code></td><td><span class="sw" style="background:#a78bfa"></span><code>#a78bfa</code></td><td>#4 心、#11 室、#18 觜、#25 翼</td></tr>
+  <tr><td class="id">C1.8.3</td><td>火曜</td><td><code>.el-fire</code></td><td><span class="sw" style="background:#dc2626"></span><code>#dc2626</code></td><td><span class="sw" style="background:#f87171"></span><code>#f87171</code></td><td>#5 尾、#12 壁、#19 参、#26 軫</td></tr>
+  <tr><td class="id">C1.8.4</td><td>水曜</td><td><code>.el-water</code></td><td><span class="sw" style="background:#2563eb"></span><code>#2563eb</code></td><td><span class="sw" style="background:#38bdf8"></span><code>#38bdf8</code></td><td>#6 箕、#13 奎、#20 井</td></tr>
+  <tr><td class="id">C1.8.5</td><td>木曜</td><td><code>.el-wood</code></td><td><span class="sw" style="background:#16a34a"></span><code>#16a34a</code></td><td><span class="sw" style="background:#4ade80"></span><code>#4ade80</code></td><td>#0 角、#7 斗、#14 婁、#21 鬼</td></tr>
+  <tr><td class="id">C1.8.6</td><td>金曜</td><td><code>.el-metal</code></td><td><span class="sw" style="background:#ca8a04"></span><code>#ca8a04</code></td><td><span class="sw" style="background:#fbbf24"></span><code>#fbbf24</code></td><td>#1 亢、#8 女、#15 胃、#22 柳</td></tr>
+  <tr><td class="id">C1.8.7</td><td>土曜</td><td><code>.el-earth</code></td><td><span class="sw" style="background:#78716c"></span><code>#78716c</code></td><td><span class="sw" style="background:#a8a29e"></span><code>#a8a29e</code></td><td>#2 氐、#9 虛、#16 昴、#23 星</td></tr>
+</table>
+
+<h3><span class="id">C1.9</span> 領域專用色 — 六關係</h3>
+<p>六關係直接對應四等級色，不另設獨立色。</p>
+<table>
+  <tr><th>ID</th><th>關係</th><th>對應等級</th><th>原典引用</th></tr>
+  <tr><td class="id">C1.9.1</td><td>命（めい）</td><td>C1.6.3 小凶</td><td>不宜舉動百事 (p.397c)</td></tr>
+  <tr><td class="id">C1.9.2</td><td>業胎（ぎょうたい）</td><td>C1.6.3 小凶</td><td>所作不成就 (p.397c)</td></tr>
+  <tr><td class="id">C1.9.3</td><td>榮親（えいしん）</td><td>C1.6.1 大吉</td><td>諸吉事並大吉 (p.397c)</td></tr>
+  <tr><td class="id">C1.9.4</td><td>友衰（ゆうすい）</td><td>C1.6.2 吉</td><td>宜結交 (p.391b)</td></tr>
+  <tr><td class="id">C1.9.5</td><td>安壞（あんかい）</td><td>C1.6.4 凶</td><td>壊日餘並不堪 (p.398a)</td></tr>
+  <tr><td class="id">C1.9.6</td><td>危成（きせい）</td><td>C1.6.3 小凶</td><td>成日修道學問吉 (p.398a)</td></tr>
+</table>
+
+<h3><span class="id">C1.10</span> 領域專用色 — 消耗度 Tier / 九曜流年</h3>
+<table>
+  <tr><th>ID</th><th>項目</th><th>對應等級</th></tr>
+  <tr><td class="id">C1.10.1</td><td>Tier 1 / 九曜大吉（盛運/進運/吉運）</td><td>C1.6.1 大吉</td></tr>
+  <tr><td class="id">C1.10.2</td><td>Tier 2 / 九曜半吉/末吉（開運/喜運/平運）</td><td>C1.6.3 小凶</td></tr>
+  <tr><td class="id">C1.10.3</td><td>Tier 3</td><td>C1.6.3 小凶</td></tr>
+  <tr><td class="id">C1.10.4</td><td>Tier 4 / 九曜大凶（潜運/休運/滞運）</td><td>C1.6.4 凶</td></tr>
+</table>
+
+<!-- ================================================================ -->
+<h2><span class="section-id">C2</span>字型系統</h2>
+
+<h3><span class="id">C2.1</span> 字型家族</h3>
+<table>
+  <tr><th>ID</th><th>Token</th><th>字型</th><th>Weights</th><th>用途</th></tr>
+  <tr><td class="id">C2.1.1</td><td><code>--font-serif</code></td><td style="font-family:'Noto Serif JP',serif">'Noto Serif JP'</td><td>400, 600, 700</td><td>Logo「宿曜道」、Page Title、宿名、等級名、九曜星名、底部 Tab 漢字 icon</td></tr>
+  <tr><td class="id">C2.1.2</td><td><code>--font-sans</code></td><td style="font-family:'Inter','Noto Sans JP',sans-serif">'Inter' + 'Noto Sans JP'</td><td>400, 500, 700</td><td>內文、按鈕、badge、表單、說明文、導覽、breadcrumb</td></tr>
+  <tr><td class="id">C2.1.3</td><td><code>--font-mono</code></td><td style="font-family:monospace">'Geist Mono'</td><td>400</td><td>API 端點、code block（Tech 頁）</td></tr>
+</table>
+
+<h3><span class="id">C2.2</span> 字級表</h3>
+<table>
+  <tr><th>ID</th><th>名稱</th><th>大小</th><th>字重</th><th>字型</th><th>用途</th></tr>
+  <tr><td class="id">C2.2.1</td><td>Page Title</td><td>22px</td><td>700</td><td>serif</td><td>頁面主標題（首頁、關於、知識庫）</td></tr>
+  <tr><td class="id">C2.2.2</td><td>Card Title</td><td>14px</td><td>600</td><td>sans</td><td>卡片標題（今日宜忌、三九秘法、本週概覽...）</td></tr>
+  <tr><td class="id">C2.2.3</td><td>Body</td><td>13px</td><td>400</td><td>sans</td><td>內文、描述文、建議文</td></tr>
+  <tr><td class="id">C2.2.4</td><td>Small</td><td>11px</td><td>400-600</td><td>sans</td><td>Badge 文字、標籤、出處引用、日期</td></tr>
+  <tr><td class="id">C2.2.5</td><td>Level Name</td><td>20-24px</td><td>700</td><td>serif</td><td>等級圓環內（大吉/吉/小凶/凶）</td></tr>
+  <tr><td class="id">C2.2.6</td><td>Mansion Name</td><td>13-14px</td><td>700</td><td>serif</td><td>宿名顯示（角宿、翼宿...）</td></tr>
+  <tr><td class="id">C2.2.7</td><td>Nav Link</td><td>13px</td><td>500</td><td>sans</td><td>Navbar 導覽連結</td></tr>
+  <tr><td class="id">C2.2.8</td><td>Tab Label</td><td>12px</td><td>400 / 600 active</td><td>sans</td><td>Tab-bar 分頁文字</td></tr>
+  <tr><td class="id">C2.2.9</td><td>Bottom Tab</td><td>10px label / 18px icon</td><td>500 / serif icon</td><td>sans + serif</td><td>底部 Tab（漢字 icon 用 serif）</td></tr>
+  <tr><td class="id">C2.2.10</td><td>Logo</td><td>18px (navbar) / 16px (sheet)</td><td>700</td><td>serif</td><td>「宿曜道」品牌字</td></tr>
+</table>
+
+<h3><span class="id">C2.3</span> 行高</h3>
+<table>
+  <tr><th>ID</th><th>用途</th><th>行高</th></tr>
+  <tr><td class="id">C2.3.1</td><td>一般內文</td><td>1.6</td></tr>
+  <tr><td class="id">C2.3.2</td><td>緊湊元素（badge, tag, tab）</td><td>1.0 - 1.2</td></tr>
+  <tr><td class="id">C2.3.3</td><td>標題</td><td>1.3</td></tr>
+</table>
+
+<!-- ================================================================ -->
+<h2><span class="section-id">C3</span>間距系統</h2>
+
+<h3><span class="id">C3.1</span> 基數</h3>
+<p>4px 基數。所有間距為 4 的倍數。</p>
+
+<h3><span class="id">C3.2</span> 間距階梯</h3>
+<table>
+  <tr><th>ID</th><th>名稱</th><th>值</th><th>用途</th></tr>
+  <tr><td class="id">C3.2.1</td><td>gap-xs</td><td>2px</td><td>Tab-bar 內 button 間距</td></tr>
+  <tr><td class="id">C3.2.2</td><td>gap-sm</td><td>4px</td><td>Badge 之間、icon 與文字、日曆格 gap</td></tr>
+  <tr><td class="id">C3.2.3</td><td>gap-md</td><td>8px</td><td>Grid gap、卡片內元素間、表單欄位間</td></tr>
+  <tr><td class="id">C3.2.4</td><td>gap-lg</td><td>12px</td><td>Card margin-bottom、區塊間距</td></tr>
+  <tr><td class="id">C3.2.5</td><td>gap-xl</td><td>16px</td><td>Navbar 連結間距 (desktop)</td></tr>
+  <tr><td class="id">C3.2.6</td><td>gap-2xl</td><td>24px</td><td>Page section 間距</td></tr>
+</table>
+
+<h3><span class="id">C3.3</span> 元件內距</h3>
+<table>
+  <tr><th>ID</th><th>元件</th><th>Padding</th></tr>
+  <tr><td class="id">C3.3.1</td><td>Card</td><td>16px</td></tr>
+  <tr><td class="id">C3.3.2</td><td>Button (default)</td><td>8px 16px</td></tr>
+  <tr><td class="id">C3.3.3</td><td>Button (sm)</td><td>4px 10px</td></tr>
+  <tr><td class="id">C3.3.4</td><td>Badge</td><td>2px 8px</td></tr>
+  <tr><td class="id">C3.3.5</td><td>Input</td><td>8px 12px</td></tr>
+  <tr><td class="id">C3.3.6</td><td>Tab-bar</td><td>3px outer / 7px 10px per button</td></tr>
+  <tr><td class="id">C3.3.7</td><td>Mansion Tag</td><td>2px 8px</td></tr>
+  <tr><td class="id">C3.3.8</td><td>Page (mobile)</td><td>0 16px</td></tr>
+  <tr><td class="id">C3.3.9</td><td>Page (desktop)</td><td>0 24px</td></tr>
+  <tr><td class="id">C3.3.10</td><td>Navbar</td><td>0 16px, h=64px</td></tr>
+  <tr><td class="id">C3.3.11</td><td>Bottom Tab</td><td>8px 0, h=64px</td></tr>
+</table>
+
+<!-- ================================================================ -->
+<h2><span class="section-id">C4</span>圓角系統</h2>
+
+<h3><span class="id">C4.1</span> 圓角階梯</h3>
+<table>
+  <tr><th>ID</th><th>Token</th><th>值</th><th>用途</th></tr>
+  <tr><td class="id">C4.1.1</td><td><code>--radius-sm</code></td><td>calc(0.5rem * 0.6) = 4.8px</td><td>內嵌小元素</td></tr>
+  <tr><td class="id">C4.1.2</td><td><code>--radius-md</code></td><td>calc(0.5rem * 0.8) = 6.4px</td><td>Tab-bar 內 button</td></tr>
+  <tr><td class="id">C4.1.3</td><td><code>--radius-lg</code></td><td>0.5rem = 8px</td><td>Card、Button、Input、Tag</td></tr>
+  <tr><td class="id">C4.1.4</td><td><code>--radius-xl</code></td><td>calc(0.5rem * 1.4) = 11.2px</td><td>Modal / Sheet / Dialog</td></tr>
+</table>
+
+<h3><span class="id">C4.2</span> 特殊圓角</h3>
+<table>
+  <tr><th>ID</th><th>值</th><th>用途</th></tr>
+  <tr><td class="id">C4.2.1</td><td>9999px (pill)</td><td>Badge、Locale switcher button</td></tr>
+  <tr><td class="id">C4.2.2</td><td>50% (circle)</td><td>等級圓環 (Level Ring)、甘露/羅刹圓點</td></tr>
+  <tr><td class="id">C4.2.3</td><td>4px</td><td>Level Bar、Keyword tag、色票 (color swatch)</td></tr>
+</table>
+
+<!-- ================================================================ -->
+<h2><span class="section-id">C5</span>元件色彩對照</h2>
+
+<h3><span class="id">C5.1</span> 元件 → Token 對應表</h3>
+<table>
+  <tr><th>ID</th><th>元件</th><th>背景</th><th>文字/邊框</th><th>備註</th></tr>
+  <tr><td class="id">C5.1.1</td><td>Level Ring</td><td>transparent</td><td>border + text: 四等級色 (C1.6)</td><td>3px border</td></tr>
+  <tr><td class="id">C5.1.2</td><td>Level Bar</td><td>四等級色 12% opacity</td><td>四等級色 full</td><td>高度依等級 20-56px</td></tr>
+  <tr><td class="id">C5.1.3</td><td>Badge (fortune)</td><td>四等級色 12% opacity</td><td>四等級色 full</td><td>pill shape</td></tr>
+  <tr><td class="id">C5.1.4</td><td>Badge (special day)</td><td>特殊日色 12% opacity</td><td>特殊日色 full</td><td>甘露金/金剛紫/羅刹紅/凌犯橘</td></tr>
+  <tr><td class="id">C5.1.5</td><td>Badge (primary)</td><td><code>--primary-dim</code></td><td><code>--primary</code></td><td>「今年」「你的宿」等標記</td></tr>
+  <tr><td class="id">C5.1.6</td><td>Mansion Tag</td><td><code>--muted</code></td><td>border: <code>--border</code>、七曜名: 七曜色 (C1.8)</td><td>宿名用 --foreground</td></tr>
+  <tr><td class="id">C5.1.7</td><td>Calendar Day Cell</td><td>四等級色 12% opacity</td><td>--foreground</td><td>selected: ring border; 特殊日小圓點 4px</td></tr>
+  <tr><td class="id">C5.1.8</td><td>Special Day Note</td><td><code>--accent-dim</code></td><td>left-border 3px: 特殊日色</td><td>甘露用 C1.7.1、凌犯用 C1.7.4</td></tr>
+  <tr><td class="id">C5.1.9</td><td>Progress Bar</td><td><code>--muted</code></td><td>fill: 四等級色 full</td><td>6px height</td></tr>
+  <tr><td class="id">C5.1.10</td><td>Matrix Cell</td><td>四等級色 12% opacity</td><td>四等級色 full</td><td>HR 團隊矩陣</td></tr>
+  <tr><td class="id">C5.1.11</td><td>Tier Card 左色條</td><td>card bg</td><td>left-border 3px: 四等級色</td><td>企業分析結果</td></tr>
+</table>
+
+<h3><span class="id">C5.2</span> 導覽元件</h3>
+<table>
+  <tr><th>ID</th><th>元件</th><th>Default</th><th>Active</th><th>Hover</th></tr>
+  <tr><td class="id">C5.2.1</td><td>Navbar Logo</td><td>Light: --foreground / Dark: --primary</td><td>—</td><td>—</td></tr>
+  <tr><td class="id">C5.2.2</td><td>Navbar Link</td><td>--muted-foreground</td><td>--foreground + 1px underline --primary</td><td>--foreground</td></tr>
+  <tr><td class="id">C5.2.3</td><td>Bottom Tab</td><td>--text-dim</td><td>--primary + scale(1.1)</td><td>--foreground</td></tr>
+  <tr><td class="id">C5.2.4</td><td>Fortune Sub-tab</td><td>--muted-foreground, bg transparent</td><td>--foreground, bg --card, shadow, 600 weight</td><td>—</td></tr>
+  <tr><td class="id">C5.2.5</td><td>Breadcrumb</td><td>--text-dim</td><td>current: --muted-foreground</td><td>—</td></tr>
+  <tr><td class="id">C5.2.6</td><td>Locale Switcher</td><td>--muted-foreground</td><td>--primary + 500 weight</td><td>--foreground</td></tr>
+  <tr><td class="id">C5.2.7</td><td>Theme Toggle</td><td>--accent</td><td>—</td><td>bg: foreground 8% opacity</td></tr>
+</table>
+
+<h3><span class="id">C5.3</span> 表單元件</h3>
+<table>
+  <tr><th>ID</th><th>元件</th><th>Default</th><th>Focus</th></tr>
+  <tr><td class="id">C5.3.1</td><td>Input</td><td>bg: --muted, border: --border</td><td>border: --primary (ring)</td></tr>
+  <tr><td class="id">C5.3.2</td><td>Button Primary</td><td>bg: --primary, text: --primary-fg</td><td>opacity 0.9</td></tr>
+  <tr><td class="id">C5.3.3</td><td>Button Outline</td><td>bg: transparent, border: --border, text: --muted-foreground</td><td>bg: --muted, text: --foreground</td></tr>
+  <tr><td class="id">C5.3.4</td><td>Button Ghost</td><td>bg: transparent, no border, text: --muted-foreground</td><td>text: --foreground</td></tr>
+  <tr><td class="id">C5.3.5</td><td>Button Destructive</td><td>text: --destructive</td><td>—</td></tr>
+</table>
+
+<h3><span class="id">C5.4</span> 回饋元件</h3>
+<table>
+  <tr><th>ID</th><th>元件</th><th>色彩規則</th></tr>
+  <tr><td class="id">C5.4.1</td><td>Toast (Sonner)</td><td>follows shadcn theme tokens</td></tr>
+  <tr><td class="id">C5.4.2</td><td>Skeleton</td><td>bg: --muted, pulse animation</td></tr>
+  <tr><td class="id">C5.4.3</td><td>Backdrop (navbar/bottomtab)</td><td>--background 95% opacity + backdrop-blur 12px</td></tr>
+</table>
+
+<!-- ================================================================ -->
+<h2><span class="section-id">C6</span>禁止事項</h2>
+
+<table>
+  <tr><th>ID</th><th>禁止</th><th>原因</th><th>正確做法</th></tr>
+  <tr><td class="id">C6.1</td><td>Hardcode hex/rgb</td><td>無法跟隨主題切換</td><td>使用 CSS 變數 / Tailwind class</td></tr>
+  <tr><td class="id">C6.2</td><td>五行單字（金木水火土）</td><td>與支那五行混淆</td><td>寫七曜全名（金曜/木曜/水曜/火曜/土曜）</td></tr>
+  <tr><td class="id">C6.3</td><td>四象名（青龍/朱雀/白虎/玄武）</td><td>二十八宿系統，非原典</td><td>只用序號 + 七曜名</td></tr>
+  <tr><td class="id">C6.4</td><td>幸運方位/色/數</td><td>五行自創對應表，無原典依據</td><td>使用三九秘法宜忌（T1299）</td></tr>
+  <tr><td class="id">C6.5</td><td>事業/感情/健康/財運分類</td><td>現代編輯，非原典</td><td>使用三九日型宜忌</td></tr>
+  <tr><td class="id">C6.6</td><td>「平」「小吉」「末吉」等級</td><td>後端只有四等級</td><td>只用大吉/吉/小凶/凶</td></tr>
+  <tr><td class="id">C6.7</td><td>六害宿</td><td>非原典，已移除</td><td>不使用</td></tr>
+  <tr><td class="id">C6.8</td><td>Emoji</td><td>開發規範禁止</td><td>使用 lucide-react icon 或漢字</td></tr>
+  <tr><td class="id">C6.9</td><td>Badge bg 不透明</td><td>與卡片底色衝突</td><td>一律 12% 透明度</td></tr>
+  <tr><td class="id">C6.10</td><td>字型 weight 隨意用</td><td>視覺不一致</td><td>只用 C2.2 定義的 weight</td></tr>
+</table>
+
+<!-- ================================================================ -->
+<h2><span class="section-id">C7</span>宿曜道專用定義</h2>
+
+<h3><span class="id">C7.1</span> 九曜流年等級（寺院傳承）</h3>
+<p class="note">四段階來自寺院傳承整理（放生寺/大聖院/岡寺），非經文逐字等級名。kuyou.json 有 editorial_note。</p>
+<table>
+  <tr><th>ID</th><th>Index</th><th>星名</th><th>等級</th><th>fortune_name</th><th>色 (引用)</th><th>備註</th></tr>
+  <tr><td class="id">C7.1.0</td><td>0</td><td>羅喉星（らごうせい）</td><td>大凶</td><td>潜運</td><td>C1.6.4</td><td>蝕神 (Rahu)</td></tr>
+  <tr><td class="id">C7.1.1</td><td>1</td><td>土曜星（どようせい）</td><td>半吉</td><td>開運</td><td>C1.6.3</td><td></td></tr>
+  <tr><td class="id">C7.1.2</td><td>2</td><td>水曜星（すいようせい）</td><td>末吉</td><td>喜運</td><td>C1.6.3</td><td></td></tr>
+  <tr><td class="id">C7.1.3</td><td>3</td><td>金曜星（きんようせい）</td><td>半吉</td><td>平運</td><td>C1.6.3</td><td></td></tr>
+  <tr><td class="id">C7.1.4</td><td>4</td><td>日曜星（にちようせい）</td><td>大吉</td><td>盛運</td><td>C1.6.1</td><td></td></tr>
+  <tr><td class="id">C7.1.5</td><td>5</td><td>火曜星（かようせい）</td><td>大凶</td><td>休運</td><td>C1.6.4</td><td></td></tr>
+  <tr><td class="id">C7.1.6</td><td>6</td><td>計都星（けいとせい）</td><td>大凶</td><td>滞運</td><td>C1.6.4</td><td>蝕神 (Ketu)</td></tr>
+  <tr><td class="id">C7.1.7</td><td>7</td><td>月曜星（げつようせい）</td><td>大吉</td><td>進運</td><td>C1.6.1</td><td></td></tr>
+  <tr><td class="id">C7.1.8</td><td>8</td><td>木曜星（もくようせい）</td><td>大吉</td><td>吉運</td><td>C1.6.1</td><td></td></tr>
+</table>
+
+<h3><span class="id">C7.2</span> 底部 Tab 漢字 icon</h3>
+<table>
+  <tr><th>ID</th><th>Tab</th><th>漢字</th><th>字型</th></tr>
+  <tr><td class="id">C7.2.1</td><td>首頁</td><td>家</td><td>serif 18px</td></tr>
+  <tr><td class="id">C7.2.2</td><td>運勢</td><td>星</td><td>serif 18px</td></tr>
+  <tr><td class="id">C7.2.3</td><td>相性</td><td>縁</td><td>serif 18px</td></tr>
+  <tr><td class="id">C7.2.4</td><td>企業</td><td>社</td><td>serif 18px</td></tr>
+  <tr><td class="id">C7.2.5</td><td>知識</td><td>書</td><td>serif 18px</td></tr>
+</table>
+
+<h3><span class="id">C7.3</span> 三語系切換</h3>
+<table>
+  <tr><th>ID</th><th>語系</th><th>顯示</th><th>Code</th></tr>
+  <tr><td class="id">C7.3.1</td><td>正體中文</td><td>中</td><td>zh-TW (default)</td></tr>
+  <tr><td class="id">C7.3.2</td><td>English</td><td>EN</td><td>en</td></tr>
+  <tr><td class="id">C7.3.3</td><td>日本語</td><td>日</td><td>ja</td></tr>
+</table>
+
+<h3><span class="id">C7.4</span> Navbar Logo 主題差異</h3>
+<table>
+  <tr><th>ID</th><th>模式</th><th>色</th></tr>
+  <tr><td class="id">C7.4.1</td><td>和風 (Light)</td><td>--foreground（墨色）</td></tr>
+  <tr><td class="id">C7.4.2</td><td>黒金 (Dark)</td><td>--primary（金色）</td></tr>
+</table>
+
+<h3><span class="id">C7.5</span> 原典內容出處標注規則</h3>
+<table>
+  <tr><th>ID</th><th>規則</th></tr>
+  <tr><td class="id">C7.5.1</td><td>宜忌內容必須標注 <code>T21n1299 三九秘法日型</code></td></tr>
+  <tr><td class="id">C7.5.2</td><td>特殊日必須標注 <code>T1299 卷五</code></td></tr>
+  <tr><td class="id">C7.5.3</td><td>九曜等級必須標注 <code>寺院傳承</code>（非原典逐字）</td></tr>
+  <tr><td class="id">C7.5.4</td><td>關係等級引用頁碼（如 p.397c, p.398a）</td></tr>
+  <tr><td class="id">C7.5.5</td><td>出處文字用 C1.3.3 dim 色 + italic</td></tr>
+</table>
+
+<hr>
+<p class="note">
+  v2 · 2026-04-04<br>
+  規範來源：cis-design-system SKILL (dash-skills/skills/cis-design-system/SKILL.md)<br>
+  Hook：~/.claude/hooks/cis-check.sh — 修改 globals.css / tailwind / layout.tsx 時強制同步檢查<br>
+  討論格式：「C1.7.1 甘露日深色值要暗一點」→ Claude 定位修改 + 同步 globals.css + 更新此文件
+</p>
+
+</body>
+</html>

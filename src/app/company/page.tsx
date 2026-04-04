@@ -107,7 +107,7 @@ function CompareTab() {
               {comparisonResult.verdict.warnings.length > 0 && (
                 <ul className='mt-2 flex flex-col gap-0.5'>
                   {comparisonResult.verdict.warnings.map((w, i) => (
-                    <li key={`${i}-${w.slice(0, 20)}`} className='text-xs text-amber-600 dark:text-amber-400 flex items-start gap-1'>
+                    <li key={`${i}-${w.slice(0, 20)}`} className='text-xs text-[var(--fortune-caution)] flex items-start gap-1'>
                       <span className='shrink-0 mt-0.5'>·</span>{w}
                     </li>
                   ))}

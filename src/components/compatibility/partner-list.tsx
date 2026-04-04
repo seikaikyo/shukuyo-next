@@ -341,12 +341,12 @@ export function PartnerList({ onSelectPartner }: PartnerListProps) {
 const RELATION_ORDER = ['eishin', 'gyotai', 'mei', 'yusui', 'kisei', 'ankai'] as const
 
 function relationColor(type: string) {
-  if (type === 'mei') return 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400'
-  if (type === 'gyotai') return 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400'
-  if (type === 'eishin') return 'bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400'
-  if (type === 'yusui') return 'bg-muted/40 text-muted-foreground'
-  if (type === 'kisei') return 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400'
-  if (type === 'ankai') return 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400'
+  if (type === 'mei') return 'bg-[var(--fortune-caution)]/10 text-[var(--fortune-caution)]'
+  if (type === 'gyotai') return 'bg-[var(--fortune-caution)]/10 text-[var(--fortune-caution)]'
+  if (type === 'eishin') return 'bg-[var(--fortune-great)]/10 text-[var(--fortune-great)]'
+  if (type === 'yusui') return 'bg-[var(--fortune-good)]/10 text-[var(--fortune-good)]'
+  if (type === 'kisei') return 'bg-[var(--fortune-caution)]/10 text-[var(--fortune-caution)]'
+  if (type === 'ankai') return 'bg-[var(--fortune-bad)]/10 text-[var(--fortune-bad)]'
   return 'bg-muted/40 text-muted-foreground'
 }
 
@@ -373,7 +373,7 @@ function PartnerMatrix({
       <div className='flex items-center gap-3'>
         <h4 className='text-sm font-medium text-foreground'>{t('v3.match.matrixMode')}</h4>
         <span className='text-xs text-muted-foreground'>
-          {t('v3.match.harmonyRate')} <span className={cn('font-bold', harmony >= 50 ? 'text-emerald-600' : 'text-amber-600')}>{harmony}%</span>
+          {t('v3.match.harmonyRate')} <span className={cn('font-bold', harmony >= 50 ? 'text-[var(--fortune-great)]' : 'text-[var(--fortune-caution)]')}>{harmony}%</span>
         </span>
       </div>
       {grouped.map((group) => (

@@ -21,10 +21,10 @@ export function RedFlagFlow({ redFlag, className }: RedFlagFlowProps) {
         <div>
           <p className='text-sm leading-relaxed mb-3'>{redFlag.test}</p>
           <div className='flex gap-2 flex-wrap'>
-            <Button variant='outline' size='sm' className='text-emerald-600 border-emerald-300 hover:bg-emerald-50' onClick={() => setStep(1)}>
+            <Button variant='outline' size='sm' className='text-[var(--fortune-great)] border-[var(--fortune-great)]/30 hover:bg-[var(--fortune-great)]/8' onClick={() => setStep(1)}>
               {t('initiative.flowHealthy')}
             </Button>
-            <Button variant='outline' size='sm' className='text-red-600 border-red-300 hover:bg-red-50' onClick={() => setStep(2)}>
+            <Button variant='outline' size='sm' className='text-[var(--fortune-bad)] border-[var(--fortune-bad)]/30 hover:bg-[var(--fortune-bad)]/8' onClick={() => setStep(2)}>
               {t('initiative.flowRedFlag')}
             </Button>
           </div>
@@ -33,7 +33,7 @@ export function RedFlagFlow({ redFlag, className }: RedFlagFlowProps) {
 
       {step === 1 && (
         <div className='flex flex-col gap-2'>
-          <div className='rounded-md border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/20 px-3 py-2 text-sm text-emerald-800 dark:text-emerald-300'>
+          <div className='rounded-md border border-[var(--fortune-great)]/20 bg-[var(--fortune-great)]/8 px-3 py-2 text-sm text-[var(--fortune-great)]'>
             {redFlag.healthy}
           </div>
           <Button variant='ghost' size='sm' className='self-start text-muted-foreground' onClick={() => setStep(0)}>

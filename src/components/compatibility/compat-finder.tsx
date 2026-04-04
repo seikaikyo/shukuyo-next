@@ -21,12 +21,12 @@ function relationBorderColor(key: string) {
 }
 
 function relationScoreColor(key: string) {
-  if (key === 'mei') return 'text-emerald-600 dark:text-emerald-400'
-  if (key === 'gyotai') return 'text-green-600 dark:text-green-400'
-  if (key === 'eishin') return 'text-sky-600 dark:text-sky-400'
-  if (key === 'yusui') return 'text-slate-500'
-  if (key === 'kisei') return 'text-amber-600 dark:text-amber-400'
-  if (key === 'ankai') return 'text-red-600 dark:text-red-400'
+  if (key === 'mei') return 'text-[var(--fortune-caution)]'
+  if (key === 'gyotai') return 'text-[var(--fortune-caution)]'
+  if (key === 'eishin') return 'text-[var(--fortune-great)]'
+  if (key === 'yusui') return 'text-[var(--fortune-good)]'
+  if (key === 'kisei') return 'text-[var(--fortune-caution)]'
+  if (key === 'ankai') return 'text-[var(--fortune-bad)]'
   return 'text-muted-foreground'
 }
 

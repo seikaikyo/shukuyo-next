@@ -10,10 +10,10 @@ import type { PairLuckyDaysResult, LuckyDay } from '@/types/lucky-days'
 
 function ratingBadge(rating: string) {
   const map: Record<string, string> = {
-    '大吉': 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
-    '吉': 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30',
-    '小凶': 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
-    '凶': 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30',
+    '大吉': 'bg-[var(--fortune-great)]/12 text-[var(--fortune-great)] border-[var(--fortune-great)]/30',
+    '吉': 'bg-[var(--fortune-good)]/12 text-[var(--fortune-good)] border-[var(--fortune-good)]/30',
+    '小凶': 'bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)] border-[var(--fortune-caution)]/30',
+    '凶': 'bg-[var(--fortune-bad)]/12 text-[var(--fortune-bad)] border-[var(--fortune-bad)]/30',
   }
   return map[rating] || 'bg-muted/50 text-muted-foreground border-border'
 }

@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宿曜道 — UI/UX Wireframe (和風/黒金)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Design Tokens — 直接取自 globals.css
+     和風 (Light) + 黒金 (Dark)
+     ============================================================ */
+  :root {
+    --bg: #faf9f6;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f5f0eb;
+    --bg-input: #f0ebe4;
+    --border: #e8e4df;
+    --border-active: #d4cfc8;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --text-dim: #999;
+    --primary: #8b4513;
+    --primary-light: #a0522d;
+    --primary-dim: rgba(139,69,19,0.12);
+    --primary-fg: #faf9f6;
+    --accent: #c9a96e;
+    --accent-dim: rgba(201,169,110,0.15);
+    --secondary: #f5f0eb;
+    --ring: #8b4513;
+    --destructive: #991b1b;
+    --fortune-great: #2d6a4f;
+    --fortune-great-bg: rgba(45,106,79,0.12);
+    --fortune-good: #4a7c59;
+    --fortune-good-bg: rgba(74,124,89,0.10);
+    --fortune-neutral: #6b6b6b;
+    --fortune-neutral-bg: rgba(107,107,107,0.08);
+    --fortune-caution: #b45309;
+    --fortune-caution-bg: rgba(180,83,9,0.10);
+    --fortune-bad: #991b1b;
+    --fortune-bad-bg: rgba(153,27,27,0.10);
+    --sky: #1d6fa3;
+    --sky-bg: rgba(29,111,163,0.10);
+    --purple: #6d28d9;
+    --purple-bg: rgba(109,40,217,0.10);
+    --amber: #b45309;
+    --amber-bg: rgba(180,83,9,0.10);
+    --kanro: #b8860b;
+    --kanro-bg: rgba(184,134,11,0.12);
+    --kongou: #7c3aed;
+    --kongou-bg: rgba(124,58,237,0.10);
+    --ryouhan: #c2410c;
+    --ryouhan-bg: rgba(194,65,12,0.10);
+    --backdrop: rgba(250,249,246,0.95);
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    --radius: 8px;
+    --radius-lg: 10px;
+    --font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+    --font-serif: 'Noto Serif JP', serif;
+  }
+
+  html.dark {
+    --bg: #0a0a0a;
+    --bg-card: #141414;
+    --bg-card-hover: #1a1710;
+    --bg-input: #1a1710;
+    --border: #2a2520;
+    --border-active: #3a3530;
+    --text: #e8e0d0;
+    --text-muted: #8a8078;
+    --text-dim: #5a5550;
+    --primary: #d4af37;
+    --primary-light: #e0c060;
+    --primary-dim: rgba(212,175,55,0.15);
+    --primary-fg: #0a0a0a;
+    --accent: #b8941f;
+    --accent-dim: rgba(184,148,31,0.15);
+    --secondary: #1a1710;
+    --ring: #d4af37;
+    --destructive: #f87171;
+    --fortune-great: #4ade80;
+    --fortune-great-bg: rgba(74,222,128,0.12);
+    --fortune-good: #86efac;
+    --fortune-good-bg: rgba(134,239,172,0.10);
+    --fortune-neutral: #8a8078;
+    --fortune-neutral-bg: rgba(138,128,120,0.10);
+    --fortune-caution: #fbbf24;
+    --fortune-caution-bg: rgba(251,191,36,0.10);
+    --fortune-bad: #f87171;
+    --fortune-bad-bg: rgba(248,113,113,0.12);
+    --sky: #38bdf8;
+    --sky-bg: rgba(56,189,248,0.12);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,0.12);
+    --amber: #fbbf24;
+    --amber-bg: rgba(251,191,36,0.12);
+    --kanro: #d4af37;
+    --kanro-bg: rgba(212,175,55,0.15);
+    --kongou: #a78bfa;
+    --kongou-bg: rgba(167,139,250,0.15);
+    --ryouhan: #fb923c;
+    --ryouhan-bg: rgba(251,146,60,0.12);
+    --backdrop: rgba(10,10,10,0.95);
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* === Wireframe Top Nav === */
+  .wireframe-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--backdrop); border-bottom: 1px solid var(--border);
+    padding: 8px 16px; backdrop-filter: blur(12px);
+    display: flex; align-items: center; gap: 6px;
+    overflow-x: auto; white-space: nowrap;
+  }
+  .wireframe-nav button {
+    background: var(--bg-card); color: var(--text-muted);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 12px; font-size: 12px; cursor: pointer;
+    font-family: var(--font-sans); transition: all 0.2s;
+  }
+  .wireframe-nav button:hover { background: var(--bg-card-hover); color: var(--text); }
+  .wireframe-nav button.active {
+    background: var(--primary-dim); color: var(--primary);
+    border-color: var(--primary); font-weight: 600;
+  }
+  .wireframe-nav .theme-toggle {
+    margin-left: auto; font-size: 16px;
+    background: transparent; border: 1px solid var(--border);
+    width: 32px; height: 32px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--accent); flex-shrink: 0;
+  }
+
+  /* === Page Container === */
+  .page { display: none; padding: 64px 16px 100px; max-width: 640px; margin: 0 auto; }
+  .page.active { display: block; }
+  .page-title { font-family: var(--font-serif); font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .page-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+
+  /* === Card === */
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px;
+    box-shadow: var(--shadow); transition: background 0.3s, border-color 0.3s;
+  }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.02em; }
+  .card-desc { font-size: 13px; color: var(--text-muted); }
+
+  /* === Button === */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: var(--radius);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    border: 1px solid var(--border); transition: all 0.2s;
+    font-family: var(--font-sans);
+  }
+  .btn-primary { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-outline { background: transparent; color: var(--text-muted); }
+  .btn-outline:hover { background: var(--bg-input); color: var(--text); }
+  .btn-ghost { background: transparent; border: none; color: var(--text-muted); }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-sm { padding: 4px 10px; font-size: 11px; }
+
+  /* === Badge === */
+  .badge {
+    display: inline-flex; padding: 2px 8px; border-radius: 9999px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.01em;
+  }
+  .badge-primary { background: var(--primary-dim); color: var(--primary); }
+  .badge-great { background: var(--fortune-great-bg); color: var(--fortune-great); }
+  .badge-good { background: var(--fortune-good-bg); color: var(--fortune-good); }
+  .badge-caution { background: var(--fortune-caution-bg); color: var(--fortune-caution); }
+  .badge-bad { background: var(--fortune-bad-bg); color: var(--fortune-bad); }
+  .badge-sky { background: var(--sky-bg); color: var(--sky); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber); }
+
+  /* 特殊日專用色 */
+  .badge-kanro { background: var(--kanro-bg); color: var(--kanro); }
+  .badge-kongou { background: var(--kongou-bg); color: var(--kongou); }
+  .badge-rasetsu { background: var(--fortune-bad-bg); color: var(--fortune-bad); }
+  .badge-ryouhan { background: var(--ryouhan-bg); color: var(--ryouhan); }
+
+  /* === Input === */
+  .input {
+    background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 8px 12px;
+    color: var(--text); font-size: 14px; width: 100%;
+    font-family: var(--font-sans); transition: border-color 0.2s;
+  }
+  .input:focus { outline: none; border-color: var(--primary); }
+
+  .separator { border-top: 1px solid var(--border); margin: 12px 0; }
+
+  /* === Layout helpers === */
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .justify-center { justify-content: center; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .gap-4 { gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .grid-7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .w-full { width: 100%; }
+  .text-center { text-align: center; }
+  .text-sm { font-size: 13px; }
+  .text-xs { font-size: 11px; }
+  .text-muted { color: var(--text-muted); }
+  .text-dim { color: var(--text-dim); }
+  .mt-2 { margin-top: 8px; }
+  .mt-3 { margin-top: 12px; }
+  .mt-4 { margin-top: 16px; }
+  .mb-2 { margin-bottom: 8px; }
+  .mb-3 { margin-bottom: 12px; }
+  .p-3 { padding: 12px; }
+  .rounded { border-radius: var(--radius); }
+  .rounded-full { border-radius: 9999px; }
+  .border { border: 1px solid var(--border); }
+
+  /* === Level Ring === */
+  .level-ring {
+    width: 96px; height: 96px; border-radius: 50%;
+    border: 3px solid; display: flex; align-items: center;
+    justify-content: center; flex-direction: column;
+    font-family: var(--font-serif); font-size: 20px; font-weight: 700;
+  }
+  .level-ring.great { border-color: var(--fortune-great); color: var(--fortune-great); }
+  .level-ring.good { border-color: var(--fortune-good); color: var(--fortune-good); }
+  .level-ring.neutral { border-color: var(--fortune-neutral); color: var(--fortune-neutral); }
+  .level-ring.caution { border-color: var(--fortune-caution); color: var(--fortune-caution); }
+  .level-ring.bad { border-color: var(--fortune-bad); color: var(--fortune-bad); }
+
+  /* === Level Bar === */
+  .level-bar {
+    height: 32px; border-radius: 4px; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .level-bar.great { background: var(--fortune-great-bg); color: var(--fortune-great); }
+  .level-bar.good { background: var(--fortune-good-bg); color: var(--fortune-good); }
+  .level-bar.neutral { background: var(--fortune-neutral-bg); color: var(--fortune-neutral); }
+  .level-bar.caution { background: var(--fortune-caution-bg); color: var(--fortune-caution); }
+  .level-bar.bad { background: var(--fortune-bad-bg); color: var(--fortune-bad); }
+
+  /* === Calendar Day Cell === */
+  .day-cell {
+    aspect-ratio: 1; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; font-size: 12px; cursor: pointer;
+    border: 1px solid transparent; transition: all 0.15s;
+  }
+  .day-cell:hover { border-color: var(--border-active); }
+  .day-cell.selected { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .day-cell .day-num { font-weight: 600; }
+  .day-cell .day-dot { width: 4px; height: 4px; border-radius: 50%; margin-top: 2px; }
+
+  /* === Tab Bar === */
+  .tab-bar {
+    display: flex; gap: 2px; overflow-x: auto;
+    padding: 3px; background: var(--bg-input);
+    border-radius: var(--radius); border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .tab-bar button {
+    flex: 1; min-width: 48px; padding: 7px 10px;
+    background: transparent; border: none; border-radius: 6px;
+    color: var(--text-muted); font-size: 12px; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+    font-family: var(--font-sans);
+  }
+  .tab-bar button.active {
+    background: var(--bg-card); color: var(--text); font-weight: 600;
+    box-shadow: var(--shadow);
+  }
+
+  /* === Navbar Mock === */
+  .mock-navbar {
+    background: var(--backdrop); border-bottom: 1px solid var(--border);
+    padding: 12px 16px; margin: -16px -16px 16px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(12px);
+  }
+  .mock-navbar .logo { font-family: var(--font-serif); font-weight: 700; font-size: 18px; letter-spacing: 0.08em; }
+  html:not(.dark) .mock-navbar .logo { color: var(--text); }
+  html.dark .mock-navbar .logo { color: var(--primary); }
+  .mock-navbar .nav-links { display: flex; gap: 16px; font-size: 13px; color: var(--text-muted); }
+  .mock-navbar .nav-links .active-link { color: var(--text); position: relative; }
+  .mock-navbar .nav-links .active-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 100%;
+    height: 1px; background: var(--primary);
+  }
+  .mock-navbar .nav-right { display: flex; gap: 6px; align-items: center; }
+
+  .mock-bottom-tabs {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--backdrop); border-top: 1px solid var(--border);
+    display: flex; padding: 8px 0 env(safe-area-inset-bottom, 8px);
+    z-index: 50; backdrop-filter: blur(12px);
+  }
+  .mock-bottom-tabs .tab-item {
+    flex: 1; text-align: center; font-size: 10px;
+    color: var(--text-dim); padding: 4px 0; transition: color 0.2s;
+  }
+  .mock-bottom-tabs .tab-item.active { color: var(--primary); }
+  .mock-bottom-tabs .tab-icon {
+    font-family: var(--font-serif); font-size: 18px;
+    display: block; margin-bottom: 2px; line-height: 1;
+  }
+
+  .breadcrumb { font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
+  .breadcrumb span { color: var(--text-muted); }
+
+  .date-nav {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .date-nav .date-label {
+    font-family: var(--font-serif); font-size: 15px;
+    font-weight: 600; min-width: 140px; text-align: center;
+  }
+
+  /* === Annotation (wireframe notes) === */
+  .annotation {
+    background: var(--primary-dim); border: 1px dashed var(--primary);
+    border-radius: var(--radius); padding: 10px 14px;
+    font-size: 12px; color: var(--primary); margin: 8px 0;
+  }
+  .annotation b { color: var(--text); }
+
+  .note {
+    background: var(--accent-dim); border-left: 3px solid var(--accent);
+    padding: 10px 14px; border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 12px; color: var(--text-muted); margin: 8px 0;
+  }
+  .note b { color: var(--text); }
+
+  .color-swatch {
+    width: 20px; height: 20px; border-radius: 4px;
+    border: 1px solid var(--border); display: inline-block; vertical-align: middle;
+  }
+
+  .mansion-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 4px; font-size: 12px;
+    background: var(--bg-input); border: 1px solid var(--border);
+    font-family: var(--font-sans);
+  }
+
+  .progress-bar {
+    height: 6px; background: var(--bg-input); border-radius: 3px; overflow: hidden;
+  }
+  .progress-bar .fill { height: 100%; border-radius: 3px; }
+
+  .matrix-cell {
+    aspect-ratio: 1; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+  }
+
+  /* Yosei element colors */
+  .el-fire { color: #dc2626; }
+  .el-water { color: #2563eb; }
+  .el-wood { color: #16a34a; }
+  .el-metal { color: #ca8a04; }
+  .el-earth { color: #78716c; }
+  .el-sun { color: #ea580c; }
+  .el-moon { color: #7c3aed; }
+  html.dark .el-fire { color: #f87171; }
+  html.dark .el-water { color: #38bdf8; }
+  html.dark .el-wood { color: #4ade80; }
+  html.dark .el-metal { color: #fbbf24; }
+  html.dark .el-earth { color: #a8a29e; }
+  html.dark .el-sun { color: #fb923c; }
+  html.dark .el-moon { color: #a78bfa; }
+</style>
+</head>
+<body>
+
+<!-- === Wireframe Page Switcher === -->
+<nav class="wireframe-nav" id="pageNav">
+  <button class="active" data-page="home">首頁</button>
+  <button data-page="daily">日運</button>
+  <button data-page="weekly">週運</button>
+  <button data-page="monthly">月運</button>
+  <button data-page="yearly">年運</button>
+  <button data-page="decade">十年</button>
+  <button data-page="lucky">吉日</button>
+  <button data-page="calendar">日曆</button>
+  <button data-page="startup">創業</button>
+  <button data-page="compat">相性</button>
+  <button data-page="company">企業</button>
+  <button data-page="hr">HR</button>
+  <button data-page="hunter">獵頭</button>
+  <button data-page="knowledge">知識</button>
+  <button data-page="about">關於</button>
+  <button data-page="tech">技術</button>
+  <button class="theme-toggle" id="themeToggle" title="切換日/夜模式">☀</button>
+</nav>
+
+<!-- ============================================================ -->
+<!-- PAGE: HOME                                                    -->
+<!-- ============================================================ -->
+<div class="page active" id="page-home">
+
+  <div class="mock-navbar">
+    <div class="logo">宿曜道</div>
+    <div class="nav-links">
+      <span class="active-link">首頁</span>
+      <span>運勢</span>
+      <span>相性</span>
+      <span>企業</span>
+      <span>知識</span>
+    </div>
+    <div class="nav-right">
+      <span class="text-xs text-muted">中</span>
+      <span class="text-xs text-muted">EN</span>
+      <span class="text-xs text-muted">日</span>
+      <span style="color:var(--accent)">☽</span>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <b>首次進入</b>：顯示生日設定卡，填完後切換至運勢總覽。<br>
+    生日存於 localStorage (Zustand persist)，不需登入即可使用。
+  </div>
+
+  <!-- Setup Card -->
+  <div class="card" style="max-width:400px; margin: 0 auto 20px;">
+    <div class="card-title text-center" style="font-family:var(--font-serif)">設定你的生日</div>
+    <div class="card-desc text-center mb-3">輸入出生日期，開始你的宿曜之旅</div>
+    <input type="date" class="input mb-2" value="1990-01-15">
+    <button class="btn btn-primary w-full" style="justify-content:center">開始</button>
+  </div>
+
+  <div class="separator"></div>
+  <div class="annotation"><b>以下為設定生日後的主頁面</b></div>
+
+  <!-- Mansion Header -->
+  <div class="card flex items-center gap-3">
+    <div class="mansion-tag">
+      <span class="el-moon">月曜</span>
+      <span>翼宿</span>
+    </div>
+    <div>
+      <div class="text-sm" style="font-weight:600">翼宿（よくしゅく）</div>
+      <div class="text-xs text-muted">第二十六宿 · 月曜</div>
+    </div>
+  </div>
+
+  <!-- Date Navigation -->
+  <div class="date-nav">
+    <button class="btn btn-ghost btn-sm">&lsaquo;</button>
+    <div class="date-label">2026年4月4日（五）</div>
+    <button class="btn btn-ghost btn-sm">&rsaquo;</button>
+  </div>
+
+  <!-- Overall Score -->
+  <div class="card flex-col items-center text-center gap-2" style="display:flex; align-items:center;">
+    <div class="level-ring great">
+      <span>大吉</span>
+    </div>
+    <div class="text-sm text-muted mt-2">翼宿 × 箕宿 — 命（めい）</div>
+    <div class="text-sm mt-2" style="max-width:360px">
+      今日與本命宿形成「命」的關係，是能量最強的一天。適合推動重要計畫。
+    </div>
+  </div>
+
+  <!-- Special Day Badges -->
+  <div class="flex gap-2 mb-3" style="flex-wrap:wrap; justify-content:center;">
+    <span class="badge badge-kanro">甘露日</span>
+    <span class="badge badge-ryouhan">凌犯</span>
+  </div>
+
+  <!-- Today's Actions — 原典宜忌 (三九秘法日型) -->
+  <div class="card">
+    <div class="card-title">今日宜忌</div>
+    <div class="mt-2">
+      <div class="text-xs text-dim mb-2">宜</div>
+      <div class="flex gap-2" style="flex-wrap:wrap">
+        <span class="badge badge-great">修道學問</span>
+        <span class="badge badge-great">作諸成就法</span>
+      </div>
+    </div>
+    <div class="mt-3">
+      <div class="text-xs text-dim mb-2">忌</div>
+      <div class="flex gap-2" style="flex-wrap:wrap">
+        <span class="badge badge-caution">訴訟</span>
+        <span class="badge badge-caution">遠行</span>
+      </div>
+    </div>
+    <div class="text-xs text-dim mt-3" style="font-style:italic">
+      出處：T21n1299 三九秘法日型
+    </div>
+  </div>
+
+  <!-- Week Preview -->
+  <div class="card">
+    <div class="card-title">本週概覽</div>
+    <div class="grid-7 mt-2">
+      <div class="text-center">
+        <div class="text-xs text-dim">一</div>
+        <div class="level-bar good" style="height:40px; font-size:10px">吉</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xs text-dim">二</div>
+        <div class="level-bar great" style="height:56px; font-size:10px">大吉</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xs text-dim">三</div>
+        <div class="level-bar caution" style="height:28px; font-size:10px">小凶</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xs text-dim">四</div>
+        <div class="level-bar caution" style="height:24px; font-size:10px">小凶</div>
+      </div>
+      <div class="text-center" style="position:relative">
+        <div class="text-xs" style="color:var(--primary); font-weight:700">五</div>
+        <div class="level-bar great" style="height:56px; font-size:10px; border:2px solid var(--primary)">大吉</div>
+        <div class="text-xs" style="color:var(--primary)">今</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xs text-dim">六</div>
+        <div class="level-bar good" style="height:40px; font-size:10px">吉</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xs text-dim">日</div>
+        <div class="level-bar bad" style="height:20px; font-size:10px">凶</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 三九秘法日資訊 -->
+  <div class="card">
+    <div class="card-title">三九秘法</div>
+    <div class="flex items-center gap-2 mt-2">
+      <span class="badge badge-primary">一九（善期）</span>
+      <span class="text-xs text-muted">第 4 日 · 安</span>
+    </div>
+    <div class="text-sm text-muted mt-2">
+      安日 — 移徙吉，但行事宜守不宜攻。
+    </div>
+    <div class="text-xs text-dim mt-2" style="font-style:italic">T21n1299 p.397c</div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="grid-2 mt-3">
+    <div class="card" style="cursor:pointer">
+      <div class="text-sm" style="font-weight:600">運勢詳情</div>
+      <div class="text-xs text-muted">查看完整日運分析</div>
+    </div>
+    <div class="card" style="cursor:pointer">
+      <div class="text-sm" style="font-weight:600">相性診斷</div>
+      <div class="text-xs text-muted">與他人的緣分關係</div>
+    </div>
+    <div class="card" style="cursor:pointer">
+      <div class="text-sm" style="font-weight:600">企業分析</div>
+      <div class="text-xs text-muted">公司相性與團隊</div>
+    </div>
+    <div class="card" style="cursor:pointer">
+      <div class="text-sm" style="font-weight:600">知識庫</div>
+      <div class="text-xs text-muted">二十七宿百科</div>
+    </div>
+  </div>
+
+  <!-- Bottom Tabs Mock -->
+  <div class="mock-bottom-tabs">
+    <div class="tab-item active"><span class="tab-icon">家</span>首頁</div>
+    <div class="tab-item"><span class="tab-icon">星</span>運勢</div>
+    <div class="tab-item"><span class="tab-icon">縁</span>相性</div>
+    <div class="tab-item"><span class="tab-icon">社</span>企業</div>
+    <div class="tab-item"><span class="tab-icon">書</span>知識</div>
+  </div>
+
+  <div class="annotation mt-4">
+    <b>互動說明</b><br>
+    - 日期導航：左右箭頭切換日期，可快速回到當日<br>
+    - 週預覽：點擊任一天跳轉到該日詳細運勢<br>
+    - 快捷卡片：點擊跳轉到對應頁面<br>
+    - 底部 Tab：mobile 固定底部（漢字 icon，字型 Noto Serif JP），desktop 隱藏<br>
+    - Navbar logo 淺色模式用墨色，深色模式用金色
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: DAILY FORTUNE                                           -->
+<!-- ============================================================ -->
+<div class="page" id="page-daily">
+  <div class="breadcrumb">首頁 / 運勢 / <span>每日運勢</span></div>
+  <div class="tab-bar">
+    <button class="active">日</button><button>週</button><button>月</button><button>年</button><button>十年</button><button>吉日</button><button>日曆</button><button>創業</button>
+  </div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/daily/{date}?birth_date=...&lang=zh-TW</code></div>
+
+  <div class="date-nav">
+    <button class="btn btn-ghost btn-sm">&lsaquo;</button>
+    <div class="date-label">2026年4月4日（五）</div>
+    <button class="btn btn-ghost btn-sm">&rsaquo;</button>
+    <button class="btn btn-outline btn-sm">今天</button>
+  </div>
+
+  <div class="card text-center" style="display:flex; flex-direction:column; align-items:center;">
+    <div class="level-ring great" style="width:120px; height:120px; font-size:24px;"><span>大吉</span></div>
+    <div class="mt-2" style="font-weight:600; font-family:var(--font-serif)">翼宿 × 箕宿</div>
+    <div class="text-sm text-muted">命（めい）— 最強的本命關係</div>
+    <div class="flex gap-2 mt-2 justify-center" style="flex-wrap:wrap">
+      <span class="badge badge-kanro">甘露日</span>
+    </div>
+    <div class="text-sm mt-3 text-muted" style="max-width:400px">
+      本命宿與當日宿形成「命」的關係。能量完全同步，適合啟動重要計畫、做出關鍵決定。
+    </div>
+  </div>
+
+  <!-- 三九秘法日型 + 宜忌 (T1299) -->
+  <div class="card">
+    <div class="card-title">三九秘法</div>
+    <div class="flex items-center gap-2 mt-2">
+      <span class="badge badge-primary">一九（善期）</span>
+      <span class="text-xs text-muted">第 4 日 · 安</span>
+    </div>
+    <div class="text-sm text-muted mt-2">安日 — 移徙吉，但行事宜守不宜攻。</div>
+    <div class="text-xs text-dim mt-2" style="font-style:italic">T21n1299 p.397c</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">今日宜忌</div>
+    <div class="grid-2 mt-2">
+      <div class="p-3 rounded" style="background:var(--bg-input)">
+        <div class="text-xs text-dim mb-2">宜</div>
+        <div class="text-sm" style="color:var(--fortune-great)">修道學問</div>
+        <div class="text-sm" style="color:var(--fortune-great)">作諸成就法</div>
+        <div class="text-sm" style="color:var(--fortune-great)">移徙</div>
+      </div>
+      <div class="p-3 rounded" style="background:var(--bg-input)">
+        <div class="text-xs text-dim mb-2">忌</div>
+        <div class="text-sm" style="color:var(--fortune-caution)">訴訟</div>
+        <div class="text-sm" style="color:var(--fortune-caution)">遠行</div>
+      </div>
+    </div>
+    <div class="text-xs text-dim mt-2" style="font-style:italic">T21n1299 三九秘法日型</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">特殊日資訊</div>
+    <div class="note" style="border-left-color:var(--kanro)"><b style="color:var(--kanro)">甘露日（かんろにち）</b><br>諸吉事並大吉，萬事皆宜。</div>
+    <div class="note mt-2"><b>凌犯期間</b><br>本命宿受犯的月份，吉凶可能逆轉。原本吉的變凶、凶的變吉，宜修法化解。</div>
+  </div>
+
+  <div class="annotation mt-3">
+    <b>元件清單</b>：Breadcrumb / FortuneSubTabs (sticky) / DateNav / OverallLevelCard (ring + 宿關係 + badge + 建議) / SankiCard (三九秘法日型) / AuspiciousCard (宜忌，T1299) / SpecialInfoCard (甘露/金剛/羅刹/凌犯)<br>
+    <b>已移除非原典</b>：幸運方位/色/數（五行自創）、事業/感情/健康/財運（現代編輯）
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: WEEKLY                                                  -->
+<!-- ============================================================ -->
+<div class="page" id="page-weekly">
+  <div class="breadcrumb">首頁 / 運勢 / <span>週運</span></div>
+  <div class="tab-bar">
+    <button>日</button><button class="active">週</button><button>月</button><button>年</button><button>十年</button><button>吉日</button><button>日曆</button><button>創業</button>
+  </div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/weekly/{date}?birth_date=...&lang=zh-TW</code></div>
+
+  <div class="date-nav">
+    <button class="btn btn-ghost btn-sm">&lsaquo;</button>
+    <div class="date-label">3/30 — 4/5</div>
+    <button class="btn btn-ghost btn-sm">&rsaquo;</button>
+    <button class="btn btn-outline btn-sm">本週</button>
+  </div>
+
+  <div class="card text-center" style="display:flex; flex-direction:column; align-items:center;">
+    <div class="level-ring good" style="width:100px; height:100px; font-size:22px;"><span>吉</span></div>
+    <div class="mt-2"><span class="mansion-tag"><span class="el-moon">月曜</span> 翼宿</span></div>
+    <div class="text-sm mt-2" style="font-weight:600; font-family:var(--font-serif)">本週重點：人際拓展</div>
+    <div class="text-sm text-muted mt-2" style="max-width:400px">整體運勢良好，週二和週五是高峰日，適合安排重要會面。</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">每日概覽</div>
+    <div class="grid-7 mt-2" style="gap:6px;">
+      <div class="text-center"><div class="text-xs text-dim">一</div><div class="text-xs text-muted">3/30</div><div class="level-bar good mt-2" style="height:44px">吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">二</div><div class="text-xs text-muted">3/31</div><div class="level-bar great mt-2" style="height:56px">大吉</div><div class="text-xs" style="color:var(--kanro)">甘露</div></div>
+      <div class="text-center"><div class="text-xs text-dim">三</div><div class="text-xs text-muted">4/1</div><div class="level-bar caution mt-2" style="height:32px">小凶</div></div>
+      <div class="text-center"><div class="text-xs text-dim">四</div><div class="text-xs text-muted">4/2</div><div class="level-bar caution mt-2" style="height:24px">小凶</div></div>
+      <div class="text-center"><div class="text-xs" style="color:var(--primary); font-weight:600">五</div><div class="text-xs" style="color:var(--primary)">4/3</div><div class="level-bar great mt-2" style="height:56px; border:2px solid var(--primary)">大吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">六</div><div class="text-xs text-muted">4/4</div><div class="level-bar good mt-2" style="height:44px">吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">日</div><div class="text-xs text-muted">4/5</div><div class="level-bar bad mt-2" style="height:20px">凶</div><div class="text-xs" style="color:var(--fortune-bad)">羅刹</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">本週宜忌摘要</div>
+    <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+      <div><span class="text-sm" style="font-weight:600">3/31 (二)</span><span class="text-sm text-muted"> — 甘露日，諸吉事並大吉</span></div>
+      <div><span class="text-sm" style="font-weight:600">4/3 (五)</span><span class="text-sm text-muted"> — 命宿日，宜修道學問、作諸成就法</span></div>
+      <div><span class="text-sm" style="font-weight:600">4/5 (日)</span><span class="text-sm text-muted"> — 羅刹日，百事忌</span></div>
+    </div>
+    <div class="text-xs text-dim mt-2" style="font-style:italic">T21n1299 三九秘法</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">本週特殊日</div>
+    <div class="grid-3 mt-2">
+      <div class="text-center p-3 rounded" style="background:var(--kanro-bg)"><div class="text-xs" style="color:var(--kanro)">甘露日</div><div style="font-weight:700; color:var(--kanro)">1</div></div>
+      <div class="text-center p-3 rounded" style="background:var(--kongou-bg)"><div class="text-xs" style="color:var(--kongou)">金剛峯日</div><div style="font-weight:700; color:var(--kongou)">0</div></div>
+      <div class="text-center p-3 rounded" style="background:var(--fortune-bad-bg)"><div class="text-xs" style="color:var(--fortune-bad)">羅刹日</div><div style="font-weight:700; color:var(--fortune-bad)">1</div></div>
+    </div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：WeekNav / WeekOverviewCard / DailyOverviewGrid (7 欄 bar) / WeekAuspiciousCard (宜忌摘要) / SpecialDaysCard (甘露/金剛/羅刹統計)<br><b>已移除非原典</b>：事業/感情/健康建議（現代編輯）、幸運方位/色（五行自創）</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: MONTHLY                                                 -->
+<!-- ============================================================ -->
+<div class="page" id="page-monthly">
+  <div class="breadcrumb">首頁 / 運勢 / <span>月運</span></div>
+  <div class="tab-bar"><button>日</button><button>週</button><button class="active">月</button><button>年</button><button>十年</button><button>吉日</button><button>日曆</button><button>創業</button></div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/monthly/{year}/{month}?birth_date=...&lang=zh-TW</code></div>
+
+  <div class="date-nav">
+    <button class="btn btn-ghost btn-sm">&lsaquo;</button>
+    <div class="date-label">2026年 4月</div>
+    <button class="btn btn-ghost btn-sm">&rsaquo;</button>
+    <button class="btn btn-outline btn-sm">本月</button>
+  </div>
+
+  <div class="card text-center" style="display:flex; flex-direction:column; align-items:center;">
+    <div class="level-ring good" style="width:100px; height:100px; font-size:22px;"><span>吉</span></div>
+    <div class="mt-2"><span class="mansion-tag"><span class="el-moon">月曜</span> 翼宿</span><span class="text-xs text-muted"> × 角宿</span></div>
+    <div class="text-sm mt-2" style="font-weight:600; font-family:var(--font-serif)">主題：穩步前行</div>
+    <div class="text-sm text-muted mt-2" style="max-width:400px">四月整體運勢平穩偏好，中旬有一波能量高峰。</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">每週分析</div>
+    <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+      <div>
+        <div class="flex justify-between items-center mb-2"><span class="text-sm" style="font-weight:600">第一週 (3/30-4/5)</span><span class="badge badge-good">吉</span></div>
+        <div class="progress-bar"><div class="fill" style="width:70%; background:var(--fortune-good)"></div></div>
+        <div class="text-xs text-muted mt-2">蓄勢待發，適合規劃和準備</div>
+        <div class="grid-7 mt-2">
+          <div class="level-bar good" style="height:16px; font-size:0"></div><div class="level-bar great" style="height:16px; font-size:0"></div><div class="level-bar neutral" style="height:16px; font-size:0"></div><div class="level-bar caution" style="height:16px; font-size:0"></div><div class="level-bar great" style="height:16px; font-size:0"></div><div class="level-bar good" style="height:16px; font-size:0"></div><div class="level-bar bad" style="height:16px; font-size:0"></div>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <div>
+        <div class="flex justify-between items-center mb-2"><span class="text-sm" style="font-weight:600">第二週 (4/6-4/12)</span><span class="badge badge-great">大吉</span></div>
+        <div class="progress-bar"><div class="fill" style="width:90%; background:var(--fortune-great)"></div></div>
+        <div class="text-xs text-muted mt-2">能量高峰，重要事項安排在這週</div>
+      </div>
+      <div class="separator"></div>
+      <div>
+        <div class="flex justify-between items-center mb-2"><span class="text-sm" style="font-weight:600">第三週 (4/13-4/19)</span><span class="badge badge-good">吉</span></div>
+        <div class="progress-bar"><div class="fill" style="width:65%; background:var(--fortune-good)"></div></div>
+        <div class="text-xs text-muted mt-2">持續推進，節奏可以放緩</div>
+      </div>
+      <div class="separator"></div>
+      <div>
+        <div class="flex justify-between items-center mb-2"><span class="text-sm" style="font-weight:600">第四週 (4/20-4/26)</span><span class="badge badge-caution">小凶</span></div>
+        <div class="progress-bar"><div class="fill" style="width:35%; background:var(--fortune-caution)"></div></div>
+        <div class="text-xs text-muted mt-2">收尾階段，避免冒險行動</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">月度策略</div>
+    <div class="mt-2"><div class="text-xs text-dim mb-2">推薦日</div><div class="flex gap-2" style="flex-wrap:wrap"><span class="badge badge-great">4/2</span><span class="badge badge-great">4/7</span><span class="badge badge-great">4/8</span><span class="badge badge-great">4/11</span><span class="badge badge-great">4/15</span></div></div>
+    <div class="mt-3"><div class="text-xs text-dim mb-2">注意日</div><div class="flex gap-2" style="flex-wrap:wrap"><span class="badge badge-caution">4/5</span><span class="badge badge-caution">4/22</span><span class="badge badge-caution">4/25</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">特殊日統計</div>
+    <div class="grid-3 mt-2">
+      <div class="text-center p-3 rounded" style="background:var(--kanro-bg)"><div class="text-xs" style="color:var(--kanro)">甘露日</div><div style="font-weight:700; font-size:20px; color:var(--kanro)">3</div></div>
+      <div class="text-center p-3 rounded" style="background:var(--kongou-bg)"><div class="text-xs" style="color:var(--kongou)">金剛峯日</div><div style="font-weight:700; font-size:20px; color:var(--kongou)">2</div></div>
+      <div class="text-center p-3 rounded" style="background:var(--fortune-bad-bg)"><div class="text-xs" style="color:var(--fortune-bad)">羅刹日</div><div style="font-weight:700; font-size:20px; color:var(--fortune-bad)">2</div></div>
+    </div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：MonthNav / MonthOverviewCard / WeeklyBreakdownCard (4 週 progress + mini bars) / StrategyCard (推薦/注意 badges) / SpecialDaysCard (3 欄統計)</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: YEARLY                                                  -->
+<!-- ============================================================ -->
+<div class="page" id="page-yearly">
+  <div class="breadcrumb">首頁 / 運勢 / <span>年運</span></div>
+  <div class="tab-bar"><button>日</button><button>週</button><button>月</button><button class="active">年</button><button>十年</button><button>吉日</button><button>日曆</button><button>創業</button></div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/yearly/{year}?birth_date=...&lang=zh-TW</code></div>
+
+  <div class="date-nav"><button class="btn btn-ghost btn-sm">&lsaquo;</button><div class="date-label">2026年</div><button class="btn btn-ghost btn-sm">&rsaquo;</button><button class="btn btn-outline btn-sm">今年</button></div>
+
+  <div class="card text-center" style="display:flex; flex-direction:column; align-items:center;">
+    <div class="level-ring bad" style="width:110px; height:110px; font-size:22px;"><span>大凶</span><span class="text-xs text-muted">計都星</span></div>
+    <div class="mt-2" style="font-weight:600; font-family:var(--font-serif)">計都星（けいとせい）</div>
+    <div class="text-xs text-muted">數え年 37 歲 · 蝕神</div>
+    <div class="text-sm mt-2" style="font-weight:600; font-family:var(--font-serif)">年度主題：守成忍耐</div>
+    <div class="text-sm text-muted mt-2" style="max-width:400px">計都星為蝕神，與羅喉星同屬大凶年。宜守不宜攻，避免重大變動。</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">月度趨勢</div>
+    <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-top:8px;">
+      <div class="text-center"><div class="text-xs text-dim">1月</div><div class="level-bar caution" style="height:28px">小凶</div></div>
+      <div class="text-center"><div class="text-xs text-dim">2月</div><div class="level-bar good" style="height:36px">吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">3月</div><div class="level-bar good" style="height:36px">吉</div></div>
+      <div class="text-center"><div class="text-xs" style="color:var(--primary); font-weight:600">4月</div><div class="level-bar great" style="height:48px; border:2px solid var(--primary)">大吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">5月</div><div class="level-bar good" style="height:36px">吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">6月</div><div class="level-bar caution" style="height:24px">小凶</div></div>
+      <div class="text-center"><div class="text-xs text-dim">7月</div><div class="level-bar caution" style="height:28px">小凶</div></div>
+      <div class="text-center"><div class="text-xs text-dim">8月</div><div class="level-bar great" style="height:48px">大吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">9月</div><div class="level-bar good" style="height:36px">吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">10月</div><div class="level-bar good" style="height:36px">吉</div></div>
+      <div class="text-center"><div class="text-xs text-dim">11月</div><div class="level-bar caution" style="height:24px">小凶</div></div>
+      <div class="text-center"><div class="text-xs text-dim">12月</div><div class="level-bar great" style="height:48px">大吉</div></div>
+    </div>
+  </div>
+
+  <!-- 年度九曜建議 (T1299) -->
+  <div class="card">
+    <div class="card-title">九曜年運建議</div>
+    <div class="text-sm text-muted mt-2">
+      計都星為蝕神，全年大凶。宜守成忍耐，避免重大變動、訴訟、遠行。靜待翌年月曜星轉運。
+    </div>
+    <div class="separator"></div>
+    <div class="grid-2 mt-2">
+      <div class="p-3 rounded" style="background:var(--bg-input)">
+        <div class="text-xs text-dim mb-2">大吉月份</div>
+        <div class="flex gap-2" style="flex-wrap:wrap">
+          <span class="badge badge-great">4月</span>
+          <span class="badge badge-great">8月</span>
+          <span class="badge badge-great">12月</span>
+        </div>
+      </div>
+      <div class="p-3 rounded" style="background:var(--bg-input)">
+        <div class="text-xs text-dim mb-2">凶月份</div>
+        <div class="flex gap-2" style="flex-wrap:wrap">
+          <span class="badge badge-bad">6月</span>
+          <span class="badge badge-bad">11月</span>
+        </div>
+      </div>
+    </div>
+    <div class="text-xs text-dim mt-2" style="font-style:italic">T21n1299 九曜流年</div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：YearNav / YearOverviewCard (九曜星 ring + 數え年) / MonthlyTrendGrid (6x2) / CategoryAnalysisCard / OpportunityWarningGrid</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: DECADE                                                  -->
+<!-- ============================================================ -->
+<div class="page" id="page-decade">
+  <div class="breadcrumb">首頁 / 運勢 / <span>十年運勢</span></div>
+  <div class="tab-bar"><button>日</button><button>週</button><button>月</button><button>年</button><button class="active">十年</button><button>吉日</button><button>日曆</button><button>創業</button></div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/yearly-range?birth_date=...&start_year=2022&end_year=2031</code></div>
+
+  <div class="date-nav"><button class="btn btn-ghost btn-sm">&lsaquo;</button><div class="date-label">2022 — 2031</div><button class="btn btn-ghost btn-sm">&rsaquo;</button></div>
+
+  <div style="display:flex; flex-direction:column; gap:8px;">
+    <div class="card flex items-center gap-3" style="opacity:0.5; border-left:3px solid var(--fortune-good); cursor:pointer;"><div style="min-width:50px"><div class="text-sm" style="font-weight:700">2022</div><div class="text-xs text-dim">33歲</div></div><div style="flex:1"><div class="flex items-center gap-2"><span class="mansion-tag text-xs">角宿</span><span class="badge badge-good">吉</span></div><div class="text-xs text-muted mt-2">羅睺星 — 轉機之年</div></div></div>
+    <div class="card flex items-center gap-3" style="opacity:0.5; border-left:3px solid var(--fortune-neutral); cursor:pointer;"><div style="min-width:50px"><div class="text-sm" style="font-weight:700">2023</div><div class="text-xs text-dim">34歲</div></div><div style="flex:1"><div class="flex items-center gap-2"><span class="mansion-tag text-xs">亢宿</span><span class="badge" style="background:var(--fortune-neutral-bg); color:var(--fortune-neutral)">平</span></div><div class="text-xs text-muted mt-2">土星 — 沉潛期</div></div></div>
+    <div class="card flex items-center gap-3" style="opacity:0.5; border-left:3px solid var(--fortune-caution); cursor:pointer;"><div style="min-width:50px"><div class="text-sm" style="font-weight:700">2024</div><div class="text-xs text-dim">35歲</div></div><div style="flex:1"><div class="flex items-center gap-2"><span class="mansion-tag text-xs">氐宿</span><span class="badge badge-caution">小凶</span></div><div class="text-xs text-muted mt-2">水星 — 挑戰之年</div></div></div>
+    <div class="card flex items-center gap-3" style="opacity:0.5; border-left:3px solid var(--fortune-great); cursor:pointer;"><div style="min-width:50px"><div class="text-sm" style="font-weight:700">2025</div><div class="text-xs text-dim">36歲</div></div><div style="flex:1"><div class="flex items-center gap-2"><span class="mansion-tag text-xs">房宿</span><span class="badge badge-great">大吉</span></div><div class="text-xs text-muted mt-2">金星 — 黃金之年</div></div></div>
+
+    <!-- Current year -->
+    <div class="card flex items-center gap-3" style="border-left:3px solid var(--fortune-bad); border-color:var(--primary); cursor:pointer;"><div style="min-width:50px"><div class="text-sm" style="font-weight:700; color:var(--primary)">2026</div><div class="text-xs" style="color:var(--primary)">37歲</div></div><div style="flex:1"><div class="flex items-center gap-2"><span class="mansion-tag text-xs">心宿</span><span class="badge badge-bad">大凶</span><span class="badge badge-primary">今年</span></div><div class="text-xs text-muted mt-2">計都星（蝕神）— 守成忍耐</div></div></div>
+
+    <div class="card flex items-center gap-3" style="border-left:3px solid var(--fortune-great); cursor:pointer;"><div style="min-width:50px"><div class="text-sm" style="font-weight:700">2027</div><div class="text-xs text-dim">38歲</div></div><div style="flex:1"><div class="flex items-center gap-2"><span class="mansion-tag text-xs">尾宿</span><span class="badge badge-great">大吉</span></div><div class="text-xs text-muted mt-2">太陽星 — 光明之年</div></div></div>
+    <div class="card flex items-center gap-3" style="border-left:3px solid var(--fortune-good); cursor:pointer;"><div style="min-width:50px"><div class="text-sm" style="font-weight:700">2028</div><div class="text-xs text-dim">39歲</div></div><div style="flex:1"><div class="flex items-center gap-2"><span class="mansion-tag text-xs">箕宿</span><span class="badge badge-good">吉</span></div><div class="text-xs text-muted mt-2">火星 — 行動之年</div></div></div>
+    <div class="text-center text-xs text-dim p-3">... 2029-2031 ...</div>
+  </div>
+
+  <div class="annotation"><b>互動</b>：點擊年份卡 → 跳轉 /fortune/yearly?year={year}。過去年份淡化 (opacity:0.5)，當前年份 primary 框。左側色條依等級著色。</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: LUCKY DAYS                                              -->
+<!-- ============================================================ -->
+<div class="page" id="page-lucky">
+  <div class="breadcrumb">首頁 / 運勢 / <span>吉日查詢</span></div>
+  <div class="tab-bar"><button>日</button><button>週</button><button>月</button><button>年</button><button>十年</button><button class="active">吉日</button><button>日曆</button><button>創業</button></div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/lucky-days/summary/{birthDate}</code> + <code>GET .../calendar/{birthDate}/{year}/{month}</code></div>
+
+  <div class="page-title">吉日查詢</div>
+  <div class="page-desc">根據本命宿，找出各類事務的最佳時機</div>
+
+  <div class="card flex items-center gap-3"><span class="mansion-tag"><span class="el-moon">月曜</span> 翼宿</span><span class="text-sm text-muted">よくしゅく</span></div>
+
+  <div class="card">
+    <div class="card-title">篩選類別</div>
+    <div class="flex gap-2 mt-2" style="flex-wrap:wrap"><button class="btn btn-sm btn-primary">全部</button><button class="btn btn-sm btn-outline">事業</button><button class="btn btn-sm btn-outline">感情</button><button class="btn btn-sm btn-outline">健康</button><button class="btn btn-sm btn-outline">旅行</button><button class="btn btn-sm btn-outline">搬家</button><button class="btn btn-sm btn-outline">結婚</button><button class="btn btn-sm btn-outline">開業</button></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">事業 — 面試</div>
+    <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+      <div class="p-3 rounded" style="background:var(--bg-input)"><div class="flex justify-between items-center"><span class="text-sm" style="font-weight:600">4/7 (二)</span><span class="badge badge-great">大吉</span></div><div class="text-xs text-muted mt-2">命宿日 + 甘露日重疊</div><div class="flex gap-2 mt-2"><span class="badge badge-kanro">甘露日</span><span class="badge badge-great">命宿</span></div></div>
+      <div class="p-3 rounded" style="background:var(--bg-input)"><div class="flex justify-between items-center"><span class="text-sm" style="font-weight:600">4/15 (三)</span><span class="badge badge-good">吉</span></div><div class="text-xs text-muted mt-2">業宿日，工作能量強</div><div class="flex gap-2 mt-2"><span class="badge badge-good">業宿</span></div></div>
+      <div class="p-3 rounded" style="background:var(--bg-input)"><div class="flex justify-between items-center"><span class="text-sm" style="font-weight:600">4/22 (三)</span><span class="badge badge-caution">注意</span></div><div class="text-xs text-muted mt-2">壞宿日，需額外準備</div><div class="flex gap-2 mt-2"><span class="badge badge-caution">壞宿</span></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">感情 — 告白 · 約會</div>
+    <div class="p-3 rounded mt-2" style="background:var(--bg-input)"><div class="flex justify-between items-center"><span class="text-sm" style="font-weight:600">4/11 (六)</span><span class="badge badge-great">大吉</span></div><div class="text-xs text-muted mt-2">榮親日 + 週末</div><div class="flex gap-2 mt-2"><span class="badge badge-great">榮親</span></div></div>
+  </div>
+
+  <div class="card flex justify-between items-center"><div><div class="card-title">匯出行事曆</div><div class="text-xs text-muted">將吉日匯出為 .ics</div></div><button class="btn btn-outline btn-sm">下載 .ics</button></div>
+
+  <div class="annotation"><b>元件</b>：MansionInfoCard / CategoryFilter (pill 多選) / LuckyCategoryCard (分組) / LuckyDayItem (日期 + badge + boosts/conflicts) / IcsDownloadCard</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: CALENDAR                                                -->
+<!-- ============================================================ -->
+<div class="page" id="page-calendar">
+  <div class="breadcrumb">首頁 / 運勢 / <span>運勢日曆</span></div>
+  <div class="tab-bar"><button>日</button><button>週</button><button>月</button><button>年</button><button>十年</button><button>吉日</button><button class="active">日曆</button><button>創業</button></div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/calendar/{year}/{month}?birth_date=...&lang=zh-TW</code></div>
+
+  <div class="date-nav"><button class="btn btn-ghost btn-sm">&lsaquo;</button><div class="date-label">2026年 4月</div><button class="btn btn-ghost btn-sm">&rsaquo;</button></div>
+
+  <div class="card">
+    <div class="grid-7 mb-2"><div class="text-center text-xs text-dim">一</div><div class="text-center text-xs text-dim">二</div><div class="text-center text-xs text-dim">三</div><div class="text-center text-xs text-dim">四</div><div class="text-center text-xs text-dim">五</div><div class="text-center text-xs text-dim">六</div><div class="text-center text-xs text-dim">日</div></div>
+    <div class="grid-7 mb-2">
+      <div class="day-cell" style="background:var(--bg-input)"><span class="day-num text-dim">30</span></div>
+      <div class="day-cell" style="background:var(--fortune-great-bg)"><span class="day-num">31</span><span class="day-dot" style="background:var(--fortune-great)"></span></div>
+      <div class="day-cell" style="background:var(--fortune-neutral-bg)"><span class="day-num">1</span></div>
+      <div class="day-cell" style="background:var(--fortune-good-bg)"><span class="day-num">2</span></div>
+      <div class="day-cell" style="background:var(--fortune-great-bg)"><span class="day-num">3</span></div>
+      <div class="day-cell selected" style="background:var(--fortune-great-bg)"><span class="day-num">4</span><span class="day-dot" style="background:var(--fortune-great)"></span></div>
+      <div class="day-cell" style="background:var(--fortune-bad-bg)"><span class="day-num">5</span><span class="day-dot" style="background:var(--fortune-bad)"></span></div>
+    </div>
+    <div class="grid-7 mb-2">
+      <div class="day-cell" style="background:var(--fortune-good-bg)"><span class="day-num">6</span></div>
+      <div class="day-cell" style="background:var(--fortune-great-bg)"><span class="day-num">7</span><span class="day-dot" style="background:var(--fortune-great)"></span></div>
+      <div class="day-cell" style="background:var(--fortune-great-bg)"><span class="day-num">8</span></div>
+      <div class="day-cell" style="background:var(--fortune-neutral-bg)"><span class="day-num">9</span></div>
+      <div class="day-cell" style="background:var(--fortune-caution-bg)"><span class="day-num">10</span></div>
+      <div class="day-cell" style="background:var(--fortune-great-bg)"><span class="day-num">11</span></div>
+      <div class="day-cell" style="background:var(--fortune-good-bg)"><span class="day-num">12</span></div>
+    </div>
+    <div class="grid-7 mb-2">
+      <div class="day-cell" style="background:var(--fortune-neutral-bg)"><span class="day-num">13</span></div>
+      <div class="day-cell" style="background:var(--fortune-good-bg)"><span class="day-num">14</span></div>
+      <div class="day-cell" style="background:var(--fortune-great-bg)"><span class="day-num">15</span></div>
+      <div class="day-cell" style="background:var(--fortune-caution-bg)"><span class="day-num">16</span></div>
+      <div class="day-cell" style="background:var(--fortune-neutral-bg)"><span class="day-num">17</span></div>
+      <div class="day-cell" style="background:var(--fortune-neutral-bg)"><span class="day-num">18</span></div>
+      <div class="day-cell" style="background:var(--fortune-bad-bg)"><span class="day-num">19</span></div>
+    </div>
+    <div class="text-center text-xs text-dim p-3">... 第 4-5 週 ...</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">圖例</div>
+    <div class="flex gap-3 mt-2" style="flex-wrap:wrap">
+      <div class="flex items-center gap-2"><span style="width:12px;height:12px;border-radius:2px;background:var(--fortune-great-bg);border:1px solid var(--fortune-great)"></span><span class="text-xs">大吉</span></div>
+      <div class="flex items-center gap-2"><span style="width:12px;height:12px;border-radius:2px;background:var(--fortune-good-bg);border:1px solid var(--fortune-good)"></span><span class="text-xs">吉</span></div>
+      <div class="flex items-center gap-2"><span style="width:12px;height:12px;border-radius:2px;background:var(--fortune-caution-bg);border:1px solid var(--fortune-caution)"></span><span class="text-xs">小凶</span></div>
+      <div class="flex items-center gap-2"><span style="width:12px;height:12px;border-radius:2px;background:var(--fortune-bad-bg);border:1px solid var(--fortune-bad)"></span><span class="text-xs">凶</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">4月4日（五）詳細</div>
+    <div class="flex items-center gap-2 mt-2"><span class="badge badge-great">大吉</span><span class="mansion-tag text-xs">箕宿</span><span class="text-xs text-muted">命（めい）</span></div>
+    <div class="separator"></div>
+    <div class="text-sm text-muted">本命宿日，能量最強的一天。</div>
+    <div class="flex gap-2 mt-2"><span class="badge badge-kanro">甘露日</span><span class="badge badge-ryouhan">凌犯</span></div>
+    <div class="mt-3"><button class="btn btn-outline btn-sm w-full" style="justify-content:center">查看完整日運 →</button></div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：MonthNav / CalendarGrid (7x6，bg 色依等級，小圓點標特殊日) / CalendarLegend / DayDetailPanel (選中日)</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: STARTUP                                                 -->
+<!-- ============================================================ -->
+<div class="page" id="page-startup">
+  <div class="breadcrumb">首頁 / 運勢 / <span>創業</span></div>
+  <div class="tab-bar"><button>日</button><button>週</button><button>月</button><button>年</button><button>十年</button><button>吉日</button><button>日曆</button><button class="active">創業</button></div>
+  <div class="annotation">API: <code>GET /shukuyo/fortune/startup/industry/{birthDate}</code> + <code>POST /shukuyo/fortune/lucky-dates</code></div>
+
+  <div class="page-title">創業指引</div>
+  <div class="page-desc">根據本命宿特質，推薦適合的產業方向與開業吉日</div>
+
+  <div class="tab-bar" style="max-width:240px"><button class="active">產業推薦</button><button>開業日曆</button></div>
+
+  <div class="card">
+    <div class="flex items-center gap-2 mb-3"><span class="mansion-tag"><span class="el-moon">月曜</span> 翼宿</span><span class="text-sm text-muted">的適合產業</span></div>
+    <div class="flex gap-2 mb-3" style="flex-wrap:wrap"><span class="badge badge-primary">創意產業</span><span class="badge badge-primary">教育</span><span class="badge badge-primary">媒體</span><span class="badge badge-primary">藝術設計</span><span class="badge badge-primary">顧問諮詢</span></div>
+    <div class="text-sm text-muted">翼宿天生具有藝術感和創造力，適合從事需要想像力和表現力的產業。</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">適合合作的宿</div>
+    <div class="text-xs text-muted mb-3">創業夥伴推薦宿位</div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div class="flex items-center gap-3 p-3 rounded" style="background:var(--bg-input)"><span class="mansion-tag"><span class="el-metal">金曜</span> 觜宿</span><div style="flex:1"><div class="text-xs text-muted">命 — 最強夥伴</div></div></div>
+      <div class="flex items-center gap-3 p-3 rounded" style="background:var(--bg-input)"><span class="mansion-tag"><span class="el-wood">木曜</span> 角宿</span><div style="flex:1"><div class="text-xs text-muted">榮親 — 互利關係</div></div></div>
+      <div class="flex items-center gap-3 p-3 rounded" style="background:var(--bg-input)"><span class="mansion-tag"><span class="el-water">水曜</span> 室宿</span><div style="flex:1"><div class="text-xs text-muted">友衰 — 穩定關係</div></div></div>
+    </div>
+    <button class="btn btn-ghost btn-sm mt-3 w-full" style="justify-content:center">顯示全部 →</button>
+  </div>
+
+  <div class="annotation"><b>切換「開業日曆」</b>：月曆視圖依「開業吉凶」著色，選日顯示宜/忌清單。<br><b>元件</b>：ViewToggle / IndustryCard / FavorableMansionsCard / StartupCalendarView</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: COMPATIBILITY                                           -->
+<!-- ============================================================ -->
+<div class="page" id="page-compat">
+  <div class="breadcrumb">首頁 / <span>相性診斷</span></div>
+  <div class="annotation">API: <code>POST /shukuyo/engine/compatibility</code> + <code>GET .../compatibility-finder/{birthDate}</code> + <code>GET .../lucky-days/pair/{d1}/{d2}</code></div>
+
+  <div class="tab-bar"><button class="active">診斷</button><button>夥伴</button><button>探索</button></div>
+
+  <div class="card"><div class="card-title">你的生日</div><div class="flex items-center gap-2 mt-2"><span class="mansion-tag"><span class="el-moon">月曜</span> 翼宿</span><span class="text-sm text-muted">1990-01-15</span></div></div>
+
+  <div class="card"><div class="card-title">對方的生日</div><input type="date" class="input mt-2" value="1992-05-20"><button class="btn btn-primary w-full mt-3" style="justify-content:center">分析相性</button></div>
+
+  <div class="card mt-3">
+    <div class="text-center">
+      <div class="flex justify-center gap-4 items-center">
+        <div class="text-center"><span class="mansion-tag"><span class="el-moon">月曜</span> 翼宿</span><div class="text-xs text-muted mt-2">你</div></div>
+        <div style="font-size:24px; color:var(--primary)">×</div>
+        <div class="text-center"><span class="mansion-tag"><span class="el-wood">木曜</span> 角宿</span><div class="text-xs text-muted mt-2">對方</div></div>
+      </div>
+      <div class="mt-3">
+        <div class="level-ring great" style="width:100px; height:100px; font-size:18px; margin:0 auto;"><span>榮親</span></div>
+        <div class="text-sm mt-2" style="font-weight:600; font-family:var(--font-serif)">榮親（えいしん）</div>
+        <div class="badge badge-great mt-2">互利共榮</div>
+      </div>
+      <div class="text-sm text-muted mt-3" style="max-width:400px; margin:0 auto;">你與對方形成「榮親」的關係，互相提攜、共同成長。</div>
+    </div>
+    <div class="separator"></div>
+    <div class="grid-2 mt-2">
+      <div class="p-3 rounded text-center" style="background:var(--bg-input)"><div class="text-xs text-dim">你 → 對方</div><div class="text-sm" style="font-weight:600; color:var(--fortune-great)">榮</div><div class="text-xs text-muted">你能滋養對方</div></div>
+      <div class="p-3 rounded text-center" style="background:var(--bg-input)"><div class="text-xs text-dim">對方 → 你</div><div class="text-sm" style="font-weight:600; color:var(--fortune-good)">親</div><div class="text-xs text-muted">對方能支持你</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">二人吉日</div>
+    <div class="flex gap-2 mb-3" style="flex-wrap:wrap"><button class="btn btn-sm btn-primary">約會</button><button class="btn btn-sm btn-outline">結婚</button><button class="btn btn-sm btn-outline">旅行</button><button class="btn btn-sm btn-outline">合作</button></div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div class="p-3 rounded flex justify-between items-center" style="background:var(--bg-input)"><div><div class="text-sm" style="font-weight:600">4/11 (六)</div><div class="text-xs text-muted">雙方能量同步日</div></div><span class="badge badge-great">大吉</span></div>
+      <div class="p-3 rounded flex justify-between items-center" style="background:var(--bg-input)"><div><div class="text-sm" style="font-weight:600">4/18 (六)</div><div class="text-xs text-muted">和諧溝通日</div></div><span class="badge badge-good">吉</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">六種關係類型</div>
+    <div class="grid-3 mt-2" style="gap:6px">
+      <div class="p-3 rounded text-center" style="background:var(--fortune-great-bg)"><div class="text-sm" style="font-weight:600; color:var(--fortune-great)">命</div><div class="text-xs text-muted">最強</div></div>
+      <div class="p-3 rounded text-center" style="background:var(--fortune-great-bg)"><div class="text-sm" style="font-weight:600; color:var(--fortune-great)">業胎</div><div class="text-xs text-muted">前世緣</div></div>
+      <div class="p-3 rounded text-center" style="background:var(--fortune-good-bg)"><div class="text-sm" style="font-weight:600; color:var(--fortune-good)">榮親</div><div class="text-xs text-muted">互利</div></div>
+      <div class="p-3 rounded text-center" style="background:var(--fortune-good-bg)"><div class="text-sm" style="font-weight:600; color:var(--fortune-good)">友衰</div><div class="text-xs text-muted">穩定</div></div>
+      <div class="p-3 rounded text-center" style="background:var(--fortune-caution-bg)"><div class="text-sm" style="font-weight:600; color:var(--fortune-caution)">安壞</div><div class="text-xs text-muted">複雜</div></div>
+      <div class="p-3 rounded text-center" style="background:var(--fortune-bad-bg)"><div class="text-sm" style="font-weight:600; color:var(--fortune-bad)">危成</div><div class="text-xs text-muted">對立</div></div>
+    </div>
+  </div>
+
+  <div class="annotation"><b>三分頁</b>：診斷 (日期輸入 → 結果) / 夥伴 (localStorage 列表 → 選取 → 結果) / 探索 (27 宿關係分布)。<br><b>元件</b>：CompatTabs / DiagnoseForm / PairResultCard / PairLuckyDaysCard / RelationLegend / PartnerList / CompatFinder</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: COMPANY                                                 -->
+<!-- ============================================================ -->
+<div class="page" id="page-company">
+  <div class="breadcrumb">首頁 / <span>企業分析</span></div>
+  <div class="annotation">API: <code>POST /shukuyo/career/batch</code> + <code>POST /shukuyo/career/comparison</code></div>
+
+  <div class="tab-bar"><button class="active">管理</button><button>分析</button><button>比較</button></div>
+
+  <div class="card"><div class="card-title">新增公司</div><div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"><input class="input" placeholder="公司名稱" value="台積電"><input type="date" class="input" value="1987-02-21"><div class="grid-2"><input class="input" placeholder="國家" value="台灣"><input class="input" placeholder="備註"></div><button class="btn btn-primary" style="align-self:flex-end">新增</button></div></div>
+
+  <div class="card"><div class="card-title">已儲存公司</div><div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+    <div class="flex justify-between items-center p-3 rounded" style="background:var(--bg-input)"><div><div class="text-sm" style="font-weight:600">台積電</div><div class="text-xs text-muted">1987-02-21 · 台灣</div></div><div class="flex gap-2"><button class="btn btn-ghost btn-sm">編輯</button><button class="btn btn-ghost btn-sm" style="color:var(--destructive)">刪除</button></div></div>
+    <div class="flex justify-between items-center p-3 rounded" style="background:var(--bg-input)"><div><div class="text-sm" style="font-weight:600">Google</div><div class="text-xs text-muted">1998-09-04 · 美國</div></div><div class="flex gap-2"><button class="btn btn-ghost btn-sm">編輯</button><button class="btn btn-ghost btn-sm" style="color:var(--destructive)">刪除</button></div></div>
+    <div class="flex justify-between items-center p-3 rounded" style="background:var(--bg-input)"><div><div class="text-sm" style="font-weight:600">Sony</div><div class="text-xs text-muted">1946-05-07 · 日本</div></div><div class="flex gap-2"><button class="btn btn-ghost btn-sm">編輯</button><button class="btn btn-ghost btn-sm" style="color:var(--destructive)">刪除</button></div></div>
+  </div></div>
+
+  <div class="separator"></div>
+  <div class="annotation"><b>「分析」分頁</b></div>
+
+  <div class="card"><div class="card-title">批次分析結果</div>
+    <div class="mb-3"><div class="text-xs mb-2" style="color:var(--fortune-great); font-weight:600">Tier 1 — 最佳匹配</div><div class="p-3 rounded" style="background:var(--bg-input); border-left:3px solid var(--fortune-great)"><div class="flex justify-between items-center"><div class="text-sm" style="font-weight:600">台積電</div><span class="badge badge-great">Tier 1</span></div><div class="flex items-center gap-2 mt-2"><span class="mansion-tag text-xs"><span class="el-metal">金曜</span> 觜宿</span><span class="text-xs text-muted">命 — 最強連結</span></div></div></div>
+    <div class="mb-3"><div class="text-xs mb-2" style="color:var(--fortune-good); font-weight:600">Tier 2 — 良好匹配</div><div class="p-3 rounded" style="background:var(--bg-input); border-left:3px solid var(--fortune-good)"><div class="flex justify-between items-center"><div class="text-sm" style="font-weight:600">Google</div><span class="badge badge-good">Tier 2</span></div><div class="flex items-center gap-2 mt-2"><span class="mansion-tag text-xs"><span class="el-wood">木曜</span> 角宿</span><span class="text-xs text-muted">榮親 — 互利</span></div></div></div>
+    <div><div class="text-xs mb-2" style="color:var(--fortune-caution); font-weight:600">Tier 3 — 需注意</div><div class="p-3 rounded" style="background:var(--bg-input); border-left:3px solid var(--fortune-caution)"><div class="flex justify-between items-center"><div class="text-sm" style="font-weight:600">Sony</div><span class="badge badge-caution">Tier 3</span></div><div class="flex items-center gap-2 mt-2"><span class="mansion-tag text-xs"><span class="el-fire">火曜</span> 星宿</span><span class="text-xs text-muted">安壞 — 複雜關係</span></div></div></div>
+  </div>
+
+  <div class="separator"></div>
+  <div class="annotation"><b>「比較」分頁</b></div>
+
+  <div class="card" style="background:var(--fortune-great-bg); border-color:var(--fortune-great)"><div class="card-title" style="color:var(--fortune-great)">綜合推薦</div><div class="text-sm mt-2"><span style="font-weight:700; color:var(--fortune-great)">台積電</span> 是目前最佳的企業選擇。</div><div class="text-xs text-muted mt-2">命的關係 + 今年度大吉，無負面消耗度。</div></div>
+
+  <div class="grid-2 mt-2">
+    <div class="card" style="cursor:pointer"><div class="text-sm" style="font-weight:600">HR 模式</div><div class="text-xs text-muted">以公司角度評估候選人</div></div>
+    <div class="card" style="cursor:pointer"><div class="text-sm" style="font-weight:600">獵頭模式</div><div class="text-xs text-muted">為求職者媒合公司</div></div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：CompanyTabs / CompanyForm / CompanyList / CompanyBatchResult (Tier 分組) / CompanyCompareVerdict / ModeEntryCards</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: HR                                                      -->
+<!-- ============================================================ -->
+<div class="page" id="page-hr">
+  <div class="breadcrumb">首頁 / 企業 / <span>HR 模式</span></div>
+  <div class="annotation">API: <code>POST /shukuyo/career/batch</code> (mode: 'hr')</div>
+
+  <div class="page-title">HR 模式</div>
+  <div class="page-desc">以公司角度評估候選人與現有團隊的相性</div>
+
+  <div class="card"><div class="card-title">公司資訊</div><div class="grid-2 mt-2"><input class="input" placeholder="公司名稱" value="台積電"><input type="date" class="input" value="1987-02-21"></div><button class="btn btn-outline btn-sm mt-2">儲存</button></div>
+
+  <div class="card"><div class="card-title">新增候選人</div><div class="grid-2 mt-2"><input class="input" placeholder="候選人名稱"><input type="date" class="input"></div><button class="btn btn-primary btn-sm mt-2">新增</button></div>
+
+  <div class="card"><div class="card-title">候選人列表</div><div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+    <div class="flex justify-between items-center p-3 rounded" style="background:var(--bg-input)"><div><span class="text-sm" style="font-weight:600">王小明</span><span class="text-xs text-muted"> · 1995-03-20</span></div><button class="btn btn-ghost btn-sm" style="color:var(--destructive)">x</button></div>
+    <div class="flex justify-between items-center p-3 rounded" style="background:var(--bg-input)"><div><span class="text-sm" style="font-weight:600">李小花</span><span class="text-xs text-muted"> · 1998-07-12</span></div><button class="btn btn-ghost btn-sm" style="color:var(--destructive)">x</button></div>
+    <div class="flex justify-between items-center p-3 rounded" style="background:var(--bg-input)"><div><span class="text-sm" style="font-weight:600">張大偉</span><span class="text-xs text-muted"> · 1992-11-05</span></div><button class="btn btn-ghost btn-sm" style="color:var(--destructive)">x</button></div>
+  </div></div>
+
+  <button class="btn btn-primary w-full mt-2" style="justify-content:center">分析團隊相性</button>
+
+  <div class="card mt-3"><div class="card-title">團隊相性矩陣</div><div class="text-xs text-muted mb-3">行 = 作用方，列 = 受影響方</div>
+    <div style="display:grid; grid-template-columns: 56px repeat(4,1fr); gap:4px; font-size:11px;">
+      <div></div><div class="text-center text-xs text-dim">台積電</div><div class="text-center text-xs text-dim">王小明</div><div class="text-center text-xs text-dim">李小花</div><div class="text-center text-xs text-dim">張大偉</div>
+      <div class="text-xs text-dim" style="display:flex; align-items:center">台積電</div><div class="matrix-cell" style="background:var(--bg-input)">—</div><div class="matrix-cell" style="background:var(--fortune-great-bg); color:var(--fortune-great)">命</div><div class="matrix-cell" style="background:var(--fortune-good-bg); color:var(--fortune-good)">榮親</div><div class="matrix-cell" style="background:var(--fortune-caution-bg); color:var(--fortune-caution)">安壞</div>
+      <div class="text-xs text-dim" style="display:flex; align-items:center">王小明</div><div class="matrix-cell" style="background:var(--fortune-great-bg); color:var(--fortune-great)">命</div><div class="matrix-cell" style="background:var(--bg-input)">—</div><div class="matrix-cell" style="background:var(--fortune-good-bg); color:var(--fortune-good)">友衰</div><div class="matrix-cell" style="background:var(--fortune-great-bg); color:var(--fortune-great)">業胎</div>
+      <div class="text-xs text-dim" style="display:flex; align-items:center">李小花</div><div class="matrix-cell" style="background:var(--fortune-good-bg); color:var(--fortune-good)">親榮</div><div class="matrix-cell" style="background:var(--fortune-good-bg); color:var(--fortune-good)">衰友</div><div class="matrix-cell" style="background:var(--bg-input)">—</div><div class="matrix-cell" style="background:var(--fortune-bad-bg); color:var(--fortune-bad)">危成</div>
+      <div class="text-xs text-dim" style="display:flex; align-items:center">張大偉</div><div class="matrix-cell" style="background:var(--fortune-caution-bg); color:var(--fortune-caution)">壞安</div><div class="matrix-cell" style="background:var(--fortune-great-bg); color:var(--fortune-great)">胎業</div><div class="matrix-cell" style="background:var(--fortune-bad-bg); color:var(--fortune-bad)">成危</div><div class="matrix-cell" style="background:var(--bg-input)">—</div>
+    </div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：CompanySetupForm / CandidateForm / CandidateList / TeamMatrix (N×N，色依關係類型)。<b>互動</b>：點擊矩陣格 → 彈出兩人詳細相性。</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: HEADHUNTER                                              -->
+<!-- ============================================================ -->
+<div class="page" id="page-hunter">
+  <div class="breadcrumb">首頁 / 企業 / <span>獵頭模式</span></div>
+  <div class="annotation">API: <code>POST /shukuyo/career/batch</code> (mode: 'seeker')</div>
+
+  <div class="page-title">獵頭模式</div>
+  <div class="page-desc">為求職者批次分析多家公司的相性排名</div>
+
+  <div class="card"><div class="card-title">新增求職者</div><div class="grid-2 mt-2"><input class="input" placeholder="求職者名稱" value="陳小華"><input type="date" class="input" value="1993-08-15"></div><button class="btn btn-primary btn-sm mt-2">新增</button></div>
+
+  <div class="card"><div class="card-title">求職者列表</div><div class="flex justify-between items-center p-3 rounded mt-2" style="background:var(--bg-input)"><div><span class="text-sm" style="font-weight:600">陳小華</span><span class="text-xs text-muted"> · 1993-08-15</span><span class="mansion-tag text-xs" style="margin-left:8px"><span class="el-water">水曜</span> 室宿</span></div><div class="flex gap-2"><button class="btn btn-outline btn-sm">分析</button><button class="btn btn-ghost btn-sm" style="color:var(--destructive)">x</button></div></div></div>
+
+  <div class="card mt-3"><div class="flex items-center gap-2 mb-3"><span class="text-sm" style="font-weight:600">陳小華</span><span class="mansion-tag text-xs"><span class="el-water">水曜</span> 室宿</span><span class="text-xs text-muted">的企業排名</span></div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div class="p-3 rounded" style="background:var(--bg-input); border-left:3px solid var(--fortune-great)"><div class="flex justify-between items-center"><span class="text-sm" style="font-weight:600">台積電</span><span class="badge badge-great">Tier 1</span></div><div class="text-xs text-muted mt-2">榮親 · 消耗度 0.1</div><div class="text-xs text-dim mt-2">能量互補，長期發展潛力大</div></div>
+      <div class="p-3 rounded" style="background:var(--bg-input); border-left:3px solid var(--fortune-good)"><div class="flex justify-between items-center"><span class="text-sm" style="font-weight:600">Google</span><span class="badge badge-good">Tier 2</span></div><div class="text-xs text-muted mt-2">友衰 · 消耗度 0.3</div></div>
+      <div class="p-3 rounded" style="background:var(--bg-input); border-left:3px solid var(--fortune-bad)"><div class="flex justify-between items-center"><span class="text-sm" style="font-weight:600">Sony</span><span class="badge badge-bad">Tier 4</span></div><div class="text-xs text-muted mt-2">危成 · 消耗度 0.8</div><div class="text-xs mt-2" style="color:var(--fortune-bad)">高消耗關係，不建議</div></div>
+    </div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：SeekerForm / SeekerList / SeekerAnalysisResult (Tier 排序) / CompanyTierCard</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: KNOWLEDGE                                               -->
+<!-- ============================================================ -->
+<div class="page" id="page-knowledge">
+  <div class="breadcrumb">首頁 / <span>知識庫</span></div>
+  <div class="annotation">API: <code>GET /shukuyo/engine/mansions</code> + <code>GET .../relations</code> + <code>GET .../metadata</code></div>
+
+  <div class="tab-bar"><button class="active">二十七宿</button><button>六關係</button><button>歷史</button></div>
+
+  <div class="grid-3" style="gap:8px">
+    <div class="card" style="cursor:pointer; padding:12px; position:relative;">
+      <div class="flex items-center gap-2 mb-2"><span class="el-fire text-xs" style="font-weight:600">火</span><span class="text-xs text-dim">#1</span></div>
+      <div class="text-sm" style="font-weight:700; font-family:var(--font-serif)">角宿</div>
+      <div class="text-xs text-muted">かくしゅく</div>
+      <div class="flex gap-2 mt-2"><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">領導</span><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">創新</span></div>
+    </div>
+    <div class="card" style="cursor:pointer; padding:12px; border-color:var(--primary); position:relative;">
+      <div class="flex items-center gap-2 mb-2"><span class="el-metal text-xs" style="font-weight:600">金</span><span class="text-xs text-dim">#2</span></div>
+      <div class="text-sm" style="font-weight:700; font-family:var(--font-serif)">亢宿</div>
+      <div class="text-xs text-muted">こうしゅく</div>
+      <div class="badge badge-primary" style="position:absolute; top:8px; right:8px; font-size:9px;">你的宿</div>
+      <div class="flex gap-2 mt-2"><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">聰慧</span><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">分析</span></div>
+    </div>
+    <div class="card" style="cursor:pointer; padding:12px;">
+      <div class="flex items-center gap-2 mb-2"><span class="el-wood text-xs" style="font-weight:600">木</span><span class="text-xs text-dim">#3</span></div>
+      <div class="text-sm" style="font-weight:700; font-family:var(--font-serif)">氐宿</div>
+      <div class="text-xs text-muted">ていしゅく</div>
+      <div class="flex gap-2 mt-2"><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">穩重</span><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">責任</span></div>
+    </div>
+    <div class="card" style="cursor:pointer; padding:12px;">
+      <div class="flex items-center gap-2 mb-2"><span class="el-fire text-xs" style="font-weight:600">火</span><span class="text-xs text-dim">#4</span></div>
+      <div class="text-sm" style="font-weight:700; font-family:var(--font-serif)">房宿</div>
+      <div class="text-xs text-muted">ぼうしゅく</div>
+      <div class="flex gap-2 mt-2"><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">行動</span><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">熱情</span></div>
+    </div>
+    <div class="card" style="cursor:pointer; padding:12px;">
+      <div class="flex items-center gap-2 mb-2"><span class="el-water text-xs" style="font-weight:600">水</span><span class="text-xs text-dim">#5</span></div>
+      <div class="text-sm" style="font-weight:700; font-family:var(--font-serif)">心宿</div>
+      <div class="text-xs text-muted">しんしゅく</div>
+      <div class="flex gap-2 mt-2"><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">直覺</span><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">敏銳</span></div>
+    </div>
+    <div class="card" style="cursor:pointer; padding:12px;">
+      <div class="flex items-center gap-2 mb-2"><span class="el-metal text-xs" style="font-weight:600">金</span><span class="text-xs text-dim">#6</span></div>
+      <div class="text-sm" style="font-weight:700; font-family:var(--font-serif)">尾宿</div>
+      <div class="text-xs text-muted">びしゅく</div>
+      <div class="flex gap-2 mt-2"><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">毅力</span><span class="text-xs" style="background:var(--bg-input); padding:1px 6px; border-radius:4px;">耐心</span></div>
+    </div>
+  </div>
+  <div class="text-center text-xs text-dim p-3">... 共 27 宿 ...</div>
+
+  <div class="card mt-3" style="border-color:var(--primary)">
+    <div class="card-title" style="font-family:var(--font-serif)">角宿 詳細（Modal 預覽）</div>
+    <div class="separator"></div>
+    <div class="grid-2 mt-2 text-sm"><div><span class="text-dim">七曜：</span>木曜</div><div><span class="text-dim">序號：</span>第一宿</div></div>
+    <div class="separator"></div>
+    <div class="text-sm"><span class="text-dim">性格：</span>天生的領導者，有強烈的正義感和行動力。</div>
+    <div class="text-sm mt-2"><span class="text-dim">關鍵詞：</span>領導 · 創新 · 正義</div>
+    <div class="separator"></div>
+    <div class="text-sm"><span class="text-dim">日型宜：</span>修道學問、作諸成就法</div>
+    <div class="text-sm"><span class="text-dim">日型忌：</span>訴訟、遠行</div>
+    <div class="text-xs text-dim mt-2" style="font-style:italic">宜忌出處：T21n1299 三九秘法</div>
+  </div>
+
+  <div class="separator"></div>
+  <div class="annotation"><b>「六關係」分頁</b></div>
+
+  <div style="display:flex; flex-direction:column; gap:8px;">
+    <div class="card" style="cursor:pointer"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="text-sm" style="font-weight:700; font-family:var(--font-serif)">命（めい）</span><span class="badge badge-great">最強</span></div><span class="text-xs text-dim">展開</span></div><div class="text-sm text-muted mt-2">同一宿位的人，本質完全相同，互相理解最深。</div></div>
+    <div class="card" style="cursor:pointer"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="text-sm" style="font-weight:700; font-family:var(--font-serif)">業胎（ぎょうたい）</span><span class="badge badge-great">前世緣</span></div><span class="text-xs text-dim">展開</span></div><div class="text-sm text-muted mt-2">前世今生的緣分，初次見面就有熟悉感。</div></div>
+    <div class="card" style="cursor:pointer"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="text-sm" style="font-weight:700; font-family:var(--font-serif)">榮親（えいしん）</span><span class="badge badge-good">互利</span></div><span class="text-xs text-dim">展開</span></div><div class="text-sm text-muted mt-2">互相滋養的關係，合作能產生加乘效果。</div></div>
+    <div class="text-center text-xs text-dim p-3">... 共 6 種關係 ...</div>
+  </div>
+
+  <div class="annotation"><b>元件</b>：KnowledgeTabs / MansionGrid (3 欄 grid，mobile 2 欄) / MansionDetailModal (Dialog/Sheet) / RelationCard (可展開) / HistorySection</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: ABOUT                                                   -->
+<!-- ============================================================ -->
+<div class="page" id="page-about">
+  <div class="page-title" style="font-family:var(--font-serif)">關於宿曜道</div>
+
+  <div class="card"><div class="card-title">開發理念</div><div class="text-sm text-muted mt-2">宿曜道源自印度占星術，經由密教傳入唐朝，再傳入日本。本應用基於《宿曜經》（T1299），將古典智慧數位化，提供現代人可參考的生活指引。</div></div>
+
+  <div class="card"><div class="card-title">功能特色</div><div class="grid-2 mt-2" style="gap:10px">
+    <div class="p-3 rounded" style="background:var(--bg-input)"><div class="text-sm" style="font-weight:600">運勢預測</div><div class="text-xs text-muted">日/週/月/年/十年</div></div>
+    <div class="p-3 rounded" style="background:var(--bg-input)"><div class="text-sm" style="font-weight:600">相性診斷</div><div class="text-xs text-muted">六種關係 + 方向分析</div></div>
+    <div class="p-3 rounded" style="background:var(--bg-input)"><div class="text-sm" style="font-weight:600">吉日查詢</div><div class="text-xs text-muted">按類別找最佳時機</div></div>
+    <div class="p-3 rounded" style="background:var(--bg-input)"><div class="text-sm" style="font-weight:600">企業分析</div><div class="text-xs text-muted">Tier 排名 + 團隊矩陣</div></div>
+    <div class="p-3 rounded" style="background:var(--bg-input)"><div class="text-sm" style="font-weight:600">三語支援</div><div class="text-xs text-muted">繁中/英文/日文</div></div>
+    <div class="p-3 rounded" style="background:var(--bg-input)"><div class="text-sm" style="font-weight:600">知識庫</div><div class="text-xs text-muted">二十七宿百科全書</div></div>
+  </div></div>
+
+  <div class="card"><div class="card-title">隱私聲明</div><div class="text-sm text-muted mt-2">你的生日和相關資料僅儲存在你的瀏覽器（localStorage）中。我們不會收集或傳送你的個人資料到任何伺服器。</div></div>
+
+  <div class="card"><div class="card-title">開發者</div><div class="text-sm mt-2" style="font-weight:600">DashAI</div><div class="text-sm text-muted">AI-assisted development</div><div class="flex gap-3 mt-2"><span class="text-xs text-muted" style="text-decoration:underline; cursor:pointer">GitHub</span><span class="text-xs text-muted" style="text-decoration:underline; cursor:pointer">Portfolio</span><span class="text-xs text-muted" style="text-decoration:underline; cursor:pointer">LinkedIn</span></div><div class="mt-3"><button class="btn btn-outline btn-sm">技術架構 →</button></div></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: TECH                                                    -->
+<!-- ============================================================ -->
+<div class="page" id="page-tech">
+  <div class="breadcrumb">首頁 / 關於 / <span>技術架構</span></div>
+  <div class="page-title" style="font-family:var(--font-serif)">技術架構</div>
+
+  <div class="card"><div class="card-title">前端</div><div class="flex gap-2 mt-2" style="flex-wrap:wrap"><span class="badge badge-primary">Next.js 16</span><span class="badge badge-primary">React 19</span><span class="badge badge-primary">TypeScript</span><span class="badge badge-primary">Tailwind CSS 4</span><span class="badge badge-primary">shadcn/ui</span><span class="badge badge-primary">Zustand</span></div></div>
+
+  <div class="card"><div class="card-title">後端</div><div class="flex gap-2 mt-2" style="flex-wrap:wrap"><span class="badge badge-great">Go</span><span class="badge badge-great">Chi Router</span><span class="badge badge-great">Render</span></div></div>
+
+  <div class="card"><div class="card-title">基礎設施</div><div class="flex gap-2 mt-2" style="flex-wrap:wrap"><span class="badge badge-sky">Vercel</span><span class="badge badge-sky">Sentry</span><span class="badge badge-sky">Logto</span><span class="badge badge-sky">Vercel Analytics</span></div></div>
+
+  <div class="card"><div class="card-title">API 端點 (12)</div><div style="display:flex; flex-direction:column; gap:4px; margin-top:8px; font-size:12px; font-family:monospace;"><div class="text-muted">GET  /shukuyo/fortune/daily/{date}</div><div class="text-muted">GET  /shukuyo/fortune/weekly/{date}</div><div class="text-muted">GET  /shukuyo/fortune/monthly/{year}/{month}</div><div class="text-muted">GET  /shukuyo/fortune/yearly/{year}</div><div class="text-muted">GET  /shukuyo/fortune/yearly-range</div><div class="text-muted">GET  /shukuyo/fortune/calendar/{year}/{month}</div><div class="text-muted">GET  /shukuyo/fortune/lucky-days/summary/{birth}</div><div class="text-muted">GET  /shukuyo/fortune/lucky-days/pair/{d1}/{d2}</div><div class="text-muted">POST /shukuyo/engine/compatibility</div><div class="text-muted">POST /shukuyo/career/batch</div><div class="text-muted">POST /shukuyo/career/comparison</div><div class="text-muted">GET  /shukuyo/engine/mansions</div></div></div>
+
+  <div class="card"><div class="text-xs text-muted">本應用使用 AI 輔助開發 (Claude Code)。</div></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- Scripts                                                       -->
+<!-- ============================================================ -->
+<script>
+// Page switcher
+document.querySelectorAll('#pageNav button[data-page]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#pageNav button[data-page]').forEach(b => b.classList.remove('active'))
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+    btn.classList.add('active')
+    document.getElementById('page-' + btn.dataset.page).classList.add('active')
+    window.scrollTo(0, 0)
+  })
+})
+
+// Theme toggle
+const toggle = document.getElementById('themeToggle')
+toggle.addEventListener('click', () => {
+  document.documentElement.classList.toggle('dark')
+  const isDark = document.documentElement.classList.contains('dark')
+  toggle.textContent = isDark ? '☀' : '☽'
+})
+</script>
+
+</body>
+</html>

@@ -348,14 +348,14 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
                     </div>
                   </div>
                   <div className='flex items-start gap-2'>
-                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-red-500' />
+                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-[var(--fortune-bad)]' />
                     <div>
                       <p className='text-xs font-medium text-[var(--fortune-bad)]'>{t('compat.redFlag')}</p>
                       <p className='text-xs text-muted-foreground'>{redFlag.red_flag}</p>
                     </div>
                   </div>
                   <div className='flex items-start gap-2'>
-                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-sky-500' />
+                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-[var(--fortune-good)]' />
                     <div>
                       <p className='text-xs font-medium text-[var(--fortune-good)]'>{t('compat.selfTest')}</p>
                       <p className='text-xs text-muted-foreground'>{redFlag.test}</p>

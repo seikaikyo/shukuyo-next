@@ -25,10 +25,10 @@ interface DirectionNarrativeBlockProps {
 const LEVEL_TIER: Record<string, number> = { daikichi: 1, kichi: 2, shokyo: 3, kyo: 4 }
 
 const TIER_BORDER: Record<number, string> = {
-  1: 'border-l-emerald-400',
-  2: 'border-l-blue-400',
-  3: 'border-l-amber-400',
-  4: 'border-l-red-400',
+  1: 'border-l-[var(--fortune-great)]',
+  2: 'border-l-[var(--fortune-good)]',
+  3: 'border-l-[var(--fortune-caution)]',
+  4: 'border-l-[var(--fortune-bad)]',
 }
 
 function escHtml(s: string): string {
@@ -76,7 +76,7 @@ export function DirectionNarrativeBlock({
         <div className='flex flex-col gap-0.5'>
           {doList.map((item, i) => (
             <div key={`do-${i}`} className='text-xs pl-4 relative text-muted-foreground'>
-              <span className='absolute left-0 text-emerald-500 font-semibold'>+</span>
+              <span className='absolute left-0 text-[var(--fortune-great)] font-semibold'>+</span>
               {item}
             </div>
           ))}
@@ -111,7 +111,7 @@ export function DirectionNarrativeBlock({
             <>
               {guidance.suitable.length > 0 && (
                 <div className='flex flex-col gap-1 p-2 rounded bg-muted/30'>
-                  <span className='text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1'>
+                  <span className='text-xs font-semibold text-[var(--fortune-great)] flex items-center gap-1'>
                     {t('guidance.suitable')}
                     <InfoHint text={t('guidance.suitableHint')} />
                   </span>

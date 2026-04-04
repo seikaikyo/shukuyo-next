@@ -124,10 +124,10 @@ export function CompanyBatch({ result }: CompanyBatchProps) {
       {/* tier summary */}
       <div className='flex gap-2'>
         {[
-          { label: t('v3.company.topPick'), count: result.tier_summary.tier_1, color: 'text-emerald-600 dark:text-emerald-400' },
-          { label: t('v3.company.steadyChoice'), count: result.tier_summary.tier_2, color: 'text-sky-600 dark:text-sky-400' },
-          { label: t('v3.company.needCaution'), count: result.tier_summary.tier_3, color: 'text-amber-600 dark:text-amber-400' },
-          { label: t('company.tierOverride.warning'), count: result.tier_summary.tier_4, color: 'text-red-600 dark:text-red-400' },
+          { label: t('v3.company.topPick'), count: result.tier_summary.tier_1, color: 'text-[var(--fortune-great)]' },
+          { label: t('v3.company.steadyChoice'), count: result.tier_summary.tier_2, color: 'text-[var(--fortune-good)]' },
+          { label: t('v3.company.needCaution'), count: result.tier_summary.tier_3, color: 'text-[var(--fortune-caution)]' },
+          { label: t('company.tierOverride.warning'), count: result.tier_summary.tier_4, color: 'text-[var(--fortune-bad)]' },
         ].map((tier) => (
           <div key={tier.label} className='flex-1 text-center py-2 rounded-md bg-muted/30'>
             <p className={cn('text-lg font-bold tabular-nums', tier.color)}>{tier.count}</p>

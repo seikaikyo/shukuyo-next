@@ -7,13 +7,13 @@ import { InfoHint } from './info-hint'
 import { LEVEL_GLOSSARY, getKnowledgeLink } from '@/utils/glossary'
 
 const LEVEL_MAP: Record<string, { textKey: string; color: string; bg: string }> = {
-  daikichi: { textKey: 'fortune.levels.daikichi', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/30' },
-  kichi: { textKey: 'fortune.levels.kichi', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
-  shokyo: { textKey: 'fortune.levels.shokyo', color: 'text-slate-500 dark:text-slate-400', bg: 'bg-slate-100 dark:bg-slate-800/30' },
-  kyo: { textKey: 'fortune.levels.kyo', color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-950/30' },
-  suekichi: { textKey: 'fortune.levels.suekichi', color: 'text-slate-500 dark:text-slate-400', bg: 'bg-slate-100 dark:bg-slate-800/30' },
-  hankichi: { textKey: 'fortune.levels.hankichi', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/30' },
-  daikyo: { textKey: 'fortune.levels.daikyo', color: 'text-red-700 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-950/40' },
+  daikichi: { textKey: 'fortune.levels.daikichi', color: 'text-[var(--fortune-great)]', bg: 'bg-[var(--fortune-great)]/12' },
+  kichi: { textKey: 'fortune.levels.kichi', color: 'text-[var(--fortune-good)]', bg: 'bg-[var(--fortune-good)]/12' },
+  shokyo: { textKey: 'fortune.levels.shokyo', color: 'text-[var(--fortune-caution)]', bg: 'bg-[var(--fortune-caution)]/12' },
+  kyo: { textKey: 'fortune.levels.kyo', color: 'text-[var(--fortune-bad)]', bg: 'bg-[var(--fortune-bad)]/12' },
+  suekichi: { textKey: 'fortune.levels.suekichi', color: 'text-[var(--fortune-caution)]', bg: 'bg-[var(--fortune-caution)]/12' },
+  hankichi: { textKey: 'fortune.levels.hankichi', color: 'text-[var(--fortune-caution)]', bg: 'bg-[var(--fortune-caution)]/12' },
+  daikyo: { textKey: 'fortune.levels.daikyo', color: 'text-[var(--fortune-bad)]', bg: 'bg-[var(--fortune-bad)]/12' },
 }
 
 // CJK aliases
