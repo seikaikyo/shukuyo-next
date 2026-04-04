@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 const TABS = [
   { href: '/', labelKey: 'nav.home', icon: '\u5BB6' },
   { href: '/fortune/daily', labelKey: 'nav.fortune', icon: '\u661F' },
-  { href: '/compatibility', labelKey: 'nav.compatibility', icon: '\u7E01' },
+  { href: '/compatibility', labelKey: 'nav.match', icon: '\u7E01' },
   { href: '/company', labelKey: 'nav.company', icon: '\u793E' },
   { href: '/knowledge', labelKey: 'nav.knowledge', icon: '\u66F8' },
 ]

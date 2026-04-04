@@ -7,7 +7,7 @@ export function Footer() {
 
   return (
     <footer className='hidden border-t border-border py-6 text-center text-xs text-muted-foreground md:block'>
-      <p>{t('footer.copyright')}</p>
+      <p>{t('footer.source')}</p>
     </footer>
   )
 }

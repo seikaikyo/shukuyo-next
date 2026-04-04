@@ -68,7 +68,7 @@ function YearlyContent() {
             {star?.name}（{star?.reading}）
           </div>
           <div className='text-xs text-muted-foreground'>
-            {t('fortune.kazoeAge', { age: String(star?.kazoe_age || '') })} · {star?.fortune_name}
+            {t('fortune.kazoeAge')} {star?.kazoe_age || ''}{t('common.ageSuffix')} · {star?.fortune_name}
           </div>
           {yf.theme?.title && (
             <div className='mt-2 font-serif text-sm font-semibold'>

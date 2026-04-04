@@ -105,7 +105,7 @@ function HrContent() {
         <CardContent className='py-4'>
           <h3 className='text-sm font-semibold'>{t('company.companyInfo')}</h3>
           <div className='mt-2 grid grid-cols-2 gap-2'>
-            <Input placeholder={t('company.name')} value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+            <Input placeholder={t('company.companyNameLabel')} value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
             <Input type='date' value={companyDate} onChange={(e) => setCompanyDate(e.target.value)} />
           </div>
           <Button variant='outline' size='sm' className='mt-2' onClick={handleSaveCompany}>

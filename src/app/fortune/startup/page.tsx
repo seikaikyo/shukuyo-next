@@ -47,7 +47,7 @@ function StartupContent() {
           className={`flex-1 rounded-md px-3 py-[7px] text-xs transition-all ${tab === 'calendar' ? 'bg-card font-semibold text-foreground shadow-sm' : 'text-muted-foreground'}`}
           onClick={() => setTab('calendar')}
         >
-          {t('fortune.startupCalendar')}
+          {t('fortune.startupCalendarLabel')}
         </button>
       </div>
 
@@ -81,7 +81,7 @@ function StartupContent() {
           {industryRecs.favorable_mansions.length > 0 && (
             <Card>
               <CardContent className='py-4'>
-                <h3 className='text-sm font-semibold'>{t('fortune.favorableMansions')}</h3>
+                <h3 className='text-sm font-semibold'>{t('fortune.favorableMansionsLabel')}</h3>
                 <p className='mb-3 text-xs text-muted-foreground'>
                   {t('fortune.favorableMansionsDesc')}
                 </p>

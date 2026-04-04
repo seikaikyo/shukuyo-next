@@ -53,7 +53,7 @@ function HeadhunterContent() {
       {/* Add seeker */}
       <Card>
         <CardContent className='py-4'>
-          <h3 className='text-sm font-semibold'>{t('company.addSeeker')}</h3>
+          <h3 className='text-sm font-semibold'>{t('company.addSeekerLabel')}</h3>
           <div className='mt-2 grid grid-cols-2 gap-2'>
             <Input placeholder={t('company.seekerName')} value={name} onChange={(e) => setName(e.target.value)} />
             <Input type='date' value={date} onChange={(e) => setDate(e.target.value)} />

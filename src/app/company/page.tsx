@@ -79,7 +79,7 @@ function CompanyContent() {
             <CardContent className='py-4'>
               <h3 className='text-sm font-semibold'>{t('company.addCompany')}</h3>
               <div className='mt-2 flex flex-col gap-2'>
-                <Input placeholder={t('company.name')} value={name} onChange={(e) => setName(e.target.value)} />
+                <Input placeholder={t('company.companyNameLabel')} value={name} onChange={(e) => setName(e.target.value)} />
                 <Input type='date' value={foundingDate} onChange={(e) => setFoundingDate(e.target.value)} />
                 <div className='grid grid-cols-2 gap-2'>
                   <Input placeholder={t('company.country')} value={country} onChange={(e) => setCountry(e.target.value)} />
@@ -95,7 +95,7 @@ function CompanyContent() {
           {/* Company list */}
           <Card>
             <CardContent className='py-4'>
-              <h3 className='text-sm font-semibold'>{t('company.savedCompanies')}</h3>
+              <h3 className='text-sm font-semibold'>{t('company.savedCompaniesLabel')}</h3>
               <div className='mt-2 flex flex-col gap-2'>
                 {companies.map((c) => (
                   <div key={c.id} className='flex items-center justify-between rounded-lg bg-muted p-3'>

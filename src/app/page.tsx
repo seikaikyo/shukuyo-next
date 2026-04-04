@@ -25,8 +25,8 @@ function SetupCard() {
   return (
     <Card className='mx-auto max-w-[400px]'>
       <CardContent className='flex flex-col items-center gap-3 pt-6'>
-        <h2 className='font-serif text-base font-semibold'>{t('setup.title')}</h2>
-        <p className='text-center text-sm text-muted-foreground'>{t('setup.description')}</p>
+        <h2 className='font-serif text-base font-semibold'>{t('setup.welcome')}</h2>
+        <p className='text-center text-sm text-muted-foreground'>{t('setup.welcomeDesc')}</p>
         <Input
           type='date'
           value={date}
@@ -266,8 +266,8 @@ function HomeContent() {
         {[
           { href: '/fortune/daily', titleKey: 'home.fortuneDetail', descKey: 'home.fortuneDetailDesc' },
           { href: '/compatibility', titleKey: 'home.compatibility', descKey: 'home.compatibilityDesc' },
-          { href: '/company', titleKey: 'home.company', descKey: 'home.companyDesc' },
-          { href: '/knowledge', titleKey: 'home.knowledge', descKey: 'home.knowledgeDesc' },
+          { href: '/company', titleKey: 'home.companyAnalysis', descKey: 'home.companyAnalysisDesc' },
+          { href: '/knowledge', titleKey: 'home.knowledgeBase', descKey: 'home.knowledgeBaseDesc' },
         ].map((link) => (
           <Link key={link.href} href={link.href}>
             <Card className='cursor-pointer transition-colors hover:bg-card/80'>

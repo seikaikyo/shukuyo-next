@@ -92,7 +92,7 @@ function CompatContent() {
                     yoseiLabel={getYoseiFullName(result.person2.yosei, locale)}
                     name={result.person2.mansion}
                   />
-                  <div className='mt-1 text-xs text-muted-foreground'>{t('compatibility.partner')}</div>
+                  <div className='mt-1 text-xs text-muted-foreground'>{t('compatibility.partnerLabel')}</div>
                 </div>
               </div>
 

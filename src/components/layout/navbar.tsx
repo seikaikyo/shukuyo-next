@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 const NAV_ITEMS = [
   { href: '/', labelKey: 'nav.home' },
   { href: '/fortune/daily', labelKey: 'nav.fortune' },
-  { href: '/compatibility', labelKey: 'nav.compatibility' },
+  { href: '/compatibility', labelKey: 'nav.match' },
   { href: '/company', labelKey: 'nav.company' },
   { href: '/knowledge', labelKey: 'nav.knowledge' },
 ]
