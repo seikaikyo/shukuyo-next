@@ -12,16 +12,16 @@ import { levelColor, levelBorderLeft } from '@/utils/fortune-helpers'
 import { useProfileStore } from '@/stores/profile'
 
 function verdictBg(severity: string) {
-  if (severity === 'good') return 'bg-emerald-50 dark:bg-emerald-950/30 border-l-emerald-500'
-  if (severity === 'caution') return 'bg-amber-50 dark:bg-amber-950/30 border-l-amber-500'
-  if (severity === 'warning') return 'bg-red-50 dark:bg-red-950/30 border-l-red-500'
+  if (severity === 'good') return 'bg-[var(--fortune-great)]/8 border-l-[var(--fortune-great)]'
+  if (severity === 'caution') return 'bg-[var(--fortune-caution)]/8 border-l-[var(--fortune-caution)]'
+  if (severity === 'warning') return 'bg-[var(--fortune-bad)]/8 border-l-[var(--fortune-bad)]'
   return 'bg-muted/30 border-l-border'
 }
 
 function verdictTitleColor(severity: string) {
-  if (severity === 'good') return 'text-emerald-700 dark:text-emerald-400'
-  if (severity === 'caution') return 'text-amber-700 dark:text-amber-400'
-  if (severity === 'warning') return 'text-red-700 dark:text-red-400'
+  if (severity === 'good') return 'text-[var(--fortune-great)]'
+  if (severity === 'caution') return 'text-[var(--fortune-caution)]'
+  if (severity === 'warning') return 'text-[var(--fortune-bad)]'
   return 'text-foreground'
 }
 
@@ -94,7 +94,7 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
                   {dir.position}
                 </span>
                 {dir.ryouhan_active && (
-                  <span className='text-xs text-amber-600 dark:text-amber-400'>{t('v3.match.ryouhanActive')}</span>
+                  <span className='text-xs text-[var(--ryouhan)]'>{t('v3.match.ryouhanActive')}</span>
                 )}
               </div>
             ))}
@@ -169,11 +169,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1'>
               {initiative.do.length > 0 && (
                 <div className='flex flex-col gap-1'>
-                  <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>{t('v3.match.doList')}</p>
+                  <p className='text-xs font-medium text-[var(--fortune-great)]'>{t('v3.match.doList')}</p>
                   <ul className='flex flex-col gap-0.5'>
                     {initiative.do.map((item, i) => (
                       <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
-                        <span className='text-emerald-500 shrink-0 mt-0.5'>·</span>
+                        <span className='text-[var(--fortune-great)] shrink-0 mt-0.5'>·</span>
                         {item}
                       </li>
                     ))}
@@ -182,11 +182,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
               )}
               {initiative.avoid.length > 0 && (
                 <div className='flex flex-col gap-1'>
-                  <p className='text-xs font-medium text-red-600 dark:text-red-400'>{t('v3.match.avoidList')}</p>
+                  <p className='text-xs font-medium text-[var(--fortune-bad)]'>{t('v3.match.avoidList')}</p>
                   <ul className='flex flex-col gap-0.5'>
                     {initiative.avoid.map((item, i) => (
                       <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
-                        <span className='text-red-500 shrink-0 mt-0.5'>·</span>
+                        <span className='text-[var(--fortune-bad)] shrink-0 mt-0.5'>·</span>
                         {item}
                       </li>
                     ))}
@@ -210,11 +210,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             {relation.tips && relation.tips.length > 0 && (
               <div className='flex flex-col gap-1'>
-                <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>{t('v3.match.strengths')}</p>
+                <p className='text-xs font-medium text-[var(--fortune-great)]'>{t('v3.match.strengths')}</p>
                 <ul className='flex flex-col gap-0.5'>
                   {relation.tips.map((tip, i) => (
                     <li key={`${i}-${tip}`} className='text-xs text-muted-foreground flex items-start gap-1.5'>
-                      <span className='text-emerald-500 shrink-0 mt-0.5'>·</span>
+                      <span className='text-[var(--fortune-great)] shrink-0 mt-0.5'>·</span>
                       {tip}
                     </li>
                   ))}
@@ -223,11 +223,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
             )}
             {relation.avoid && relation.avoid.length > 0 && (
               <div className='flex flex-col gap-1'>
-                <p className='text-xs font-medium text-red-600 dark:text-red-400'>{t('v3.match.caution')}</p>
+                <p className='text-xs font-medium text-[var(--fortune-bad)]'>{t('v3.match.caution')}</p>
                 <ul className='flex flex-col gap-0.5'>
                   {relation.avoid.map((item, i) => (
                     <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1.5'>
-                      <span className='text-red-500 shrink-0 mt-0.5'>·</span>
+                      <span className='text-[var(--fortune-bad)] shrink-0 mt-0.5'>·</span>
                       {item}
                     </li>
                   ))}
@@ -240,7 +240,7 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
               <p className='text-xs font-medium text-muted-foreground'>{t('v3.match.sceneTitle')}</p>
               <div className='flex flex-wrap gap-1'>
                 {relation.good_for.map((g) => (
-                  <span key={g} className='text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
+                  <span key={g} className='text-xs px-2 py-0.5 rounded-full bg-[var(--fortune-great)]/12 text-[var(--fortune-great)]'>
                     {g}
                   </span>
                 ))}
@@ -294,11 +294,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
                   <div className='flex flex-col gap-1'>
                     {!!doList?.length && (
                       <div>
-                        <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-0.5'>{t('v3.match.doList')}</p>
+                        <p className='text-xs font-medium text-[var(--fortune-great)] mb-0.5'>{t('v3.match.doList')}</p>
                         <ul className='flex flex-col gap-0.5'>
                           {doList.map((item, i) => (
                             <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
-                              <span className='shrink-0 mt-0.5 text-emerald-500'>·</span>{item}
+                              <span className='shrink-0 mt-0.5 text-[var(--fortune-great)]'>·</span>{item}
                             </li>
                           ))}
                         </ul>
@@ -306,11 +306,11 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
                     )}
                     {!!avoidList?.length && (
                       <div>
-                        <p className='text-xs font-medium text-red-600 dark:text-red-400 mb-0.5'>{t('v3.match.avoidList')}</p>
+                        <p className='text-xs font-medium text-[var(--fortune-bad)] mb-0.5'>{t('v3.match.avoidList')}</p>
                         <ul className='flex flex-col gap-0.5'>
                           {avoidList.map((item, i) => (
                             <li key={`${i}-${item}`} className='text-xs text-muted-foreground flex items-start gap-1'>
-                              <span className='shrink-0 mt-0.5 text-red-500'>·</span>{item}
+                              <span className='shrink-0 mt-0.5 text-[var(--fortune-bad)]'>·</span>{item}
                             </li>
                           ))}
                         </ul>
@@ -341,23 +341,23 @@ export function PairResult({ result, partnerRelation }: PairResultProps) {
               {redFlag && (
                 <div className='flex flex-col gap-2'>
                   <div className='flex items-start gap-2'>
-                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-emerald-500' />
+                    <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-[var(--fortune-great)]' />
                     <div>
-                      <p className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>{t('compat.healthy')}</p>
+                      <p className='text-xs font-medium text-[var(--fortune-great)]'>{t('compat.healthy')}</p>
                       <p className='text-xs text-muted-foreground'>{redFlag.healthy}</p>
                     </div>
                   </div>
                   <div className='flex items-start gap-2'>
                     <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-red-500' />
                     <div>
-                      <p className='text-xs font-medium text-red-600 dark:text-red-400'>{t('compat.redFlag')}</p>
+                      <p className='text-xs font-medium text-[var(--fortune-bad)]'>{t('compat.redFlag')}</p>
                       <p className='text-xs text-muted-foreground'>{redFlag.red_flag}</p>
                     </div>
                   </div>
                   <div className='flex items-start gap-2'>
                     <span className='shrink-0 mt-0.5 w-2 h-2 rounded-full bg-sky-500' />
                     <div>
-                      <p className='text-xs font-medium text-sky-600 dark:text-sky-400'>{t('compat.selfTest')}</p>
+                      <p className='text-xs font-medium text-[var(--fortune-good)]'>{t('compat.selfTest')}</p>
                       <p className='text-xs text-muted-foreground'>{redFlag.test}</p>
                     </div>
                   </div>

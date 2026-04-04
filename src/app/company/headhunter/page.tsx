@@ -15,10 +15,10 @@ import type { CompanyBatchResult } from '@/types/company'
 
 function tierBadge(rank: number) {
   const map: Record<number, string> = {
-    1: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
-    2: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30',
-    3: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
-    4: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30',
+    1: 'bg-[var(--fortune-great)]/12 text-[var(--fortune-great)] border-[var(--fortune-great)]/30',
+    2: 'bg-[var(--fortune-good)]/12 text-[var(--fortune-good)] border-[var(--fortune-good)]/30',
+    3: 'bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)] border-[var(--fortune-caution)]/30',
+    4: 'bg-[var(--fortune-bad)]/12 text-[var(--fortune-bad)] border-[var(--fortune-bad)]/30',
   }
   return map[rank] || 'bg-muted/50 text-muted-foreground border-border'
 }

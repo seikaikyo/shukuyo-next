@@ -128,9 +128,9 @@ function CompareTab() {
               </div>
               <span className={cn(
                 'text-[10px] px-1.5 py-0.5 rounded self-start',
-                c.priority.rank === 1 ? 'bg-emerald-500/10 text-emerald-600' :
-                c.priority.rank === 2 ? 'bg-sky-500/10 text-sky-600' :
-                'bg-amber-500/10 text-amber-600'
+                c.priority.rank === 1 ? 'bg-[var(--fortune-great)]/12 text-[var(--fortune-great)]' :
+                c.priority.rank === 2 ? 'bg-[var(--fortune-good)]/12 text-[var(--fortune-good)]' :
+                'bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)]'
               )}>
                 {c.priority.label}
               </span>
