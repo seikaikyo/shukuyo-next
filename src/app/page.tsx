@@ -30,12 +30,14 @@ function SetupCard() {
         <Input
           type='date'
           value={date}
+          min='1920-01-01'
+          max='2020-12-31'
           onChange={(e) => setDate(e.target.value)}
           className='text-center'
         />
         <Button
           className='w-full'
-          disabled={!date}
+          disabled={!date || date.length !== 10}
           onClick={() => setBirthDate(date)}
         >
           {t('setup.start')}
@@ -171,18 +173,18 @@ function HomeContent() {
                 <div className='mt-2'>
                   <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.suitable')}</div>
                   <div className='flex flex-wrap gap-1.5'>
-                    {df.day_mansion.day_fortune.auspicious.map((a, i) => (
+                    {(df.day_mansion.day_fortune.auspicious || []).map((a, i) => (
                       <FortuneBadge key={i} label={a} level='great_fortune' />
                     ))}
                   </div>
                 </div>
-                {df.day_mansion.day_fortune.inauspicious.length > 0 && (
+                {(df.day_mansion.day_fortune.inauspicious || []).length > 0 && (
                   <div className='mt-3'>
                     <div className='mb-1 text-xs text-muted-foreground'>
                       {t('fortune.unsuitable')}
                     </div>
                     <div className='flex flex-wrap gap-1.5'>
-                      {df.day_mansion.day_fortune.inauspicious.map((a, i) => (
+                      {(df.day_mansion.day_fortune.inauspicious || []).map((a, i) => (
                         <FortuneBadge key={i} label={a} level='small_misfortune' />
                       ))}
                     </div>

@@ -57,6 +57,8 @@ function CompatContent() {
           <h3 className='text-sm font-semibold'>{t('compatibility.partnerBirthday')}</h3>
           <Input
             type='date'
+            min='1920-01-01'
+            max='2020-12-31'
             className='mt-2'
             value={partnerDate}
             onChange={(e) => setPartnerDate(e.target.value)}

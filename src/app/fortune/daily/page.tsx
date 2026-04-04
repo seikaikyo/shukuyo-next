@@ -124,13 +124,13 @@ function DailyContent() {
             <div className='mt-2 grid grid-cols-2 gap-3'>
               <div className='rounded-lg bg-muted p-3'>
                 <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.suitable')}</div>
-                {df.day_mansion.day_fortune.auspicious.map((a, i) => (
+                {(df.day_mansion.day_fortune.auspicious || []).map((a, i) => (
                   <div key={i} className='text-sm' style={{ color: 'var(--fortune-great)' }}>{a}</div>
                 ))}
               </div>
               <div className='rounded-lg bg-muted p-3'>
                 <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.unsuitable')}</div>
-                {df.day_mansion.day_fortune.inauspicious.map((a, i) => (
+                {(df.day_mansion.day_fortune.inauspicious || []).map((a, i) => (
                   <div key={i} className='text-sm' style={{ color: 'var(--fortune-caution)' }}>{a}</div>
                 ))}
               </div>

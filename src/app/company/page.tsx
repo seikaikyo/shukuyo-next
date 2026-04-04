@@ -80,7 +80,7 @@ function CompanyContent() {
               <h3 className='text-sm font-semibold'>{t('company.addCompany')}</h3>
               <div className='mt-2 flex flex-col gap-2'>
                 <Input placeholder={t('company.companyNameLabel')} value={name} onChange={(e) => setName(e.target.value)} />
-                <Input type='date' value={foundingDate} onChange={(e) => setFoundingDate(e.target.value)} />
+                <Input type='date' min='1800-01-01' max='2025-12-31' value={foundingDate} onChange={(e) => setFoundingDate(e.target.value)} />
                 <div className='grid grid-cols-2 gap-2'>
                   <Input placeholder={t('company.country')} value={country} onChange={(e) => setCountry(e.target.value)} />
                   <Input placeholder={t('company.memo')} />

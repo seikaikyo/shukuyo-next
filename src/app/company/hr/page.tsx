@@ -106,7 +106,7 @@ function HrContent() {
           <h3 className='text-sm font-semibold'>{t('company.companyInfo')}</h3>
           <div className='mt-2 grid grid-cols-2 gap-2'>
             <Input placeholder={t('company.companyNameLabel')} value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-            <Input type='date' value={companyDate} onChange={(e) => setCompanyDate(e.target.value)} />
+            <Input type='date' min='1800-01-01' max='2025-12-31' value={companyDate} onChange={(e) => setCompanyDate(e.target.value)} />
           </div>
           <Button variant='outline' size='sm' className='mt-2' onClick={handleSaveCompany}>
             {t('common.save')}
@@ -120,7 +120,7 @@ function HrContent() {
           <h3 className='text-sm font-semibold'>{t('company.addCandidate')}</h3>
           <div className='mt-2 grid grid-cols-2 gap-2'>
             <Input placeholder={t('company.candidateName')} value={candName} onChange={(e) => setCandName(e.target.value)} />
-            <Input type='date' value={candDate} onChange={(e) => setCandDate(e.target.value)} />
+            <Input type='date' min='1920-01-01' max='2020-12-31' value={candDate} onChange={(e) => setCandDate(e.target.value)} />
           </div>
           <Button size='sm' className='mt-2' onClick={handleAddCandidate} disabled={!candName || !candDate}>
             {t('company.add')}

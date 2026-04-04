@@ -56,7 +56,7 @@ function HeadhunterContent() {
           <h3 className='text-sm font-semibold'>{t('company.addSeekerLabel')}</h3>
           <div className='mt-2 grid grid-cols-2 gap-2'>
             <Input placeholder={t('company.seekerName')} value={name} onChange={(e) => setName(e.target.value)} />
-            <Input type='date' value={date} onChange={(e) => setDate(e.target.value)} />
+            <Input type='date' min='1920-01-01' max='2020-12-31' value={date} onChange={(e) => setDate(e.target.value)} />
           </div>
           <Button size='sm' className='mt-2' onClick={handleAdd} disabled={!name || !date}>
             {t('company.add')}
