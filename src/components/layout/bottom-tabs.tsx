@@ -5,55 +5,40 @@ import { usePathname } from 'next/navigation'
 import { useTranslation } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
-const tabDefs = [
-  { href: '/', key: 'nav.home', icon: '家' },
-  { href: '/fortune', key: 'nav.fortune', icon: '星' },
-  { href: '/compatibility', key: 'nav.match', icon: '縁' },
-  { href: '/company', key: 'nav.company', icon: '社' },
-  { href: '/knowledge', key: 'nav.knowledge', icon: '書' },
+const TABS = [
+  { href: '/', labelKey: 'nav.home', icon: '\u5BB6' },
+  { href: '/fortune/daily', labelKey: 'nav.fortune', icon: '\u661F' },
+  { href: '/compatibility', labelKey: 'nav.compatibility', icon: '\u7E01' },
+  { href: '/company', labelKey: 'nav.company', icon: '\u793E' },
+  { href: '/knowledge', labelKey: 'nav.knowledge', icon: '\u66F8' },
 ]
 
 export function BottomTabs() {
   const pathname = usePathname()
   const { t } = useTranslation()
 
-  const tabs = tabDefs.map((d) => ({ ...d, label: t(d.key) }))
+  function isActive(href: string) {
+    if (href === '/') return pathname === '/'
+    return pathname.startsWith(href)
+  }
 
   return (
-    <nav className='fixed bottom-0 inset-x-0 z-40 h-16 border-t border-border bg-background/95 backdrop-blur-sm md:hidden'>
-      <div className='flex h-full'>
-        {tabs.map((tab) => {
-          const isActive =
-            pathname === tab.href ||
-            (tab.href !== '/' && pathname.startsWith(tab.href))
-
-          return (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={cn(
-                'flex flex-1 flex-col items-center justify-center gap-0.5',
-                'text-center transition-colors duration-200',
-                isActive
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
-              )}
-            >
-              <span
-                className={cn(
-                  'font-serif text-lg leading-none transition-transform duration-200',
-                  isActive ? 'scale-110' : ''
-                )}
-              >
-                {tab.icon}
-              </span>
-              <span className='text-[10px] font-medium leading-none'>
-                {tab.label}
-              </span>
-            </Link>
-          )
-        })}
-      </div>
+    <nav className='fixed bottom-0 left-0 right-0 z-50 flex border-t border-border bg-background/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom,8px)] md:hidden'>
+      {TABS.map((tab) => (
+        <Link
+          key={tab.href}
+          href={tab.href}
+          className={cn(
+            'flex flex-1 flex-col items-center py-2 text-[10px] transition-colors',
+            isActive(tab.href)
+              ? 'text-primary'
+              : 'text-muted-foreground'
+          )}
+        >
+          <span className='font-serif text-lg leading-none'>{tab.icon}</span>
+          {t(tab.labelKey)}
+        </Link>
+      ))}
     </nav>
   )
 }

@@ -2,7 +2,6 @@
 
 import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/lib/i18n'
 
 export default function Error({
@@ -25,9 +24,12 @@ export default function Error({
         <p className='text-sm text-muted-foreground'>
           {error.message || t('error.renderErrorDesc')}
         </p>
-        <Button variant='outline' onClick={reset}>
+        <button
+          onClick={reset}
+          className='rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted'
+        >
           {t('common.retry')}
-        </Button>
+        </button>
       </div>
     </div>
   )

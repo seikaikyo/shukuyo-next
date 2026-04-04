@@ -2,7 +2,6 @@
 
 import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 
 export default function GlobalError({
   error,
@@ -20,14 +19,17 @@ export default function GlobalError({
       <body className='min-h-screen flex items-center justify-center bg-background text-foreground'>
         <div className='flex flex-col items-center gap-4 text-center max-w-sm px-4'>
           <h2 className='text-lg font-semibold'>
-            發生未預期的錯誤
+            {'\u767C\u751F\u672A\u9810\u671F\u7684\u932F\u8AA4'}
           </h2>
           <p className='text-sm text-muted-foreground'>
-            {error.message || '頁面載入時發生問題，請重試。'}
+            {error.message || '\u9801\u9762\u8F09\u5165\u6642\u767C\u751F\u554F\u984C\uFF0C\u8ACB\u91CD\u8A66\u3002'}
           </p>
-          <Button variant='outline' onClick={reset}>
-            重試
-          </Button>
+          <button
+            onClick={reset}
+            className='rounded-lg border border-border px-4 py-2 text-sm font-medium'
+          >
+            {'\u91CD\u8A66'}
+          </button>
         </div>
       </body>
     </html>

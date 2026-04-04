@@ -1,393 +1,279 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useProfileStore, useProfileHydrated } from '@/stores/profile'
-import { useFortune } from '@/hooks/use-fortune'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
-import { Star, Sparkles, BookOpen, CalendarDays, Briefcase } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
-import { levelColor, levelBorder, getLevelHeight, getLevelKey } from '@/utils/fortune-helpers'
-import { specialDayBadgeClass, ryouhanBadgeClass } from '@/utils/special-day-colors'
-import { SankiCard } from '@/components/shared/sanki-card'
-import { AuspiciousCard } from '@/components/shared/auspicious-card'
-import type { DailyFortune, WeeklyFortune } from '@/types/fortune'
-
-// ---- Setup card (no birth date set) ----
+import { useFortune } from '@/hooks/use-fortune'
+import { useMansion } from '@/hooks/use-mansion'
+import { getYoseiFullName } from '@/utils/yosei'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
+import { LevelRing } from '@/components/shared/level-ring'
+import { LevelBar } from '@/components/shared/level-bar'
+import { FortuneBadge } from '@/components/shared/fortune-badge'
+import { MansionTag } from '@/components/shared/mansion-tag'
+import { DateNav } from '@/components/shared/date-nav'
 
 function SetupCard() {
-  const { setBirthDate } = useProfileStore()
   const { t } = useTranslation()
-  const [inputDate, setInputDate] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!inputDate) return
-    setSubmitting(true)
-    setBirthDate(inputDate)
-    setSubmitting(false)
-  }
+  const setBirthDate = useProfileStore((s) => s.setBirthDate)
+  const [date, setDate] = useState('')
 
   return (
-    <div className='flex flex-1 items-center justify-center py-24 px-4'>
-      <Card className='w-full max-w-md border border-border shadow-sm'>
-        <CardHeader className='text-center pb-4'>
-          <CardTitle className='font-serif text-2xl font-semibold tracking-wide text-foreground'>
-            {t('welcome.title')}
-          </CardTitle>
-          <p className='text-sm text-muted-foreground mt-2'>
-            {t('home.setupSubtitle')}
-          </p>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-            <div className='flex flex-col gap-1.5'>
-              <label
-                htmlFor='birth-date'
-                className='text-sm font-medium text-foreground'
-              >
-                {t('setup.birthDate')}
-              </label>
-              <input
-                id='birth-date'
-                type='date'
-                value={inputDate}
-                onChange={(e) => setInputDate(e.target.value)}
-                min='1900-01-01'
-                max={new Date().toISOString().split('T')[0]}
-                required
-                className={cn(
-                  'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1',
-                  'text-sm text-foreground shadow-sm transition-colors',
-                  'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-                  'disabled:cursor-not-allowed disabled:opacity-50'
-                )}
-              />
-            </div>
-            <Button
-              type='submit'
-              disabled={!inputDate || submitting}
-              className='w-full mt-2'
-            >
-              {t('home.start')}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className='mx-auto max-w-[400px]'>
+      <CardContent className='flex flex-col items-center gap-3 pt-6'>
+        <h2 className='font-serif text-base font-semibold'>{t('setup.title')}</h2>
+        <p className='text-center text-sm text-muted-foreground'>{t('setup.description')}</p>
+        <Input
+          type='date'
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className='text-center'
+        />
+        <Button
+          className='w-full'
+          disabled={!date}
+          onClick={() => setBirthDate(date)}
+        >
+          {t('setup.start')}
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
 
-// ---- Helpers ----
-
-function formatDateLabel(dateStr: string, locale: string) {
+function formatDateLabel(dateStr: string, locale: string): string {
   const d = new Date(dateStr + 'T00:00:00')
-  const loc = locale === 'zh-TW' ? 'zh-TW' : locale === 'ja' ? 'ja-JP' : 'en-US'
-  return d.toLocaleDateString(loc, {
-    month: 'long',
-    day: 'numeric',
-    weekday: 'short',
-  })
+  const weekdays: Record<string, string[]> = {
+    'zh-TW': ['日', '一', '二', '三', '四', '五', '六'],
+    en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    ja: ['日', '月', '火', '水', '木', '金', '土'],
+  }
+  const wd = (weekdays[locale] || weekdays['zh-TW'])[d.getDay()]
+  if (locale === 'en') {
+    return `${d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} (${wd})`
+  }
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日（${wd}）`
 }
 
-function offsetDate(dateStr: string, days: number) {
+function addDays(dateStr: string, n: number): string {
   const d = new Date(dateStr + 'T00:00:00')
-  d.setDate(d.getDate() + days)
+  d.setDate(d.getDate() + n)
   return d.toISOString().split('T')[0]
 }
 
-function todayStr() {
-  // 用本地時區，避免 UTC 在 UTC+8 凌晨時顯示前一天
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-
-// ---- Skeleton placeholders ----
-
-function ScoreSkeleton() {
-  return (
-    <Card className='border border-border'>
-      <CardContent className='flex flex-col items-center gap-3 pt-8 pb-8'>
-        <Skeleton className='h-28 w-28 rounded-full' />
-        <Skeleton className='h-5 w-20 mt-1' />
-        <Skeleton className='h-4 w-52' />
-        <Skeleton className='h-4 w-40' />
-      </CardContent>
-    </Card>
-  )
-}
-
-function DetailSkeleton() {
-  return (
-    <Card className='border border-border'>
-      <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-        <Skeleton className='h-3 w-20' />
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className='flex items-center gap-3'>
-            <Skeleton className='h-3 w-10 shrink-0' />
-            <Skeleton className='h-1.5 flex-1' />
-            <Skeleton className='h-3 w-7' />
-          </div>
-        ))}
-      </CardContent>
-    </Card>
-  )
-}
-
-// ---- 今日特殊日 ----
-
-function TodaySpecialDays({ fortune }: { fortune: DailyFortune }) {
-  const { t } = useTranslation()
-  const badges: { label: string; color: string }[] = []
-
-  if (fortune.special_day) {
-    badges.push({
-      label: fortune.special_day.name,
-      color: specialDayBadgeClass(fortune.special_day.type),
-    })
-  }
-
-  if (fortune.ryouhan?.active) {
-    badges.push({
-      label: t('fortune.ryouhan'),
-      color: ryouhanBadgeClass(),
-    })
-  }
-
-  if (fortune.compound_analysis?.length) {
-    for (const c of fortune.compound_analysis) {
-      badges.push({
-        label: c.name,
-        color: c.severity >= 3
-          ? 'bg-[var(--fortune-bad)]/12 text-[var(--fortune-bad)]'
-          : 'bg-[var(--fortune-caution)]/12 text-[var(--fortune-caution)]',
-      })
-    }
-  }
-
-  if (!badges.length) return null
-
-  return (
-    <div className='flex flex-wrap justify-center gap-1.5'>
-      {badges.map((b) => (
-        <span
-          key={b.label}
-          className={cn('text-[11px] px-2 py-0.5 rounded-full border border-transparent', b.color)}
-        >
-          {b.label}
-        </span>
-      ))}
-    </div>
-  )
-}
-
-// ---- 今日宜忌 (T1299) ----
-
-function TodayAuspicious({ fortune }: { fortune: DailyFortune }) {
-  const dayFortune = fortune.day_mansion?.day_fortune
-  if (!dayFortune) return null
-  return <AuspiciousCard dayFortune={dayFortune} />
-}
-
-// ---- 週運預覽 ----
-
-function WeekPreview({ weeklyFortune, activeDate }: { weeklyFortune: WeeklyFortune; activeDate: string }) {
-  const { t } = useTranslation()
-
-  return (
-    <Card className='border border-border'>
-      <CardContent className='pt-4 pb-4'>
-        <div className='flex items-center gap-1.5 mb-2'>
-          <CalendarDays className='size-3.5 text-muted-foreground' aria-hidden='true' />
-          <p className='text-[10px] font-medium text-muted-foreground uppercase tracking-widest'>{t('home.weekPreview')}</p>
-        </div>
-        <div className='flex justify-between gap-0.5'>
-          {weeklyFortune.daily_overview.map((day) => {
-            const isActive = day.date === activeDate
-            return (
-              <div
-                key={day.date}
-                className={cn(
-                  'flex flex-col items-center gap-0.5 flex-1 py-1.5 rounded-md transition-colors',
-                  isActive && 'bg-primary/10'
-                )}
-              >
-                <span className='text-[10px] text-muted-foreground'>{day.weekday}</span>
-                <div
-                  className={cn('w-5 rounded-sm', levelColor(day.level))}
-                  style={{ height: `${getLevelHeight(day.level) * 0.3}px` }}
-                />
-                <span className={cn(
-                  'text-[10px] font-medium',
-                  levelColor(day.level)
-                )}>
-                  {t(getLevelKey(day.level))}
-                </span>
-                {day.special_day && (
-                  <span className='w-1.5 h-1.5 rounded-full bg-[var(--kanro)]' />
-                )}
-                {day.ryouhan_active && !day.special_day && (
-                  <span className='w-1.5 h-1.5 rounded-full bg-[var(--ryouhan)]' />
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-// ---- Main content when birth date is set ----
-
-function HomeContent({ birthDate }: { birthDate: string }) {
-  const today = todayStr()
-  const [activeDate, setActiveDate] = useState(today)
-  const { dailyFortune, weeklyFortune, loading, error, fetchDaily, fetchWeekly } = useFortune()
+function HomeContent() {
   const { t, locale } = useTranslation()
+  const birthDate = useProfileStore((s) => s.birthDate)!
+  const { dailyFortune, weeklyFortune, dailyLoading, fetchDaily, fetchWeekly } = useFortune()
+  const { myMansion, fetchMyMansion } = useMansion()
+
+  const today = new Date().toISOString().split('T')[0]
+  const [activeDate, setActiveDate] = useState(today)
+
+  const load = useCallback(
+    (date: string) => {
+      fetchDaily(birthDate, date, locale)
+      fetchWeekly(birthDate, date, locale)
+      fetchMyMansion()
+    },
+    [birthDate, locale, fetchDaily, fetchWeekly, fetchMyMansion]
+  )
 
   useEffect(() => {
-    fetchDaily(birthDate, activeDate)
-    fetchWeekly(birthDate, activeDate)
-  }, [birthDate, activeDate, fetchDaily, fetchWeekly])
+    load(activeDate)
+  }, [activeDate, load])
 
-  const fortune = dailyFortune
+  const df = dailyFortune
+  const levelName = df?.fortune?.level_name || ''
+  const level = df?.fortune?.level || 'good_fortune'
 
   return (
-    <div className='flex-1 mx-auto w-full max-w-2xl px-4 py-8 flex flex-col gap-6'>
-      {/* mansion header */}
-      {fortune && (
-        <div className='text-center'>
-          <p className='text-xs text-muted-foreground tracking-widest uppercase mb-1'>
-            {t('fortune.yourMansion')}
-          </p>
-          <h2 className='font-serif text-xl font-semibold text-primary'>
-            {fortune.your_mansion.name_jp}
-            <span className='font-sans text-sm text-muted-foreground ml-2'>
-              {fortune.your_mansion.reading}
-            </span>
-          </h2>
-        </div>
-      )}
-
-      {/* date navigation */}
-      <div className='flex items-center justify-center gap-2'>
-        <button
-          onClick={() => setActiveDate((d) => offsetDate(d, -1))}
-          aria-label={t('common.previousDay')}
-          className='h-8 w-8 rounded-full flex items-center justify-center text-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200'
-        >
-          ‹
-        </button>
-        <span className='text-sm font-medium text-foreground min-w-36 text-center'>
-          {formatDateLabel(activeDate, locale)}
-        </span>
-        <button
-          onClick={() => setActiveDate((d) => offsetDate(d, 1))}
-          aria-label={t('common.nextDay')}
-          className='h-8 w-8 rounded-full flex items-center justify-center text-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-200'
-        >
-          ›
-        </button>
-        {activeDate !== today && (
-          <button
-            onClick={() => setActiveDate(today)}
-            className='text-xs text-primary hover:text-primary/80 underline-offset-2 hover:underline transition-colors duration-200 ml-1'
-          >
-            {t('home.today')}
-          </button>
-        )}
-      </div>
-
-      {/* error state */}
-      {error && !loading && (
-        <div role='alert' className='flex flex-col items-center gap-3 py-8 text-center'>
-          <p className='text-sm text-muted-foreground'>{t('error.fetchFailed')}</p>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => fetchDaily(birthDate, activeDate)}
-          >
-            {t('common.retry')}
-          </Button>
-        </div>
-      )}
-
-      {/* overall score card */}
-      {loading ? (
-        <ScoreSkeleton />
-      ) : fortune ? (
-        <Card className='border border-border dark:border-primary/20'>
-          <CardContent className='flex flex-col items-center gap-3 pt-8 pb-8'>
-            <div
-              className={cn(
-                'relative flex items-center justify-center rounded-full border-4 h-28 w-28',
-                levelBorder(fortune.fortune.level)
-              )}
-            >
-              <span
-                className={cn(
-                  'text-2xl font-bold font-serif',
-                  levelColor(fortune.fortune.level)
-                )}
-              >
-                {fortune.fortune.level_name || t(getLevelKey(fortune.fortune.level || '')) || '—'}
-              </span>
+    <div className='space-y-3'>
+      {/* Mansion header */}
+      {myMansion && (
+        <Card>
+          <CardContent className='flex items-center gap-3 py-3'>
+            <MansionTag
+              yosei={myMansion.yosei}
+              yoseiLabel={getYoseiFullName(myMansion.yosei, locale)}
+              name={myMansion.name_jp}
+            />
+            <div>
+              <div className='text-sm font-semibold'>
+                {myMansion.name_jp}（{myMansion.reading}）
+              </div>
+              <div className='text-xs text-muted-foreground'>
+                {t('mansion.index', { index: String(myMansion.index) })} · {getYoseiFullName(myMansion.yosei, locale)}
+              </div>
             </div>
-            <p
-              className={cn(
-                'text-lg font-serif font-semibold',
-                levelColor(fortune.fortune.level)
-              )}
-            >
-              {fortune.fortune.level_name || fortune.fortune.level || '—'}
-            </p>
-            {fortune.advice && (
-              <p className='text-sm text-muted-foreground text-center max-w-xs leading-relaxed'>
-                {fortune.advice}
-              </p>
-            )}
           </CardContent>
         </Card>
+      )}
+
+      {/* Date navigation */}
+      <DateNav
+        label={formatDateLabel(activeDate, locale)}
+        onPrev={() => setActiveDate(addDays(activeDate, -1))}
+        onNext={() => setActiveDate(addDays(activeDate, 1))}
+        onToday={activeDate !== today ? () => setActiveDate(today) : undefined}
+      />
+
+      {/* Overall score */}
+      {dailyLoading ? (
+        <Card>
+          <CardContent className='flex flex-col items-center gap-3 py-6'>
+            <Skeleton className='h-24 w-24 rounded-full' />
+            <Skeleton className='h-4 w-40' />
+          </CardContent>
+        </Card>
+      ) : df ? (
+        <>
+          <Card>
+            <CardContent className='flex flex-col items-center gap-2 py-6 text-center'>
+              <LevelRing level={level} label={levelName} />
+              <p className='mt-2 text-sm text-muted-foreground'>
+                {df.your_mansion.name_jp} x {df.day_mansion.name_jp} — {df.mansion_relation.name}（{df.mansion_relation.reading}）
+              </p>
+              {df.advice && (
+                <p className='mt-2 max-w-[360px] text-sm text-muted-foreground'>
+                  {df.advice}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Special day badges */}
+          {(df.special_day || df.ryouhan?.active) && (
+            <div className='flex flex-wrap justify-center gap-2'>
+              {df.special_day && (
+                <FortuneBadge
+                  label={df.special_day.name}
+                  special={df.special_day.type}
+                />
+              )}
+              {df.ryouhan?.active && (
+                <FortuneBadge label={t('fortune.ryouhan')} special='ryouhan' />
+              )}
+            </div>
+          )}
+
+          {/* Auspicious card */}
+          {df.day_mansion.day_fortune && (
+            <Card>
+              <CardContent className='py-4'>
+                <h3 className='text-sm font-semibold tracking-wide'>
+                  {t('fortune.auspicious')}
+                </h3>
+                <div className='mt-2'>
+                  <div className='mb-1 text-xs text-muted-foreground'>{t('fortune.suitable')}</div>
+                  <div className='flex flex-wrap gap-1.5'>
+                    {df.day_mansion.day_fortune.auspicious.map((a, i) => (
+                      <FortuneBadge key={i} label={a} level='great_fortune' />
+                    ))}
+                  </div>
+                </div>
+                {df.day_mansion.day_fortune.inauspicious.length > 0 && (
+                  <div className='mt-3'>
+                    <div className='mb-1 text-xs text-muted-foreground'>
+                      {t('fortune.unsuitable')}
+                    </div>
+                    <div className='flex flex-wrap gap-1.5'>
+                      {df.day_mansion.day_fortune.inauspicious.map((a, i) => (
+                        <FortuneBadge key={i} label={a} level='small_misfortune' />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <p className='mt-3 text-xs italic text-muted-foreground'>
+                  {df.day_mansion.day_fortune.source || 'T21n1299'}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Sanki card */}
+          {df.sanki && (
+            <Card>
+              <CardContent className='py-4'>
+                <h3 className='text-sm font-semibold tracking-wide'>
+                  {t('fortune.sanki')}
+                </h3>
+                <div className='mt-2 flex items-center gap-2'>
+                  <FortuneBadge
+                    label={`${df.sanki.period}（${df.sanki.period_reading}）`}
+                  />
+                  <span className='text-xs text-muted-foreground'>
+                    {t('fortune.sankiDay', {
+                      day: String(df.sanki.day_in_period),
+                    })} · {df.sanki.day_type}
+                  </span>
+                </div>
+                <p className='mt-2 text-sm text-muted-foreground'>
+                  {df.sanki.day_description}
+                </p>
+                <p className='mt-2 text-xs italic text-muted-foreground'>
+                  T21n1299 p.397c
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </>
       ) : null}
 
-      {/* today special days + auspicious */}
-      {!loading && fortune && (
-        <>
-          <TodaySpecialDays fortune={fortune} />
-          <TodayAuspicious fortune={fortune} />
-        </>
+      {/* Week preview */}
+      {weeklyFortune && (
+        <Card>
+          <CardContent className='py-4'>
+            <h3 className='text-sm font-semibold tracking-wide'>
+              {t('fortune.weekPreview')}
+            </h3>
+            <div className='mt-2 grid grid-cols-7 gap-1'>
+              {weeklyFortune.daily_overview.map((day) => {
+                const isAct = day.date === activeDate
+                return (
+                  <div key={day.date} className='text-center'>
+                    <div
+                      className={
+                        isAct
+                          ? 'text-xs font-bold text-primary'
+                          : 'text-xs text-muted-foreground'
+                      }
+                    >
+                      {day.weekday}
+                    </div>
+                    <LevelBar
+                      level={day.level}
+                      label={levelLabel(day.level, locale)}
+                      isToday={isAct}
+                    />
+                    {isAct && (
+                      <div className='text-xs text-primary'>{t('common.today')}</div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
-      {/* sanki (三九秘法) */}
-      {!loading && fortune?.sanki && (
-        <SankiCard sanki={fortune.sanki} />
-      )}
-
-      {/* week preview */}
-      {!loading && weeklyFortune && (
-        <WeekPreview weeklyFortune={weeklyFortune} activeDate={activeDate} />
-      )}
-
-      {/* quick action links */}
-      <div className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
+      {/* Quick links */}
+      <div className='grid grid-cols-2 gap-2'>
         {[
-          { href: '/fortune', label: t('home.fortuneDetail'), icon: <Star className='size-5 text-primary' aria-hidden='true' />, desc: t('home.fortuneDetailDesc') },
-          { href: '/compatibility', label: t('home.compatibility'), icon: <Sparkles className='size-5 text-primary' aria-hidden='true' />, desc: t('home.compatibilityDesc') },
-          { href: '/company', label: t('home.companyAnalysis'), icon: <Briefcase className='size-5 text-primary' aria-hidden='true' />, desc: t('home.companyAnalysisDesc') },
-          { href: '/knowledge', label: t('home.knowledgeBase'), icon: <BookOpen className='size-5 text-primary' aria-hidden='true' />, desc: t('home.knowledgeBaseDesc') },
-        ].map(({ href, label, icon, desc }) => (
-          <Link key={href} href={href}>
-            <Card className='border border-border hover:border-primary/40 hover:shadow-sm transition-all duration-200 cursor-pointer h-full'>
-              <CardContent className='flex flex-col items-center gap-1.5 pt-5 pb-5 text-center'>
-                {icon}
-                <span className='text-xs font-medium text-foreground'>{label}</span>
-                <span className='text-xs text-muted-foreground'>{desc}</span>
+          { href: '/fortune/daily', titleKey: 'home.fortuneDetail', descKey: 'home.fortuneDetailDesc' },
+          { href: '/compatibility', titleKey: 'home.compatibility', descKey: 'home.compatibilityDesc' },
+          { href: '/company', titleKey: 'home.company', descKey: 'home.companyDesc' },
+          { href: '/knowledge', titleKey: 'home.knowledge', descKey: 'home.knowledgeDesc' },
+        ].map((link) => (
+          <Link key={link.href} href={link.href}>
+            <Card className='cursor-pointer transition-colors hover:bg-card/80'>
+              <CardContent className='py-3'>
+                <div className='text-sm font-semibold'>{t(link.titleKey)}</div>
+                <div className='text-xs text-muted-foreground'>{t(link.descKey)}</div>
               </CardContent>
             </Card>
           </Link>
@@ -397,17 +283,27 @@ function HomeContent({ birthDate }: { birthDate: string }) {
   )
 }
 
-// ---- Root export ----
+function levelLabel(level: string, locale: string): string {
+  const labels: Record<string, Record<string, string>> = {
+    great_fortune: { 'zh-TW': '\u5927\u5409', en: 'Great', ja: '\u5927\u5409' },
+    good_fortune: { 'zh-TW': '\u5409', en: 'Good', ja: '\u5409' },
+    small_misfortune: { 'zh-TW': '\u5C0F\u51F6', en: 'Caution', ja: '\u5C0F\u51F6' },
+    misfortune: { 'zh-TW': '\u51F6', en: 'Bad', ja: '\u51F6' },
+    great_misfortune: { 'zh-TW': '\u5927\u51F6', en: 'Bad', ja: '\u5927\u51F6' },
+  }
+  return labels[level]?.[locale] || labels[level]?.['zh-TW'] || level
+}
 
 export default function HomePage() {
-  const { birthDate } = useProfileStore()
   const hydrated = useProfileHydrated()
+  const birthDate = useProfileStore((s) => s.birthDate)
 
-  // SSR hydration 完成前顯示 loading，避免閃爍
   if (!hydrated) {
     return (
-      <div className='flex flex-1 items-center justify-center py-24'>
-        <Skeleton className='h-64 w-full max-w-md rounded-xl' />
+      <div className='space-y-3'>
+        <Skeleton className='h-16 w-full rounded-xl' />
+        <Skeleton className='h-8 w-48 mx-auto' />
+        <Skeleton className='h-40 w-full rounded-xl' />
       </div>
     )
   }
@@ -416,5 +312,5 @@ export default function HomePage() {
     return <SetupCard />
   }
 
-  return <HomeContent birthDate={birthDate} />
+  return <HomeContent />
 }

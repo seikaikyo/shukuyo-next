@@ -1,7 +1,7 @@
 ---
 title: Vue 大改同步 — yosei 改名 + 假分數移除 + 工具/元件補齊
 type: refactor
-status: in-progress
+status: completed
 created: 2026-03-31
 ---
 
@@ -155,6 +155,6 @@ shukuyo-next (Next.js) 尚未同步這些變更，需分階段對齊。
 
 - [x] Phase 1: Types + yosei 改名 (2026-03-31 完成)
 - [x] Phase 2: 工具函式移植 — fortune-helpers.ts (2026-03-31 完成，與 Phase 1 合併)
-- [ ] Phase 3: 共用元件補齊 (FortuneBadge, YoseiTag, RedFlagFlow, DirectionNarrativeBlock)
+- [x] Phase 3: 共用元件補齊 (FortuneBadge, YoseiTag, RedFlagFlow, DirectionNarrativeBlock) (2026-03-31 完成)
 - [x] Phase 4: 頁面元件更新 (2026-03-31 完成，與 Phase 1 合併)
-- [ ] Phase 5: Hooks 功能補齊 (選做)
+- [x] Phase 5: Hooks 功能補齊 (2026-03-31 完成)
