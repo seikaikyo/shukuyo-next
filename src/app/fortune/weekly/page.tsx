@@ -7,6 +7,7 @@ import { useFortune } from '@/hooks/use-fortune'
 import { getYoseiFullName } from '@/utils/yosei'
 import { levelLabel } from '@/utils/level-label'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
 import { DateNav } from '@/components/shared/date-nav'
@@ -24,7 +25,7 @@ function addDays(dateStr: string, n: number): string {
 function WeeklyContent() {
   const { t, locale } = useTranslation()
   const birthDate = useProfileStore((s) => s.birthDate)!
-  const { weeklyFortune: wf, weeklyLoading, fetchWeekly } = useFortune()
+  const { weeklyFortune: wf, weeklyLoading, error, fetchWeekly } = useFortune()
 
   const today = new Date().toISOString().split('T')[0]
   const [centerDate, setCenterDate] = useState(today)
@@ -38,6 +39,19 @@ function WeeklyContent() {
 
   if (weeklyLoading || !wf) {
     return <Skeleton className='h-60 w-full rounded-xl' />
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className='py-8 text-center'>
+          <p className='text-sm text-destructive'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' className='mt-3' onClick={() => load(centerDate)}>
+            {t('common.retry')}
+          </Button>
+        </CardContent>
+      </Card>
+    )
   }
 
   const level = wf.fortune?.level || 'good_fortune'

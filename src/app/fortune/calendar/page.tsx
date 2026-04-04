@@ -6,6 +6,7 @@ import { useProfileStore, useProfileHydrated } from '@/stores/profile'
 import { useTranslation } from '@/lib/i18n'
 import { useCalendar } from '@/hooks/use-calendar'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
 import { DateNav } from '@/components/shared/date-nav'
@@ -30,7 +31,7 @@ const DOT_BG: Record<string, string> = {
 function CalendarContent() {
   const { t, locale } = useTranslation()
   const birthDate = useProfileStore((s) => s.birthDate)!
-  const { calendarData, loading, fetchCalendar } = useCalendar()
+  const { calendarData, loading, error, fetchCalendar } = useCalendar()
 
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
@@ -52,6 +53,19 @@ function CalendarContent() {
   }
 
   if (loading || !calendarData) return <Skeleton className='h-60 w-full rounded-xl' />
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className='py-8 text-center'>
+          <p className='text-sm text-destructive'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' className='mt-3' onClick={() => fetchCalendar(birthDate, year, month, locale)}>
+            {t('common.retry')}
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const days = calendarData.days || []
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay()

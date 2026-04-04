@@ -6,6 +6,7 @@ import { useTranslation } from '@/lib/i18n'
 import { useFortune } from '@/hooks/use-fortune'
 import { levelLabel } from '@/utils/level-label'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
 import { DateNav } from '@/components/shared/date-nav'
@@ -16,7 +17,7 @@ import { FortuneBadge } from '@/components/shared/fortune-badge'
 function YearlyContent() {
   const { t, locale } = useTranslation()
   const birthDate = useProfileStore((s) => s.birthDate)!
-  const { yearlyFortune: yf, loading: yearlyLoading, fetchYearly } = useFortune()
+  const { yearlyFortune: yf, loading: yearlyLoading, error, fetchYearly } = useFortune()
 
   const thisYear = new Date().getFullYear()
   const [year, setYear] = useState(thisYear)
@@ -29,6 +30,19 @@ function YearlyContent() {
   useEffect(() => { load(year) }, [year, load])
 
   if (yearlyLoading || !yf) return <Skeleton className='h-60 w-full rounded-xl' />
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className='py-8 text-center'>
+          <p className='text-sm text-destructive'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' className='mt-3' onClick={() => load(year)}>
+            {t('common.retry')}
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const level = yf.fortune?.level || 'good_fortune'
   const levelName = yf.fortune?.level_name || ''
@@ -125,6 +139,12 @@ function YearlyContent() {
           )}
         </CardContent>
       </Card>
+
+      {!star?.description && !yf.strategy && (
+        <Card><CardContent className='py-4 text-center text-sm text-muted-foreground'>
+          {t('fortune.yearlyAdvice')}
+        </CardContent></Card>
+      )}
     </div>
   )
 }

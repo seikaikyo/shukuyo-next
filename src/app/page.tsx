@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { useProfileStore, useProfileHydrated } from '@/stores/profile'
 import { useTranslation } from '@/lib/i18n'

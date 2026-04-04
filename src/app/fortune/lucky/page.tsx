@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
 function LuckyContent() {
   const { t, locale } = useTranslation()
   const birthDate = useProfileStore((s) => s.birthDate)!
-  const { luckyDaySummary, loading, fetchLuckyDaySummary } = useLuckyDays()
+  const { luckyDaySummary, loading, error, fetchLuckyDaySummary } = useLuckyDays()
   const { myMansion, fetchMyMansion } = useMansion()
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
@@ -27,6 +27,19 @@ function LuckyContent() {
   }, [birthDate, locale, fetchLuckyDaySummary, fetchMyMansion])
 
   if (loading || !luckyDaySummary) return <Skeleton className='h-60 w-full rounded-xl' />
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className='py-8 text-center'>
+          <p className='text-sm text-destructive'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' className='mt-3' onClick={() => fetchLuckyDaySummary(birthDate, locale)}>
+            {t('common.retry')}
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const categories = luckyDaySummary.categories || []
   const filtered = activeCategory

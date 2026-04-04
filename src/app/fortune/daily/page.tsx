@@ -6,6 +6,7 @@ import { useTranslation } from '@/lib/i18n'
 import { useFortune } from '@/hooks/use-fortune'
 import { getYoseiFullName } from '@/utils/yosei'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
 import { DateNav } from '@/components/shared/date-nav'
@@ -34,7 +35,7 @@ function formatDate(dateStr: string, locale: string): string {
 function DailyContent() {
   const { t, locale } = useTranslation()
   const birthDate = useProfileStore((s) => s.birthDate)!
-  const { dailyFortune: df, dailyLoading, fetchDaily } = useFortune()
+  const { dailyFortune: df, dailyLoading, error, fetchDaily } = useFortune()
 
   const today = new Date().toISOString().split('T')[0]
   const [activeDate, setActiveDate] = useState(today)
@@ -52,6 +53,19 @@ function DailyContent() {
         <Skeleton className='h-40 w-full rounded-xl' />
         <Skeleton className='h-24 w-full rounded-xl' />
       </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className='py-8 text-center'>
+          <p className='text-sm text-destructive'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' className='mt-3' onClick={() => load(activeDate)}>
+            {t('common.retry')}
+          </Button>
+        </CardContent>
+      </Card>
     )
   }
 

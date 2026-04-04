@@ -7,6 +7,7 @@ import { useFortune } from '@/hooks/use-fortune'
 import { getYoseiFullName } from '@/utils/yosei'
 import { levelLabel } from '@/utils/level-label'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
@@ -19,7 +20,7 @@ import { MansionTag } from '@/components/shared/mansion-tag'
 function MonthlyContent() {
   const { t, locale } = useTranslation()
   const birthDate = useProfileStore((s) => s.birthDate)!
-  const { monthlyFortune: mf, loading: monthlyLoading, fetchMonthly } = useFortune()
+  const { monthlyFortune: mf, loading: monthlyLoading, error, fetchMonthly } = useFortune()
 
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
@@ -45,6 +46,19 @@ function MonthlyContent() {
   }
 
   if (monthlyLoading || !mf) return <Skeleton className='h-60 w-full rounded-xl' />
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className='py-8 text-center'>
+          <p className='text-sm text-destructive'>{t('error.fetchFailed')}</p>
+          <Button variant='outline' size='sm' className='mt-3' onClick={() => load(year, month)}>
+            {t('common.retry')}
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const level = mf.fortune?.level || 'good_fortune'
   const levelName = mf.fortune?.level_name || ''

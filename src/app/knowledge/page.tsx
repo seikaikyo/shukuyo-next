@@ -64,6 +64,9 @@ function KnowledgeContent() {
 
       {tab === 'mansions' && (
         <>
+          {mansions.length === 0 && !loading && (
+            <p className='py-8 text-center text-sm text-muted-foreground'>{t('error.fetchFailed')}</p>
+          )}
           <div className='grid grid-cols-3 gap-2'>
             {mansions.map((m) => {
               const isMyMansion = myMansion && m.index === myMansion.index
