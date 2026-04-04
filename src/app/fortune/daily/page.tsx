@@ -9,8 +9,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { Breadcrumb } from '@/components/shared/breadcrumb'
+import { SankiCard } from '@/components/shared/sanki-card'
+import { AuspiciousCard } from '@/components/shared/auspicious-card'
 import Link from 'next/link'
 import { levelColor, levelBorder, levelBg } from '@/utils/fortune-helpers'
+import { specialDayBadgeClass, ryouhanBadgeClass } from '@/utils/special-day-colors'
 import type { DailyFortune } from '@/types/fortune'
 
 // ---- Helpers ----
@@ -127,9 +130,9 @@ function OverallScoreCard({ fortune, t }: { fortune: DailyFortune; t: (key: stri
           </p>
         )}
 
-        {/* special day badge */}
+        {/* special day badge (CIS C1.7) */}
         {fortune.special_day && (
-          <div className='mt-1 px-3 py-1 rounded-full border border-primary/40 bg-primary/5 text-xs text-primary font-medium'>
+          <div className={cn('mt-1 px-3 py-1 rounded-full text-xs font-medium', specialDayBadgeClass(fortune.special_day.type))}>
             {fortune.special_day.name}
             {fortune.special_day.reading ? `(${fortune.special_day.reading})` : ''}
           </div>
@@ -139,80 +142,7 @@ function OverallScoreCard({ fortune, t }: { fortune: DailyFortune; t: (key: stri
   )
 }
 
-function CategoryCard({ fortune, t }: { fortune: DailyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const cats = [
-    {
-      label: t('fortune.career'),
-      desc: fortune.fortune.career_desc,
-    },
-    {
-      label: t('fortune.love'),
-      desc: fortune.fortune.love_desc,
-    },
-    {
-      label: t('fortune.health'),
-      desc: fortune.fortune.health_desc,
-    },
-    {
-      label: t('fortune.wealth'),
-      desc: fortune.fortune.wealth_desc,
-    },
-  ]
-
-  const filtered = cats.filter(({ desc }) => desc)
-  if (filtered.length === 0) return null
-
-  return (
-    <Card className='border border-border'>
-      <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
-        {filtered.map(({ label, desc }) => (
-          <div key={label}>
-            <p className='text-xs font-medium text-primary mb-1'>{label}</p>
-            <p className='text-sm text-muted-foreground leading-relaxed'>{desc}</p>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
-  )
-}
-
-function LuckyCard({ fortune, t }: { fortune: DailyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
-  const { lucky } = fortune
-
-  return (
-    <Card className='border border-border'>
-      <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-        <p className='text-xs font-medium text-muted-foreground tracking-widest uppercase'>
-          {t('fortune.todayLucky')}
-        </p>
-        <div className='grid grid-cols-3 gap-3'>
-          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-muted/50'>
-            <span className='text-xs text-muted-foreground'>{t('home.direction')}</span>
-            <span className='text-sm font-medium text-foreground'>
-              {lucky.direction}
-            </span>
-            <span className='text-xs text-muted-foreground'>{lucky.direction_reading}</span>
-          </div>
-          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-muted/50'>
-            <span className='text-xs text-muted-foreground'>{t('home.luckyColor')}</span>
-            <span
-              className='h-5 w-5 rounded-full border border-border'
-              style={{ backgroundColor: lucky.color_hex }}
-              aria-label={lucky.color}
-            />
-            <span className='text-xs text-foreground'>{lucky.color}</span>
-          </div>
-          <div className='flex flex-col items-center gap-1 p-3 rounded-md bg-muted/50'>
-            <span className='text-xs text-muted-foreground'>{t('home.luckyNumber')}</span>
-            <span className='text-sm font-medium text-foreground'>
-              {lucky.numbers.join('・')}
-            </span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
+// CategoryCard (四領域) 和 LuckyCard (五行方位/色/數) 已移除 — 非原典內容
 
 function SpecialInfoCard({ fortune, t }: { fortune: DailyFortune; t: (key: string, params?: Record<string, string | number>) => string }) {
   const hasSanki = !!fortune.sanki
@@ -241,7 +171,7 @@ function SpecialInfoCard({ fortune, t }: { fortune: DailyFortune; t: (key: strin
 
         {hasRyouhan && fortune.ryouhan && (
           <div className='flex flex-col gap-1'>
-            <span className='text-xs font-medium text-[var(--fortune-caution)]'>
+            <span className='text-xs font-medium text-[var(--ryouhan)]'>
               {t('fortune.ryouhanPeriod')}:{fortune.ryouhan.period_label || t('fortune.ryouhanActive')}
             </span>
             <span className='text-xs text-muted-foreground leading-relaxed'>
@@ -342,31 +272,13 @@ export default function FortuneDailyPage() {
             </CardContent>
           </Card>
 
-          {/* category skeleton */}
-          <Card className='border border-border'>
-            <CardContent className='pt-5 pb-5 flex flex-col gap-4'>
-              <Skeleton className='h-3 w-20' />
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className='flex flex-col gap-1.5'>
-                  <div className='flex items-center gap-3'>
-                    <Skeleton className='h-3 w-10 shrink-0' />
-                    <Skeleton className='h-1.5 flex-1' />
-                    <Skeleton className='h-3 w-7' />
-                  </div>
-                  <Skeleton className='h-3 w-3/4 ml-[52px]' />
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* lucky skeleton */}
+          {/* auspicious + sanki skeleton */}
           <Card className='border border-border'>
             <CardContent className='pt-5 pb-5 flex flex-col gap-3'>
-              <Skeleton className='h-3 w-16' />
-              <div className='grid grid-cols-3 gap-3'>
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className='h-20 rounded-md' />
-                ))}
+              <Skeleton className='h-3 w-20' />
+              <div className='grid grid-cols-2 gap-2'>
+                <Skeleton className='h-20 rounded-md' />
+                <Skeleton className='h-20 rounded-md' />
               </div>
             </CardContent>
           </Card>
@@ -377,8 +289,12 @@ export default function FortuneDailyPage() {
       {!loading && dailyFortune && (
         <>
           <OverallScoreCard fortune={dailyFortune} t={t} />
-          <CategoryCard fortune={dailyFortune} t={t} />
-          <LuckyCard fortune={dailyFortune} t={t} />
+          {dailyFortune.day_mansion?.day_fortune && (
+            <AuspiciousCard dayFortune={dailyFortune.day_mansion.day_fortune} />
+          )}
+          {dailyFortune.sanki && (
+            <SankiCard sanki={dailyFortune.sanki} />
+          )}
           <SpecialInfoCard fortune={dailyFortune} t={t} />
         </>
       )}
